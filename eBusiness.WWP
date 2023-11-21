@@ -1,0 +1,2720 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : eBusiness
+ major_version : 28
+ minor_version : 0
+ type : 4097
+ description : ""
+ subtype : 0
+project :
+ identifier : 0x0
+ internal_properties : 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
+ configurations :
+  -
+    name : eBusiness
+    internal_properties : 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
+    configuration_id : 8481671273112732694
+    type : 2
+    description : Site (management and showroom)
+    generation_directory : .\Exe\eBusiness
+    generation_name : .\eBusiness.wdl
+    version :
+     version : 30F160061R
+     internal_generation_version : 3
+    index_page_generation_name : index
+    language : 2
+    64bits : true
+  -
+    name : Webservice
+    internal_properties : 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
+    configuration_id : 11859919828529478152
+    type : 5
+    description : WebService for external BackOffice
+    generation_directory : .\Exe\Webservice
+    generation_name : .\Webservice.awws
+    version : {}
+    language : 2
+    linux : true
+    64bits : true
+ elements :
+  identifier : 0x4ace0e2101b4f687
+  elements :
+   -
+     name : COL_TaxRate
+     identifier : 0x4eb15ad4019fee7a
+     internal_properties : CAAAAAgAAADQLggUk8hge9LTwkOPKeCoVjuVxRuZiqyus01X1Fsx990hOCOfoWoAn5sF87Mt1cs1PQ==
+     physical_name : .\COL_TaxRate.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : QRY_NUMBER_PRODUCT_PHOTOS
+     identifier : 0x4ec5288903185e9a
+     internal_properties : CAAAAAgAAAB60KLmxYKqtYidgA3JbCJmkIf/V1PNnIms9pWu6do6th7geWJd46g+2UW/Ofn3g3Vf5w==
+     physical_name : .\QRY_NUMBER_PRODUCT_PHOTOS.WDR
+     type : 5
+   -
+     name : PAGE_MANAGEMENT_SECURITY_HISTORY
+     identifier : 0x4ec2354800aa1e55
+     internal_properties : CAAAAAgAAACloY2RLkvj/EFGRcIOqgU1dzaeVu09hrigHO0Awly2SroqzY4gIOuDEg6IcDCgWEiwsA==
+     physical_name : .\PAGE_MANAGEMENT_SECURITY_HISTORY.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_PhotoVariationsOfProduct
+     identifier : 0x4ec2519f067d2770
+     internal_properties : CAAAAAgAAADIRjDs24Cos4qbmrtX5ajobnNt/bfhN951SfQHDHelI5Fd/N/XaTJI10O9O/v1jQPNVQ==
+     physical_name : .\QRY_PhotoVariationsOfProduct.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_ProductPhoto
+     identifier : 0x4eb15ad30199ea65
+     internal_properties : CAAAAAgAAACb90NHZCGJkqt872jkXNufrSx0rBzKoe1yopwAgb5cRLwUJySStoUd+CSeGppWIpZ+hg==
+     physical_name : .\COL_ProductPhoto.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : IndexMainPromotion
+     identifier : 0x4eb1405800835d50
+     internal_properties : CAAAAAgAAADva8fb6JWdThc4u6SweccTOQpUxOukVjKGNy2IGee3IZ99mkF2ilFpNODaJu7inhL6eg==
+     physical_name : .\IndexMainPromotion.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_OrderNum
+     identifier : 0x4ebac783023e0789
+     internal_properties : CAAAAAgAAABAPrjkw7jwKwIDcpN/AfCo5ru1tZu5J8t2Se3vXLPZb0W5QBuvURqwT8s1gwP9hXtFzQ==
+     physical_name : .\COL_OrderNum.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : payment_confirmation_paypal
+     identifier : 0x4edca9c000a2c322
+     internal_properties : CAAAAAgAAAACeHquHUri/VBVqLWhHJo+CG9XDzYImU2ad9/CBAqKlm5g2fLFe0BWIR2HcTGvS70HDw==
+     physical_name : .\payment_confirmation_paypal.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_ProductPhotoOutOfVariation
+     identifier : 0x4ec25132067b7b89
+     internal_properties : CAAAAAgAAAA4FmC8izB4o7pLSkuHe8Rk1qeNFSO1iduNH769biXv0TOThlVnmWJ4BzOtC4tFPbMdJQ==
+     physical_name : .\QRY_ProductPhotoOutOfVariation.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_WhichVariationAccordingToValues
+     identifier : 0x4e57935b00b07f32
+     internal_properties : CAAAAAgAAAAyCGq+jfqy7cDF2EWRLvaaaEsn/18x5IeiiKOQr/SYeFxCNySVq3AGkY13QcE/O60XHw==
+     physical_name : .\QRY_WhichVariationAccordingToValues.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : pInternet_Catalog
+     identifier : 0x4402ca6d00000b79
+     internal_properties : CAAAAAgAAABYNgAcq9BYA9qrKisnnRhIntMtzXDqtdyi9l+rRc9N29nVZHdH+cLYp5MN66sl3dM9xQ==
+     physical_name : .\pInternet_Catalog.wdg
+     type : 7
+   -
+     name : COL_Family
+     identifier : 0x4eb15ad20193e6ad
+     internal_properties : CAAAAAgAAACPi+c7CLX9LjcYGwTQbytXqRYcnE3sFCVzIL7kqZV5X6EDdGdW6rHJVMA6hg7CvjKamg==
+     physical_name : .\COL_Family.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : COL_SITE_CONFIGURATION
+     identifier : 0x4eb15ad0018de095
+     internal_properties : CAAAAAgAAAA6EGKmBULq9cjdwM0JqV4qKLknr6B/UZCjlFLI6yNxb1mZvK8dI+j+mYV/eTm3Q7UfJw==
+     physical_name : .\COL_SITE_CONFIGURATION.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : COL_Question
+     identifier : 0x4ebac781023c0133
+     internal_properties : CAAAAAgAAABHw6/zMG1FZk9As1y4eS9b4eJcjEogZa6LOXvZeIeXEf/NamFukllxDAjyzlaKdmpS0g==
+     physical_name : .\COL_Question.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : PAGE_MANAGEMENT_LEGAL_INFO
+     identifier : 0x44a2546d00026dbb
+     internal_properties : CAAAAAgAAADnY8/T0I2lRm8gk7xY6pO/ifRA0PkrZRB2YZW2aNy2Gv7iWQLOcjlRLOjSLvbqlgrycg==
+     physical_name : .\PAGE_MANAGEMENT_LEGAL_INFO.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : givereview
+     identifier : 0x4ebbdba3028a98ac
+     internal_properties : CAAAAAgAAACa8EJGZSKKlah94G3pnAImEGd/F75PI8qni+IxdIqKpm5QyZI9w4ge+SWfGZlXI5V/hw==
+     physical_name : .\givereview.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_ValuesOfCharacteristics
+     identifier : 0x4e297be600524407
+     internal_properties : CAAAAAgAAABGzK7yMW5GaUxBtFG9UcLOHL3bU+nD1T5FQpSngAOJv3GB9Fd5j1xyDQnzzVWLd2lT0w==
+     physical_name : .\QRY_ValuesOfCharacteristics.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_ClearOrder
+     identifier : 0x4ed66b2800a1f7b0
+     internal_properties : CAAAAAgAAAA9GRUJtuPL1PmO/Rr2kw2NX+iqmpQevO+hrwlrMkHVCyE/NJc4yJMrynZgWNgI8OAoKA==
+     physical_name : .\QRY_ClearOrder.WDR
+     type : 5
+   -
+     name : COL_OrdLine
+     identifier : 0x4eb15ad20195e7c6
+     internal_properties : CAAAAAgAAABWPL7iwb72+VxRRMENw7ZSrBmrY+knVgl0Szetwl2/WacLcunpH+yCHRmDfQX7h3lDww==
+     physical_name : .\COL_OrdLine.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : QRY_SEARCH_CUSTOMER
+     identifier : 0x4eccf3ff0201878b
+     internal_properties : CAAAAAgAAABAPrjkw7jwKwIDcpN/DvAIxoWthbnTjoyHNLdMbzTYCDjKsyivURqwT8s1gwP9hXtFzQ==
+     physical_name : .\QRY_SEARCH_CUSTOMER.WDR
+     type : 5
+   -
+     name : basket
+     identifier : 0x4eb155ee0083ae10
+     internal_properties : CAAAAAgAAABJxbFVUg8nyO2iET7KejFho4J6YlmA9eWdcP8XKvSmsgr6fV5k5LfPrmpUrHRsFIRM1A==
+     physical_name : .\basket.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : pSendEMail
+     identifier : 0x44a3fce8000cd5c3
+     internal_properties : CAAAAAgAAACQbsjU04iguxITAgPPcBxUrgH9/cYZQeOw0PD7tn4eKoYEcXpf4arAX9vFM/PtlQv1fQ==
+     physical_name : .\pSendEMail.wdg
+     type : 7
+   -
+     name : QRY_ProductVariations
+     identifier : 0x4e539faf0054e035
+     internal_properties : CAAAAAgAAAA9GRUJtuPL1PmO/Rr22MHZH7L+tg7gQEeK+bdE4aLoGCzAv5w4yJMrynZgWNgI8OAoKA==
+     physical_name : .\QRY_ProductVariations.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_SearchPromos
+     identifier : 0x44a535600004af8d
+     internal_properties : CAAAAAgAAAAXc3+jAH01Np+Qg4xIBG+DQQBIECR+04ijXZ+k9Y6EhISM7/zeYilB3FhCvka6RroCAg==
+     physical_name : .\QRY_SearchPromos.WDR
+     type : 5
+   -
+     name : PAGE_MANAGEMENT_REFERENCES
+     identifier : 0x44a3d11f0002ce41
+     internal_properties : CAAAAAgAAAA6EGKmBULq9cjdwM0Jxi7CAEMP1/grJFmutKNluExAwETKr7wdI+j+mYV/eTm3Q7UfJw==
+     physical_name : .\PAGE_MANAGEMENT_REFERENCES.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_SERVICES
+     identifier : 0x44a3d54d0005200c
+     internal_properties : CAAAAAgAAAB10V1BfttTDNHWFTLetOkJx/qGnifCf/GvSfWd5g4MNPAMc3hQ8LvTop4Y4KBQKJhg4A==
+     physical_name : .\PAGE_MANAGEMENT_SERVICES.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_CUSTOMER_LIST
+     identifier : 0x44b52b880000dfad
+     internal_properties : CAAAAAgAAABu9EZaaRYe0ZS5PNk15B6yjNP742itD4RDgrN9StoyNtZYIcoBB9TqtWFbpW1jH5F7+w==
+     physical_name : .\PAGE_MANAGEMENT_CUSTOMER_LIST.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : customer_orders
+     identifier : 0x486a34d30008058b
+     internal_properties : CAAAAAgAAAA4FmC8izB4o7pLSkuHj/Scluf9Fb5FrXCX7pvqtUnLZa8XAmlnmWJ4BzOtC4tFPbMdJQ==
+     physical_name : .\customer_orders.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_Customer
+     identifier : 0x4eb15acf0189de15
+     internal_properties : CAAAAAgAAACwjug086gAGzLzYuNvWLxEjvHtPRj/tYhziCN3OOa2Ur4sKSK/QQqgf7slkxPNtSuVnQ==
+     physical_name : .\COL_Customer.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : PAGE_MANAGEMENT_NEWPRODUCT_LIST
+     identifier : 0x44ab97ab00019e8b
+     internal_properties : CAAAAAgAAABBPbnt2oevQAXqafYSzC2tmz5aAssGSROfHQuFpn6UlLhEG8AcLP+XZtLMNPz0jHxEzA==
+     physical_name : .\PAGE_MANAGEMENT_NEWPRODUCT_LIST.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_MAINTENANCE
+     identifier : 0x4ec2af590157eee6
+     internal_properties : CAAAAAgAAACjn5uPPGlBWnM0d5B8L0dDteK4KLlRAgKwu4JtwX2ZV+FjNCe6Th21QPzm0lKOal6mrg==
+     physical_name : .\PAGE_MANAGEMENT_MAINTENANCE.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_FORM_ORDER
+     identifier : 0x44aa9ffe0003ea8b
+     internal_properties : CAAAAAgAAAC0kpyYJxwUFz7PPt8r9xiAansxuQBiltyA+EKl6wkD1Wef+tEDBdbsi7chn2eZYVehoQ==
+     physical_name : .\PAGE_MANAGEMENT_FORM_ORDER.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_NewProduct
+     identifier : 0x4eb15ad20197e95b
+     internal_properties : CAAAAAgAAAC6kOImhcJqdUhdQE2JTq4SABM/t5K5hsK3uzEpipT4yHyyh0Sdo2h+GQX/+bk3wzWfpw==
+     physical_name : .\COL_NewProduct.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : customer_addresses
+     identifier : 0x4ec2a02900ac2aca
+     internal_properties : CAAAAAgAAAD3U9/D4F3V1v+wIywo7gP3SRRQcFPLCN+Om1AITtDCfoqW5eb+AsnhvHhiXibaphriYg==
+     physical_name : .\customer_addresses.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : pSiteParameters
+     identifier : 0x44a235f7000170ea
+     internal_properties : CAAAAAgAAADcujRgXwQsP4aHhodDUrSkipnRmTmfN9lIBrA0H/Ak9AQ+HzyrXS5E009Jt39xCf/JSQ==
+     physical_name : .\pSiteParameters.wdg
+     type : 7
+   -
+     name : customer_address_modif
+     identifier : 0x4ec2aafb00ae72b3
+     internal_properties : CAAAAAgAAAAZdcHF4l/X2P2yIS7auuFx03Iq8knBla1DL/roSvQm0mr6XX5U9MffvnpkXCTcpBT8BA==
+     physical_name : .\customer_address_modif.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_PAYMENT_CC_PAYPAL
+     identifier : 0x4ecbb4810226457a
+     internal_properties : CAAAAAgAAADJRTHV0o+nSG0ikb5KC3GRcwweHquEGmnNdyROnZGNu3mX/O/kZDdPLurULPTslATMVA==
+     physical_name : .\PAGE_MANAGEMENT_PAYMENT_CC_PAYPAL.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_CharacteristicValues_ForProduct
+     identifier : 0x4e5232480052d2f9
+     internal_properties : CAAAAAgAAAAAfnikA3gwa0JDslO/YfBo5vu1NY9hg4SkTUAzcBN5T+UZYHtvkVpwDwv1w0O9RbsFDQ==
+     physical_name : .\QRY_CharacteristicValues_ForProduct.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGETPL_Simple_XL_Admin
+     identifier : 0x4e1b064500832b4a
+     internal_properties : CAAAAAgAAACA/vgkg/iw68LDMtM/4nDg5oW9JYTlJQhS6hsjlpiETOQe3/zvEdrwj4t1Q8M9xTuFjQ==
+     physical_name : .\PAGETPL_Simple_XL_Admin.wwt
+     type : 65541
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_ORDER_LIST
+     identifier : 0x44a8f37e00013339
+     internal_properties : CAAAAAgAAABs6kRQbxQcz5aX1neTSKAIsjVBUXpyiQhwaCOQhr7Wep5MiVKbrX4U419Zp29hGY95+Q==
+     physical_name : .\PAGE_MANAGEMENT_ORDER_LIST.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_PRODUCT_FORM
+     identifier : 0x44a3a6160002b069
+     internal_properties : CAAAAAgAAACsqoSQL1Tcj1ZXlrdTCWRM2l/piUyfUrWvxGYAIeMx/z3xSBPbbT5UIx+ZZy+hWU+5uQ==
+     physical_name : .\PAGE_MANAGEMENT_PRODUCT_FORM.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : RPT_OrderForm
+     identifier : 0x4ea7e12e007d5785
+     internal_properties : CAAAAAgAAAAtKQUZppObRGk+raqmPVG5x/SCmkOgNCNOS5JMS/MbPd8BOiHIeENbOubQKOgY4NA4OA==
+     physical_name : .\RPT_OrderForm.wde
+     type : 3
+   -
+     name : customer_information
+     identifier : 0x486a34d60009112e
+     internal_properties : CAAAAAgAAAAkIgwol8xkBy7/bu8bwxio6rvhaWL5Qhf/HGfmScXXETs7Hs0TNQace6cR77cp0ccxMQ==
+     physical_name : .\customer_information.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_Order
+     identifier : 0x4eb15ad0018bdf1f
+     internal_properties : CAAAAAgAAAA8GhQAv+TM3+anJicjvMAwAlURMZyzQ4S32zcjjJKCvkrQpaZL/c7ks29pV98R6d8pKQ==
+     physical_name : .\COL_Order.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : home_sections
+     identifier : 0x4eb14738010336ce
+     internal_properties : CAAAAAgAAACoppCMO2BIU2o7ulu3cYgAvsNtzQp5Td6GNNtsyyNpj7VZgGt3iVJoN+Pd21uVbWOttQ==
+     physical_name : .\home_sections.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_CONTACT_FORM
+     identifier : 0x44a4fb2a00014f5c
+     internal_properties : CAAAAAgAAAB+5FZKeSaOoaRJTEmFaI76nKPbM3i0ROaKmZWgdo6OapK8fW5xl2R6BTGrFZ1TL6Fr6w==
+     physical_name : .\PAGE_MANAGEMENT_CONTACT_FORM.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_ProductReview_Synthesis
+     identifier : 0x4ebbaef300b906d5
+     internal_properties : CAAAAAgAAAAWfH6iAX42OZyRhIFNIbL+7O3rQ/lTc95IDkz30NO5L4FRhEepXyxC3VlDvUW7R7kDAw==
+     physical_name : .\QRY_ProductReview_Synthesis.WDR
+     type : 5
+   -
+     name : COL_Address
+     identifier : 0x4eb15acf0183da6d
+     internal_properties : CAAAAAgAAAD5VSFlQj93eN3Swc469xFp49xe7uQ6s7Fc6bHjwm0hl21D8Ov0FOf/npoE/IR8BPTcZA==
+     physical_name : .\COL_Address.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : admin_rest
+     identifier : 0x4f1fe01500a51daf
+     internal_properties : CAAAAAgAAABLx7NXVBEZwpts33iUW7+D7dqw8LPEPWKLQyNSh4kNg3VPiEOipnUN6FROqmpmEoZO1g==
+     physical_name : .\admin_rest.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : search
+     identifier : 0x4ea6f0c0007b08c5
+     internal_properties : CAAAAAgAAAAbd8PH5KEJEiv8b+hkzBv/jSxUDLMfV9xaKLZyoG6sdIxE99QSNgWdeKQemhrWohb+Bg==
+     physical_name : .\search.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_CharacteristicValue
+     identifier : 0x4eb15ad401a1ef93
+     internal_properties : CAAAAAgAAACNieU5hvO75MnezcoG521lHxgqyvB+RxW8seG7yiVxv32zYAvoGOP7moZwSMg4wDCYmA==
+     physical_name : .\COL_CharacteristicValue.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : PAGE_MANAGEMENT_PROMOTION_LIST
+     identifier : 0x44a40f47000d97d1
+     internal_properties : CAAAAAgAAADOVCZ6yfa+8fTZ3HmVb/5C1KHzuwbaaiWB0USLu3mTBfvXBkWhp3QKlYF7Rc0D//HbWw==
+     physical_name : .\PAGE_MANAGEMENT_PROMOTION_LIST.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_Promotion
+     identifier : 0x4eb15ad3019ded03
+     internal_properties : CAAAAAgAAAB82lRAfySMn6Zn5mfjltSMuhlhuRkHYd6gZNSIi4SQeHBC23CLvY4k8y+pF59RKZ9p6Q==
+     physical_name : .\COL_Promotion.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : contact
+     identifier : 0x486a34e4000d49db
+     internal_properties : CAAAAAgAAADAvjhkQzhwq4KD8hP/83zMTt+1LaZVitmbcT8OsX2XWbt7ns0v0Zowz0u1A4N9BfvFTQ==
+     physical_name : .\contact.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : TPLC_SMTP_CONFIGURATION
+     identifier : 0x4ecd369b00bbb92b
+     internal_properties : CAAAAAgAAAC3k5+DIB0VFj/wY+xoRY/jYWJsDMkcVnut0wh221O7fUOJrj2+QgmhfLginmaaZlqiog==
+     physical_name : .\TPLC_SMTP_CONFIGURATION.wwt
+     type : 65543
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_USERS
+     identifier : 0x44a3d11f0003cf2b
+     internal_properties : CAAAAAgAAAAWfH6iAX42OZyRhIFNa/ZCLKn7ox5pZyCOOxJWX4WXAf/TClGpXyxC3VlDvUW7R7kDAw==
+     physical_name : .\PAGE_MANAGEMENT_USERS.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_END_OF_CONNECTION
+     identifier : 0x44a3d11e0000cb53
+     internal_properties : CAAAAAgAAAAMCmSwjzR8r7Z3tlezusQEOpnxaW6RYgaiy8XFbLjcHPzGV4R7jV50Az+5B49BOa8ZGQ==
+     physical_name : .\PAGE_MANAGEMENT_END_OF_CONNECTION.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : pBasket
+     identifier : 0x44a9341e0000a542
+     internal_properties : CAAAAAgAAAALB3MXlNFZAtusHzjUpKufPUz0HJcV2m1WPRiM3Cb0zHScX4xi5rXNqJQO6qom0sYOFg==
+     physical_name : .\pBasket.wdg
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : TPLC_Promotion
+     identifier : 0x4ea01dbf00ffbb29
+     internal_properties : CAAAAAgAAADYtoCcK1DYg1orqqunQBRsBqnVtQAmqMiQE0+OYM5OqlaEsSrHeUJYJxONayulXVO9RQ==
+     physical_name : .\TPLC_Promotion.wwt
+     type : 65543
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_PAYMENT_CC_PAYBOX
+     identifier : 0x4ecbb47f0224404c
+     internal_properties : CAAAAAgAAACgnpiEIxgQy+KjEjPf2hBQ5vWNRXSlWzUqFJ7LHhCMBMwWJ7RP8brQr2tVo2OdZVulrQ==
+     physical_name : .\PAGE_MANAGEMENT_PAYMENT_CC_PAYBOX.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : TPLC_ADMIN_SUBMENU_CUSTOMERS
+     identifier : 0x4f2a5ffb00a6c3bc
+     internal_properties : CAAAAAgAAABTr4ufLBkRyuOkJyAtyBlB60S2NvWOFneLI3t6C/WZrwX7GLND/s3lsGxWomKeWk62vg==
+     physical_name : .\TPLC_ADMIN_SUBMENU_CUSTOMERS.wwt
+     type : 65543
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : whoarewe
+     identifier : 0x4eb161ed04aa89df
+     internal_properties : CAAAAAgAAADRLQkdqtdfENX6eeZjF1sfIaw4KBGMBh22Mtkz7Fg6tgLObe4FPA+ndqIc5Kwk3Mw0PA==
+     physical_name : .\whoarewe.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : pBackOffice
+     identifier : 0x4eb130e203111670
+     internal_properties : CAAAAAgAAAAEAmxIdyyEp46fjg/E8XIe8KcvR3/tMWJ3yk5OcY4GGurkddYs1aY820exD5dJMacREQ==
+     physical_name : .\pBackOffice.wdg
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : COL_ProductVariation_CharacteristicValue
+     identifier : 0x4eb15ad10191e334
+     internal_properties : CAAAAAgAAAA/GxcLuOXN3ueIixTB710l374mfkb8PG9PTNbO10hKtg7mceof2qE5xHBqVt4S7uIqKg==
+     physical_name : .\COL_ProductVariation_CharacteristicValue.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : customer_order_see
+     identifier : 0x4ec4c69d0157ffc1
+     internal_properties : CAAAAAgAAAADf3uvHEnh+lNUl7BdXJnpG3RWRmOFxLyjfS9f9Sl1Y0GftCfTbj1VIByGcjKuSr4GDg==
+     physical_name : .\customer_order_see.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_NEWS_FORM
+     identifier : 0x44ab917d00017b2a
+     internal_properties : CAAAAAgAAACV8f0hnvuz7PG29RL/x3crzZgUVO042pe64K4j9BD6DuLefd4p0Jszwn54QMAwyDiAgA==
+     physical_name : .\PAGE_MANAGEMENT_NEWS_FORM.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_ProductReview_General
+     identifier : 0x4ebbaea400b7d200
+     internal_properties : CAAAAAgAAAA6EGKmBULq9cjdwM0K62gI/r0FXeHzgYiLtcO446D8BPz2Z+QWI+j+mYV/eTm3Q7UfJw==
+     physical_name : .\QRY_ProductReview_General.WDR
+     type : 5
+   -
+     name : TPLC_MANAGEMENT_LIST_FAMILIES
+     identifier : 0x4eb7c06d0131b933
+     internal_properties : CAAAAAgAAABo5lBMeyCIk6p7+hvwwgo2BHVjuyzJRuinn7rOy3OZf0GhlMcwyZIo9yOdG5tVLaNt9Q==
+     physical_name : .\TPLC_MANAGEMENT_LIST_FAMILIES.wwt
+     type : 65543
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : identification
+     identifier : 0x486a34e0000c3b4a
+     internal_properties : CAAAAAgAAAC/m5eLOGVNXmcIC5RBdO2dfzi6ekeOqNaTp8lM5TldQ4l3/G+fWiG5RPDq1l6SbmKqqg==
+     physical_name : .\identification.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_CurrentPromotions
+     identifier : 0x4eba9f27019e9795
+     internal_properties : CAAAAAgAAAC5leElgv+3uB0SAY57R/O3+bRw4GgauKGuVa1Oeyhq9vLuDV6tVCe/XtrEPMQ8xDScpA==
+     physical_name : .\QRY_CurrentPromotions.WDR
+     type : 5
+   -
+     name : PAGE_MANAGEMENT_SITE_CONFIGURATION
+     identifier : 0x44a27cb20000bb72
+     internal_properties : CAAAAAgAAACRbcnd6pefUBU6uaajUJvHOQZsTAMFcvSn3teHj4WJb1GzpDfFfE9nNuLcJOzknAz0fA==
+     physical_name : .\PAGE_MANAGEMENT_SITE_CONFIGURATION.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_ArchiveAddress
+     identifier : 0x4eb15acf0185dba5
+     internal_properties : CAAAAAgAAADiWNrO/aoCHTD1yNUCKJzUfm91XXeNfZ6LlY8VDhGDfUePqjHeG+D2gb0nkRHPqx3nbw==
+     physical_name : .\COL_ArchiveAddress.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : newproducts
+     identifier : 0x486a34cc0006ea7c
+     internal_properties : CAAAAAgAAADEQiwIt+zE587fzs8EO67aYGN/V+IB+/n72Zj1XqB8dECOqyDsFeb8m4dxT9cJ8efRUQ==
+     physical_name : .\newproducts.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : payment
+     identifier : 0x4ea5367200f14219
+     internal_properties : CAAAAAgAAABGzK7yMW5GaUxBtFG+lsx8wqfxoR7d1iyDax0oj2+lC/HdXI9yj1xyDQnzzVWLd2lT0w==
+     physical_name : .\payment.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : WebDevYesNoSkin
+     identifier : 0x4ebbda630288b6f5
+     internal_properties : CAAAAAgAAACSaMre7VrSjaBl+GXyy3AQ5tXNRWYHZRyDOcLzkIAcNJwGd+Quy5Am8S2XYSHfmw33fw==
+     physical_name : .\WebDevYesNoSkin.wwh
+     type : 65542
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_EBusiness
+     identifier : 0x4ed66aa2009fecd7
+     internal_properties : CAAAAAgAAAAOFGa6iTZ+sbSZnLlWMKC4kqPJ4WoE2TV2AQRNXdE77R83IjnaZzRK1UG7BY1DP7EbGw==
+     physical_name : .\COL_EBusiness.wdg
+     type : 7
+   -
+     name : QRY_BestSellers
+     identifier : 0x4eca734002aa5d34
+     internal_properties : CAAAAAgAAAAiGBoOverC3fC1iBXC/WzsvtGdrZ0XsXOu0QEyeQoCNspg1fYe26A2wX1nUdEP690nLw==
+     physical_name : .\QRY_BestSellers.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : TPLC_MANAGE_SUBMENU_CATALOG
+     identifier : 0x4ebbb7240143fa5f
+     internal_properties : CAAAAAgAAACX8/8jgP21th8QAwzJtSk5B2pWvoMs2mmPeurLqmY0zDikm7BX4qnBXNjCPsY6xjqCgg==
+     physical_name : .\TPLC_MANAGE_SUBMENU_CATALOG.wwt
+     type : 65543
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_AllSubFamilies
+     identifier : 0x486b42890001966a
+     internal_properties : CAAAAAgAAABbNwMHpOHJ0uu8LyglohWly/iWHhSOcVmAEuJZ/IePQfMNDs1L9sXduGReWtoW4tY+xg==
+     physical_name : .\QRY_AllSubFamilies.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : page_error
+     identifier : 0x4ed66cff00a328fd
+     internal_properties : CAAAAAgAAABk4kxoVwwkx+6/Li8kow7KIHNPF5L+QQGK4Mrilmi0vDi2o8hM9cbcu2dRr3dpEYdx8Q==
+     physical_name : .\page_error.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_PhotoNumberProductVariation
+     identifier : 0x4ec54f270298597f
+     internal_properties : CAAAAAgAAAD1Ud3B/lvTjFFWlbJfd1drDbjUVOzG3Aup4B0mA4AKPvIODU7JcDtTIh6YYCDQqBjgYA==
+     physical_name : .\QRY_PhotoNumberProductVariation.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_OrdLine_ProductVariations
+     identifier : 0x4ec4ef6201581d81
+     internal_properties : CAAAAAgAAADCuDpuXQoiPZCV6HXio4AQ9pXNVVVDBRlCTsjcp5gELMReP5x+u4AW4V1HsXFvC/3HTw==
+     physical_name : .\COL_OrdLine_ProductVariations.WDG
+     type : 7
+   -
+     name : payment_addresses
+     identifier : 0x486a34f200117eee
+     internal_properties : CAAAAAgAAABzz6v/TDlxqoOEh4BNj7lRK2oiuqFArFX+31IznmAqLi42AWqjXi1F0Ey2AoJ+em5W3g==
+     physical_name : .\payment_addresses.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_PRODUCT_REVIEWS
+     identifier : 0x4eca607900b5c47d
+     internal_properties : CAAAAAgAAAD+ZNbK+aYOISTJzMkGSXD4QgURQXyU2/+NEXvYwH4WGj7MqTLqF+T6hbErlR3TryHraw==
+     physical_name : .\PAGE_MANAGEMENT_PRODUCT_REVIEWS.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : page_return_payment_ebusiness
+     identifier : 0x4ed4edea00bd4f49
+     internal_properties : CAAAAAgAAAA1ER0BvpuTTBEWVfIfLBeb5aLoCMvsclyLQ3sC5zndY+VvyBMJMPuTYt7YIOAQ6NggIA==
+     physical_name : .\page_return_payment_ebusiness.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : home_products
+     identifier : 0x4ea6d7e0007adb8c
+     internal_properties : CAAAAAgAAACyiOo+DXoybUBFWMUSKAwkbl9lLaZ9Kozzf9uy/REDHefPShEOK/CGEQ33wUG/uy2Xnw==
+     physical_name : .\home_products.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_SearchProducts
+     identifier : 0x4869142900046ee0
+     internal_properties : CAAAAAgAAAAZdcHF4l/X2P2yIS7b6s/bIQKcDD448uOjJcZ9vPcnwQ/9etFN9MffvnpkXCTcpBT8BA==
+     physical_name : .\QRY_SearchProducts.WDR
+     type : 5
+   -
+     name : PAGE_MANAGEMENT_CUSTOMIZATION_ORDER
+     identifier : 0x4ec384f500ad7935
+     internal_properties : CAAAAAgAAAAZdcHF4l/X2P2yIS7b+9PfqfSgMAMccWJ3wj8FMuymqq6yidJN9MffvnpkXCTcpBT8BA==
+     physical_name : .\PAGE_MANAGEMENT_CUSTOMIZATION_ORDER.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : gsc
+     identifier : 0x4b2f8d0300509794
+     internal_properties : CAAAAAgAAACgnpiEIxgQy+KjEjPY8dbSpOuzmywNVBGLcyhdWrZmoqq0hdZI8brQr2tVo2OdZVulrQ==
+     physical_name : .\gsc.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_PromotionPhoto
+     identifier : 0x4ec50af600b0d750
+     internal_properties : CAAAAAgAAAD8WtTA/6QMHybnZudsNiaasCFvhznvx6t2ya3vUK9lu02F0AsEPQ6kc68plx/RqR/paQ==
+     physical_name : .\COL_PromotionPhoto.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : QRY_MAX_PHOTO_NUMBER
+     identifier : 0x4ec524f303165c1a
+     internal_properties : CAAAAAgAAADoZtDM+6AIEyr7eptwm0q2vC9Lo4MFpYqk/M9028hMnFCO62CwSRKod6MdmxvVrSPtdQ==
+     physical_name : .\QRY_MAX_PHOTO_NUMBER.WDR
+     type : 5
+   -
+     name : QRY_NbFamilyProducts
+     identifier : 0x4eccd4270172e91f
+     internal_properties : CAAAAAgAAABVMb3h3rvzLDH2NdI/U3fzTRhEhKwO2yesOvFCx6xuqlbaoTrpENvzgr44gADwiHhAwA==
+     physical_name : .\QRY_NbFamilyProducts.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_NEWPRODUCT_FORM
+     identifier : 0x44ab97a900009804
+     internal_properties : CAAAAAgAAACD//svnMlhetPUFzDd+u3NQ9B+dr1YMGWz150m9R/3yXu1hsVT7r3VoJwG8rIuyj6Gjg==
+     physical_name : .\PAGE_MANAGEMENT_NEWPRODUCT_FORM.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_POPUP_PRODUCT_CHOICE
+     identifier : 0x4ec65c23029cf0b4
+     internal_properties : CAAAAAgAAACGjO4y8a4GKQwBdJF+nLi4isvxKRLeRJmnDRFDcd2/aYOT5mWyTxyyTckzjRXLtymTkw==
+     physical_name : .\PAGE_MANAGEMENT_POPUP_PRODUCT_CHOICE.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : promotions
+     identifier : 0x486a34c80005da76
+     internal_properties : CAAAAAgAAAB60KLmxYKqtYidgA3K+eTsVun1JQDXX7zvkNZ3KOa2Yp68mcJW46g+2UW/Ofn3g3Vf5w==
+     physical_name : .\promotions.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : ProductReview
+     identifier : 0x4ebba1ac01362858
+     internal_properties : CAAAAAgAAAA2HB4CoZ6Wmbxx5GHuv5wEosF5YVDRfBy07eq3gowI0GiaQ5iCv4wi/TmjHeUb59kjIw==
+     physical_name : .\ProductReview.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_NewProducts
+     identifier : 0x4869142d00057beb
+     internal_properties : CAAAAAgAAACW/P4igf62uRwRBAHOEDgwSmsBmbe57hZ1aaKZArFb/R/Hcvki36zCXdnDPcU7xzmDgw==
+     physical_name : .\QRY_NewProducts.WDR
+     type : 5
+   -
+     name : QRY_ListYearCustomerOrders
+     identifier : 0x4eca6191021d4a5e
+     internal_properties : CAAAAAgAAAAS6EpebdpSDSDleOVyZbysLlEdnb3X+z6vQVna8bJa/gIo7X6uSxCmca0X4aFfG413/w==
+     physical_name : .\QRY_ListYearCustomerOrders.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_ProductVariation
+     identifier : 0x4eb15ad1018fe20b
+     internal_properties : CAAAAAgAAAA0EhwYp5yUl75Pvl+0qIIG6IWnv4VjAHysRTNp1lk7haNfPq18hVZsCzehH+cZ4dchIQ==
+     physical_name : .\COL_ProductVariation.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : PAGE_MANAGEMENT_CHARACTERISTICS
+     identifier : 0x4e2972f600505b1f
+     internal_properties : CAAAAAgAAABp5VG1ci+HqI2C8R7r6MM/Qe6EFLVcE9dUwHYEET3Rd5m7fO89xJcvzkq0DJRMNKRs9A==
+     physical_name : .\PAGE_MANAGEMENT_CHARACTERISTICS.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_MostUsefulReview
+     identifier : 0x4ebbf98d00a86fea
+     internal_properties : CAAAAAgAAADlYc3R7oujvAEGBQLPzdPXpfRMhKjaY6+rQQ809a5spKy0h9RZ4KvDUs7IMPDgmAjwcA==
+     physical_name : .\QRY_MostUsefulReview.WDR
+     type : 5
+   -
+     name : QRY_CharacteristicValueDefaultProductVariation
+     identifier : 0x4e575d10005868ff
+     internal_properties : CAAAAAgAAABxzan9Snc/cHVaWcYDI3v3sTx4uBAa3CVYjEnqX1Q+4maKsTrlHO+HFgL8xEyEfGxU3A==
+     physical_name : .\QRY_CharacteristicValueDefaultProductVariation.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : TPLC_PaymentSteps
+     identifier : 0x4eb16422053c2a81
+     internal_properties : CAAAAAgAAADXsz9jQD11dt/Qw0yJkqmZP0z6EpWGuoqbP2kU8S/vyXOdXo2XomkBnJgC/oZ6BvrCQg==
+     physical_name : .\TPLC_PaymentSteps.wwt
+     type : 65543
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_CUSTOMERS_QUESTIONS
+     identifier : 0x4f2a60ca00a8ec04
+     internal_properties : CAAAAAgAAACTb8vf7FnRiqNk52Dth5nhSzqSmjJxUEmx+fG3Z9gyphbuKaKDvo0l8CyWYiLemg72fg==
+     physical_name : .\PAGE_MANAGEMENT_CUSTOMERS_QUESTIONS.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_InvoiceDetails
+     identifier : 0x4ea7e13b007f8a57
+     internal_properties : CAAAAAgAAAAsKgQQr9RcD9bXFjfc1/ZKKJv3v4/BOX+twiPYp/wQgHRKj8xU7b7Uo58Z568h2c85OQ==
+     physical_name : .\QRY_InvoiceDetails.WDR
+     type : 5
+   -
+     name : legalinformation
+     identifier : 0x486a34d9000a1d9d
+     internal_properties : CAAAAAgAAABi2FpOfSqCnbB1SFWC3uCwxuuVdUL5bWKXRl0on48N6xnFdNdem2B2AT2nEZFPK51n7w==
+     physical_name : .\legalinformation.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : services
+     identifier : 0x486a34bb0002a88d
+     internal_properties : CAAAAAgAAAD/W9fL+KUNHifIy9QBXmE5VzSiirFL31xDT3zZyUtDtQfZAlnfGuH5hLAqlh7SriLqag==
+     physical_name : .\services.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : references
+     identifier : 0x486a34c00003bd84
+     internal_properties : CAAAAAgAAAAHA2+zcC2Fpo+A8xz55zWNN7bOFqN9TK2jNwdexEDSHtYOyQIn0pkxzEiyDpZKNqoSEg==
+     physical_name : .\references.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_Orders
+     identifier : 0x48691444000cd60b
+     internal_properties : CAAAAAgAAACoppCMO2BIU2o7uluwr/puHB8rM3Md+WBw6JPot9y4ADzyJ7RwiVJoN+Pd21uVbWOttQ==
+     physical_name : .\QRY_Orders.WDR
+     type : 5
+   -
+     name : PAGE_MANAGEMENT_COMPANY
+     identifier : 0x44a3fce6000accf9
+     internal_properties : CAAAAAgAAADIRjDs24Cos4qbmrtQkK7yZFHDa1bpp8NTq6R6K+mjFevHdlXQaTJI10O9O/v1jQPNVQ==
+     physical_name : .\PAGE_MANAGEMENT_COMPANY.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_ProductReview_DetailedList
+     identifier : 0x4ebbb69801e1e478
+     internal_properties : CAAAAAgAAADasIKGJWJKVWg9oK2q+8iIvh0FnaEzWo2LPXPIUzDs1CyGl7R2g0heOeXf2VmXY1W/Rw==
+     physical_name : .\QRY_ProductReview_DetailedList.WDR
+     type : 5
+   -
+     name : customer_getpwd
+     identifier : 0x486a34c40004cc24
+     internal_properties : CAAAAAgAAADSKAoerZqSTWAluKWy9DwMDh91bVTqCHRbJE7dp30X2Tv7Hs1ui1BmMe3XIeEf2803Pw==
+     physical_name : .\customer_getpwd.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_FAMILIES
+     identifier : 0x44a3e91700066e93
+     internal_properties : CAAAAAgAAACY9kBcaxAYw5pr6mvgxN661LETizbRvn9Mrrsu9x3/6ccbwqmAuYIY51NNq2tlHZN9hQ==
+     physical_name : .\PAGE_MANAGEMENT_FAMILIES.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : product
+     identifier : 0x486a6f8500024f6b
+     internal_properties : CAAAAAgAAAAeBHYqmcZuAcSpLCkmCxRU6unh+eh/yOKbUTQZBgiMTIxW5/RK98TapZEL9b0zz8ELCw==
+     physical_name : .\product.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_PRODUCT_LIST
+     identifier : 0x44a38ac20001f328
+     internal_properties : CAAAAAgAAACTb8vf7FnRiqNk52Dtw0k5W+qS+rdymhGKOF9jMMTWMtp6va6Dvo0l8CyWYiLemg72fg==
+     physical_name : .\PAGE_MANAGEMENT_PRODUCT_LIST.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_PROMOTION_FORM
+     identifier : 0x44a410a0000fdc35
+     internal_properties : CAAAAAgAAAAAfnikA3gwa0JDslO476L2hDdTuwz8w0uOd7kKqHyYcJxC99RokVpwDwv1w0O9RbsFDQ==
+     physical_name : .\PAGE_MANAGEMENT_PROMOTION_FORM.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_Product
+     identifier : 0x4eb15ad3019bebdb
+     internal_properties : CAAAAAgAAABAPrjkw7jwKwIDcpN4sfayxEvTe9NpPR6o8q72qXamIuo0xZaoURqwT8s1gwP9hXtFzQ==
+     physical_name : .\COL_Product.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : PAGE_MANAGEMENT_IDENTIFICATION
+     identifier : 0x44a3d11f0001cc7c
+     internal_properties : CAAAAAgAAAB51aHlwr/3+F1SQU67/T9jseDogCXIP2yJN19JXoaMnGxk99RtlGd/HhqEfAT8hHRc5A==
+     physical_name : .\PAGE_MANAGEMENT_IDENTIFICATION.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : customer_account
+     identifier : 0x486a34cf0007f8a0
+     internal_properties : CAAAAAgAAAB716PnxIGpsoucjwjFMXUt00YiqqUcuXSnotC9lJr48NwgPxwr1qU92ES+Ovr2gnZe5g==
+     physical_name : .\customer_account.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : WebDevOkCancelSkin
+     identifier : 0x4ebbda630286b531
+     internal_properties : CAAAAAgAAABxzan9Snc/cHVaWcYDaLv3ufbcrJ8gfTqALl+m8x1xh3lrjE/lHO+HFgL8xEyEfGxU3A==
+     physical_name : .\WebDevOkCancelSkin.wwh
+     type : 65542
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : WebDevMessageBoxSkin
+     identifier : 0x4ebbda620284b282
+     internal_properties : CAAAAAgAAABxzan9Snc/cHVaWcYDabfzGXhA2OWxG42m7mZGqmIwmBDge1DlHO+HFgL8xEyEfGxU3A==
+     physical_name : .\WebDevMessageBoxSkin.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_CONSULT_HISTORY
+     identifier : 0x4f184aad01dcd89b
+     internal_properties : CAAAAAgAAABq4FK2dTJ6pbhNsF26+jhgjuPtnafJGZtIyoir6IuBl21h+NNmk1huCTWvCYlHM6Vv9w==
+     physical_name : .\QRY_CONSULT_HISTORY.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : page_return_payment_server_ebusiness
+     identifier : 0x4ed4fcef00bff9db
+     internal_properties : CAAAAAgAAACzj+s/DHkxakNER8ANfr3lQyCeRumaDptUiT24LdNDzSeZglnjHu2FEAz2wkK+ui6Wng==
+     physical_name : .\page_return_payment_server_ebusiness.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : TPLC_MANAGE_SUBMENU_SPECIAL_PAGES
+     identifier : 0x4ec232e700a8d0b2
+     internal_properties : CAAAAAgAAAC+pJaKOWZOYWQJDIlGuPCYYsOpcUT1FLWU+Um0R/mTdVe/uqGqVyS6RfHr1V2Tb2Grqw==
+     physical_name : .\TPLC_MANAGE_SUBMENU_SPECIAL_PAGES.wwt
+     type : 65543
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_ProductImages
+     identifier : 0x4e54be6a005547e9
+     internal_properties : CAAAAAgAAABxzan9Snc/cHVaWcYDfkfrWRoUhDYYW1imrgIxCIsD5SuRhlXlHO+HFgL8xEyEfGxU3A==
+     physical_name : .\QRY_ProductImages.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_Reviews
+     identifier : 0x4ebac77f023af82e
+     internal_properties : CAAAAAgAAAA2HB4CoZ6Wmbxx5GHu09yMcjG54eE3OxtSKmg0z3AkhESur7yCv4wi/TmjHeUb59kjIw==
+     physical_name : .\COL_Reviews.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : TPLC_MANAGE_SUBMENU_SITE_MANAGEMENT
+     identifier : 0x4ebbe1ff01c56eb0
+     internal_properties : CAAAAAgAAABBPbnt2oevQAXqafYTIWczSdhAiEli4Em4JAqzJvoYkHi4QygVLP+XZtLMNPz0jHxEzA==
+     physical_name : .\TPLC_MANAGE_SUBMENU_SITE_MANAGEMENT.wwt
+     type : 65543
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : home_newproducts
+     identifier : 0x4ea691e202b3745b
+     internal_properties : CAAAAAgAAAAdeXUplsNrdNmuHTrX5htf/e74aOUBvHu8qipn01u7NYNJ7u1R6LPLqpYA+Lgo0MAICA==
+     physical_name : .\home_newproducts.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : news
+     identifier : 0x486a34f600128e78
+     internal_properties : CAAAAAgAAAC4luA8C7D4IzrLyssAeL7yVBEDmzjvpUWC+n/W/RH73SOPjl3gGeL4h7MtiwvFvTOdpQ==
+     physical_name : .\news.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGETPL_CustomerAccount
+     identifier : 0x4f0d5e1000a3e2c7
+     internal_properties : CAAAAAgAAAAzD2u/jPmx6sPEx0CNxj1VoxCOhkgyrxCvWVDV1HubtR+B+uFjnm0FkIx2QsI+Oq4WHg==
+     physical_name : .\PAGETPL_CustomerAccount.wwt
+     type : 65541
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_NEWS_LIST
+     identifier : 0x44ab8eec00007761
+     internal_properties : CAAAAAgAAAC2nJ6CIR4WGTzxZOFuWFhgCrvR2eADXPqFN4AWO/mTRfcPCkECPwyifbkjnWWbZ1mjow==
+     physical_name : .\PAGE_MANAGEMENT_NEWS_LIST.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_LastPromotionFamilyProducts
+     identifier : 0x4ed6550c00be36b1
+     internal_properties : CAAAAAgAAADmbM7S0Y6mSWwhlLFeaaiw+o2pmakjrhl1qCUW5b5Wir5c2XLSbzxSLenTLfXrlwnzcw==
+     physical_name : .\QRY_LastPromotionFamilyProducts.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_News
+     identifier : 0x4eb1462f06664bc4
+     internal_properties : CAAAAAgAAABzz6v/TDlxqoOEh4BNuf0F+066Un2kTutWqGfl3EJQ6NQ4J6SjXi1F0Ey2AoJ+em5W3g==
+     physical_name : .\COL_News.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : TPLC_LargeBasket
+     identifier : 0x4ed66d3400a5f7b0
+     internal_properties : CAAAAAgAAABXM7/jwL319l9QQ8wJNmnxv9yaEpXuHNaA1vXIvUPLfY+hmjEXIumBHBiCfgb6hnpCwg==
+     physical_name : .\TPLC_LargeBasket.wwt
+     type : 65543
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : COL_ReviewVote
+     identifier : 0x4ec4ef63015a1f64
+     internal_properties : CAAAAAgAAAD+ZNbK+aYOISTJzMkGRKDQMnNJEauRF8euA3NpyiX3Afvrbm3qF+T6hbErlR3TryHraw==
+     physical_name : .\COL_ReviewVote.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : COL_Characteristic
+     identifier : 0x4eb15acf0187dd0c
+     internal_properties : CAAAAAgAAADeRDbq2YauQQTpbOlmJUCAQiWBUW1bnU2qMDauxVo6xiKYnU4KNwSaZdHLNf3zjwHLSw==
+     physical_name : .\COL_Characteristic.WDG
+     type : 7
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        public : true
+   -
+     name : PAGETPL_Simple_XL
+     identifier : 0x4e15e09a00501e04
+     internal_properties : CAAAAAgAAAC+pJaKOWZOYWQJDIlG1rRE6p85iUYfrvWhfXKSv2+lW5GtrK+qVyS6RfHr1V2Tb2Grqw==
+     physical_name : .\PAGETPL_Simple_XL.wwt
+     type : 65541
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : index
+     identifier : 0x4eb13dab00ffe728
+     internal_properties : CAAAAAgAAABTr4ufLBkRyuOkJyAtLt3lQwAeBqnasXKAPlWo/QMTPfcJUglD/s3lsGxWomKeWk62vg==
+     physical_name : .\index.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGETPL_Generic_mobile
+     identifier : 0x40f5198c00aa4d83
+     internal_properties : CAAAAAgAAAAvKwcbqNVdDtf4e+Rx071Nj9727lcA2YqMgyyRxFy2ulrava6vShGpdKAa5q4i3tI6Og==
+     physical_name : .\PAGETPL_Generic_mobile.wwt
+     type : 65541
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_LinkedProducts
+     identifier : 0x40f5263d01fa338a
+     internal_properties : CAAAAAgAAAA8GhQAv+TM3+anJicsL+bqWHsXz48ho6ymf2PQz7TYWPwCVwRE/c7ks29pV98R6d8pKQ==
+     physical_name : .\QRY_LinkedProducts.WDR
+     type : 5
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : home_mobile
+     identifier : 0x40f529c801ffb7ac
+     internal_properties : CAAAAAgAAADoZtDM+6AIEyr7eptw1E5qJGFjO/Kzsl2I2KkUY63vGddr0pmwSRKod6MdmxvVrSPtdQ==
+     physical_name : .\home_mobile.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : search_mobile
+     identifier : 0x40f53c9600ad2a1f
+     internal_properties : CAAAAAgAAACA/vgkg/iw68LDMtM4jXb6RAtDG7yV+73jsTv57gIKDg4QaXLoEdrwj4t1Q8M9xTuFjQ==
+     physical_name : .\search_mobile.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : produit_mobile
+     identifier : 0x40f56d0f00ae8166
+     internal_properties : CAAAAAgAAACsqoSQL1Tcj1ZXlrdcsmYC8EG/1+qz5WFGaLLylYsJJ5Fx5HfUbT5UIx+ZZy+hWU+5uQ==
+     physical_name : .\produit_mobile.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : opinion_product_mobile
+     identifier : 0x40f58a3500b05e6d
+     internal_properties : CAAAAAgAAAAsKgQQr9RcD9bXFjfcM+YC+LtHz/x9remt+XMXyHgkPIh24/hU7b7Uo58Z568h2c85OQ==
+     physical_name : .\opinion_product_mobile.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : newfeatures_mobile
+     identifier : 0x40f6779600b02646
+     internal_properties : CAAAAAgAAAD3U9/D4F3V1v+wIywpYQmh56rm/lM1JI+gup/YjmKoqKywj1z3AsnhvHhiXibaphriYg==
+     physical_name : .\newfeatures_mobile.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : promotions_mobile
+     identifier : 0x40f67e1e00b2a8ed
+     internal_properties : CAAAAAgAAABJxbFVUg8nyO2iET7LDOPnUf6kJIfZZTih53v7/xENy3X/WANd5LfPrmpUrHRsFIRM1A==
+     physical_name : .\promotions_mobile.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : news_mobile
+     identifier : 0x40f6826000b44b15
+     internal_properties : CAAAAAgAAAD3U9/D4F3V1v+wIywpYxWFZwbOpg9IvcKA+nQBZIyGWuoafV73AsnhvHhiXibaphriYg==
+     physical_name : .\news_mobile.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_FindLinkedProducts
+     identifier : 0x40f6c558015bf4df
+     internal_properties : CAAAAAgAAAC/m5eLOGVNXmcIC5RBzK0NHwgq2lQe18WnLOAbArHlO/EvBMefWiG5RPDq1l6SbmKqqg==
+     physical_name : .\QRY_FindLinkedProducts.WDR
+     type : 5
+   -
+     name : TPLC_Mobile_Basket
+     identifier : 0x40f6cbb80219ca29
+     internal_properties : CAAAAAgAAAA1ER0BvpuTTBEWVfIfcxeT7bjkZFkqHRuIaNjttExOira6gVoJMPuTYt7YIOAQ6NggIA==
+     physical_name : .\TPLC_Mobile_Basket.wwt
+     type : 65543
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_MAXORDER_LINKEDPRODUCT_DISPLAY
+     identifier : 0x40f6cea602c24d1c
+     internal_properties : CAAAAAgAAAAsKgQQr9RcD9bXFjfcOepmyF8X32tN43ysemnKzbbeMsJ83f5U7b7Uo58Z568h2c85OQ==
+     physical_name : .\QRY_MAXORDER_LINKEDPRODUCT_DISPLAY.WDR
+     type : 5
+   -
+     name : basket_mobile
+     identifier : 0x40f6d1160383c0e6
+     internal_properties : CAAAAAgAAAB10V1BfttTDNHWFTLfNcPXNVQMFIXPaRy/iIgAChYELMRcPxxJ8LvTop4Y4KBQKJhg4A==
+     physical_name : .\basket_mobile.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : QRY_LIST_FAMILIES_ACCORDING_TO_PARENT
+     identifier : 0x40f6e863042fd8ca
+     internal_properties : CAAAAAgAAADeRDbq2YauQQTpbOlmdQCg4qUh8bHT/i2vWXmCKWqqVpKojV4KNwSaZdHLNf3zjwHLSw==
+     physical_name : .\QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.WDR
+     type : 5
+   -
+     name : QRY_MAXORDER_FAMILY_DISPLAY
+     identifier : 0x40f7bf8c00b851a2
+     internal_properties : CAAAAAgAAACyiOo+DXoybUBFWMUSQhCIhpvVla8BWk+rgiATEHOZb4W5gFsOK/CGEQ33wUG/uy2Xnw==
+     physical_name : .\QRY_MAXORDER_FAMILY_DISPLAY.WDR
+     type : 5
+   -
+     name : QRY_MAXORDER_PRODUCT_DISPLAY
+     identifier : 0x40f7ce2800ba61e8
+     internal_properties : CAAAAAgAAADnY8/T0I2lRm8gk7xZulm5z+yaQvhKZ5hUoAI5bDdnsUuFtpXHcjlRLOjSLvbqlgrycg==
+     physical_name : .\QRY_MAXORDER_PRODUCT_DISPLAY.WDR
+     type : 5
+   -
+     name : PAGE_MANAGEMENT_POPUP_PRODUCT_STOCK
+     identifier : 0x40f8216501758c1a
+     internal_properties : CAAAAAgAAADfuzfr2IWtvgfoa/Rhcw39n67G3udD4ydeS8VkhLzWepq6fW7/OgGZZNDKNv7yjgLKSg==
+     physical_name : .\PAGE_MANAGEMENT_POPUP_PRODUCT_STOCK.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : PAGE_MANAGEMENT_POPUP_STOCK_VARIATION
+     identifier : 0x40f914b000bbe6ca
+     internal_properties : CAAAAAgAAABO1Kb6SXY+cXRZXPkWSSCIMrXB0eZDN0ygBO9lgr7Wep5MiVIaJ/SKFQH7xU2Df3Fb2w==
+     physical_name : .\PAGE_MANAGEMENT_POPUP_STOCK_VARIATION.wwh
+     type : 65538
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     name : TEST_pSiteParameters
+     identifier : 0x427123fe02e76d6c
+     internal_properties : CAAAAAgAAACW/P4igf62uRwRBAHOUjw00lfRgTedGMSu2GV3pGupd7VpMDsi36zCXdnDPcU7xzmDgw==
+     physical_name : .\TEST_pSiteParameters.wxt
+     type : 17
+     configurations :
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+  other_elements :
+   -
+     physical_name : .\description.gif
+     configurations :
+      -
+        configuration_id : 8481671273112732694
+        excluded : true
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+   -
+     physical_name : .\description.rtf
+     configurations :
+      -
+        configuration_id : 8481671273112732694
+        excluded : true
+      -
+        configuration_id : 11859919828529478152
+        excluded : true
+  analysis : .\eBusiness.ana\eBusiness.wda
+  net_assemblies : []
+  uwp_api : []
+  external_components :
+   -
+     name : SecurePayment
+     identifier : 0x43a93feb0177e344
+     internal_properties : CAAAAAgAAABO8OXnBzMrI+vQkxZ6zAD4S9DTzL48AXUfaZ+P8Xb/6Cj7hC3qIoL+Lgy760AuU/vFJ5Yn/rPCQ2zU/jl4hyvUk4XXpXQSUQ==
+     wdi_physical_name : .\SecurePayment.wdi
+     wdk_physical_name : .\SecurePayment.wdk
+     configurations :
+      -
+        configuration_id : 8481671273112732694
+        excluded_from_generation : true
+  internal_components : []
+ wb_skin : 170 eShop
+ wb_color_palette : NoRev & Light
+ languages :
+  - en-GB
+ site_map :
+  roots :
+   -
+     name : customer_account
+     parameters : []
+     title :
+      fr-FR : Compte client
+      en-GB : Customer account
+     description :
+      fr-FR : Compte client
+      en-GB : Customer account
+     children :
+      -
+        name : customer_addresses
+        parameters : []
+        title :
+         fr-FR : Mes adresses
+         en-GB : My addresses
+        description :
+         fr-FR : Mes adresses
+         en-GB : My addresses
+        children :
+         -
+           name : customer_address_modif
+           parameters : []
+           title :
+            fr-FR : Modification d'une adresse
+            en-GB : Modify an address
+           description :
+            fr-FR : Modification d'une adresse
+            en-GB : Modify an address
+           children : []
+      -
+        name : customer_orders
+        parameters : []
+        title :
+         fr-FR : Mes commandes
+         en-GB : My orders
+        description :
+         fr-FR : Mes commandes
+         en-GB : My orders
+        children :
+         -
+           name : customer_order_see
+           parameters : []
+           title :
+            fr-FR : Détails de la commande
+            en-GB : Details of the order
+           description :
+            fr-FR : Détails de la commande
+            en-GB : Details of the order
+           children : []
+      -
+        name : customer_information
+        parameters : []
+        title :
+         fr-FR : Mes informations
+         en-GB : My personal details
+        description :
+         fr-FR : Mes informations
+         en-GB : My personal details
+        children : []
+      -
+        name : customer_getpwd
+        parameters : []
+        title :
+         fr-FR : Mot de passe perdu
+         en-GB : Forgotten password
+        description :
+         fr-FR : Mot de passe perdu
+         en-GB : Forgotten password
+        children : []
+  orphans :
+   -
+     name : IndexMainPromotion
+     parameters : []
+     title :
+      fr-FR : eCommerce
+      en-GB : eBusiness
+     description :
+      fr-FR : eCommerce
+      en-GB : eBusiness
+   -
+     name : PAGE_MANAGEMENT_CHARACTERISTICS
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_CARACTERISTIQUES
+      en-GB : PAGE_MANAGEMENT_PRODUCT_FORM
+     description :
+      fr-FR : PAGE_ADMINISTRATION_CARACTERISTIQUES
+      en-GB : PAGE_MANAGEMENT_PRODUCT_FORM
+   -
+     name : PAGE_MANAGEMENT_COMPANY
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+     description :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_CONTACT_FORM
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+     description :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_CUSTOMERS_QUESTIONS
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_QUESTIONS_CLIENTS
+      en-GB : Managing the site
+     description :
+      fr-FR : PAGE_ADMINISTRATION_QUESTIONS_CLIENTS
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_CUSTOMER_LIST
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+     description :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_CUSTOMIZATION_ORDER
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : PAGE_MANAGEMENT_CHARACTERISTICS
+     description :
+      fr-FR : Administration du site
+      en-GB : PAGE_MANAGEMENT_CHARACTERISTICS
+   -
+     name : PAGE_MANAGEMENT_END_OF_CONNECTION
+     parameters : []
+     title :
+      fr-FR : Administration du site
+     description :
+      fr-FR : Administration du site
+   -
+     name : PAGE_MANAGEMENT_FAMILIES
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_FAMILLES
+      en-GB : Managing the promotions
+     description :
+      fr-FR : PAGE_ADMINISTRATION_FAMILLES
+      en-GB : Managing the promotions
+   -
+     name : PAGE_MANAGEMENT_FORM_ORDER
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_FORMULAIRE_COMMANDE
+      en-GB : PAGE_MANAGEMENT_FORM_ORDER
+     description :
+      fr-FR : PAGE_ADMINISTRATION_FORMULAIRE_COMMANDE
+      en-GB : PAGE_MANAGEMENT_FORM_ORDER
+   -
+     name : PAGE_MANAGEMENT_IDENTIFICATION
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+     description :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_LEGAL_INFO
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : Feedback
+     description :
+      fr-FR : Administration du site
+      en-GB : Feedback
+   -
+     name : PAGE_MANAGEMENT_MAINTENANCE
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+     description :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_NEWPRODUCT_FORM
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : PAGE_MANAGEMENT_POPUP_STOCK_VARIATION
+     description :
+      fr-FR : Administration du site
+      en-GB : PAGE_MANAGEMENT_POPUP_STOCK_VARIATION
+   -
+     name : PAGE_MANAGEMENT_NEWPRODUCT_LIST
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : eBusiness
+     description :
+      fr-FR : Administration du site
+      en-GB : eBusiness
+   -
+     name : PAGE_MANAGEMENT_NEWS_FORM
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_ACTUALITES_FICHE
+      en-GB : PAGE_MANAGEMENT_NEWS_FORM
+     description :
+      fr-FR : PAGE_ADMINISTRATION_ACTUALITES_FICHE
+      en-GB : PAGE_MANAGEMENT_NEWS_FORM
+   -
+     name : PAGE_MANAGEMENT_NEWS_LIST
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_ACTUALITES_LISTE
+      en-GB : PAGE_MANAGEMENT_NEWS_LIST
+     description :
+      fr-FR : PAGE_ADMINISTRATION_ACTUALITES_LISTE
+      en-GB : PAGE_MANAGEMENT_NEWS_LIST
+   -
+     name : PAGE_MANAGEMENT_ORDER_LIST
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_COMMANDE_LISTE
+     description :
+      fr-FR : PAGE_ADMINISTRATION_COMMANDE_LISTE
+   -
+     name : PAGE_MANAGEMENT_PAYMENT_CC_PAYBOX
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : Customer review
+     description :
+      fr-FR : Administration du site
+      en-GB : Customer review
+   -
+     name : PAGE_MANAGEMENT_PAYMENT_CC_PAYPAL
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : page_return_payment_server_ebusiness
+     description :
+      fr-FR : Administration du site
+      en-GB : page_return_payment_server_ebusiness
+   -
+     name : PAGE_MANAGEMENT_POPUP_PRODUCT_CHOICE
+     parameters : []
+     title :
+      fr-FR : eCommerce
+     description :
+      fr-FR : eCommerce
+   -
+     name : PAGE_MANAGEMENT_POPUP_PRODUCT_STOCK
+     parameters : []
+     title :
+      en-GB : basket
+     description :
+      en-GB : basket
+   -
+     name : PAGE_MANAGEMENT_POPUP_STOCK_VARIATION
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_POPUP_STOCK_DECLINAISON
+      en-GB : PAGE_MANAGEMENT_ORDER_LIST
+     description :
+      fr-FR : PAGE_ADMINISTRATION_POPUP_STOCK_DECLINAISON
+      en-GB : PAGE_MANAGEMENT_ORDER_LIST
+   -
+     name : PAGE_MANAGEMENT_PRODUCT_FORM
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_PRODUIT_FICHE
+      en-GB : Managing the site
+     description :
+      fr-FR : PAGE_ADMINISTRATION_PRODUIT_FICHE
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_PRODUCT_LIST
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_PRODUIT_LISTE
+      en-GB : PAGE_MANAGEMENT_PRODUCT_LIST
+     description :
+      fr-FR : PAGE_ADMINISTRATION_PRODUIT_LISTE
+      en-GB : PAGE_MANAGEMENT_PRODUCT_LIST
+   -
+     name : PAGE_MANAGEMENT_PRODUCT_REVIEWS
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : News
+     description :
+      fr-FR : Administration du site
+      en-GB : News
+   -
+     name : PAGE_MANAGEMENT_PROMOTION_FORM
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_PROMOTION_FICHE
+      en-GB : Managing the site
+     description :
+      fr-FR : PAGE_ADMINISTRATION_PROMOTION_FICHE
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_PROMOTION_LIST
+     parameters : []
+     title :
+      fr-FR : Administration des promotions
+      en-GB : PAGE_MANAGEMENT_FAMILIES
+     description :
+      fr-FR : Administration des promotions
+      en-GB : PAGE_MANAGEMENT_FAMILIES
+   -
+     name : PAGE_MANAGEMENT_REFERENCES
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+     description :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_SECURITY_HISTORY
+     parameters : []
+     title :
+      fr-FR : PAGE_ADMINISTRATION_HISTORIQUE_SECURITE
+      en-GB : PAGE_MANAGEMENT_SECURITY_HISTORY
+     description :
+      fr-FR : PAGE_ADMINISTRATION_HISTORIQUE_SECURITE
+      en-GB : PAGE_MANAGEMENT_SECURITY_HISTORY
+   -
+     name : PAGE_MANAGEMENT_SERVICES
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+     description :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_SITE_CONFIGURATION
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+     description :
+      fr-FR : Administration du site
+      en-GB : Managing the site
+   -
+     name : PAGE_MANAGEMENT_USERS
+     parameters : []
+     title :
+      fr-FR : Administration du site
+      en-GB : New products
+     description :
+      fr-FR : Administration du site
+      en-GB : New products
+   -
+     name : ProductReview
+     parameters : []
+     title :
+      fr-FR : Avis client
+      en-GB : Managing the site
+     description :
+      fr-FR : Avis client
+      en-GB : Managing the site
+   -
+     name : WebDevMessageBoxSkin
+     parameters : []
+     title :
+      fr-FR : Nom du projet
+      en-GB : product
+     description :
+      fr-FR : Nom du projet
+      en-GB : product
+   -
+     name : admin_rest
+     parameters : []
+     title :
+      en-GB : whoarewe
+     description :
+      en-GB : whoarewe
+   -
+     name : basket
+     parameters : []
+     title :
+      fr-FR : panier
+      en-GB : Managing the site
+     description :
+      fr-FR : panier
+      en-GB : Managing the site
+   -
+     name : basket_mobile
+     parameters : []
+     title :
+      en-GB : payment
+     description :
+      en-GB : payment
+   -
+     name : contact
+     parameters : []
+     title :
+      fr-FR : contact
+      en-GB : Managing the site
+     description :
+      fr-FR : contact
+      en-GB : Managing the site
+   -
+     name : contact
+     parameters : []
+     title :
+      en-GB : contact
+     description :
+      en-GB : contact
+   -
+     name : customer_account
+     parameters : []
+     title :
+      en-GB : customer_account
+     description :
+      en-GB : customer_account
+   -
+     name : customer_account
+     parameters : []
+     title :
+      fr-FR : client_compte
+     description :
+      fr-FR : client_compte
+   -
+     name : customer_address_modif
+     parameters : []
+     title :
+      fr-FR : Modification d'adresse
+      en-GB : Address modification
+     description :
+      fr-FR : Modification d'adresse
+      en-GB : Address modification
+   -
+     name : customer_addresses
+     parameters : []
+     title :
+      fr-FR : adresses
+      en-GB : addresses
+     description :
+      fr-FR : adresses
+      en-GB : addresses
+   -
+     name : customer_getpwd
+     parameters : []
+     title :
+      en-GB : customer_getpwd
+     description :
+      en-GB : customer_getpwd
+   -
+     name : customer_getpwd
+     parameters : []
+     title :
+      fr-FR : client_recuperemdp
+     description :
+      fr-FR : client_recuperemdp
+   -
+     name : customer_information
+     parameters : []
+     title :
+      en-GB : customer_information
+     description :
+      en-GB : customer_information
+   -
+     name : customer_information
+     parameters : []
+     title :
+      fr-FR : client_informations
+     description :
+      fr-FR : client_informations
+   -
+     name : customer_order_see
+     parameters : []
+     title :
+      fr-FR : Visualiser une commande
+      en-GB : View an order
+     description :
+      fr-FR : Visualiser une commande
+      en-GB : View an order
+   -
+     name : customer_orders
+     parameters : []
+     title :
+      en-GB : customer_orders
+     description :
+      en-GB : customer_orders
+   -
+     name : customer_orders
+     parameters : []
+     title :
+      fr-FR : client_commandes
+     description :
+      fr-FR : client_commandes
+   -
+     name : givereview
+     parameters : []
+     title :
+      fr-FR : Donnez votre avis
+      en-GB : Managing the site
+     description :
+      fr-FR : Donnez votre avis
+      en-GB : Managing the site
+   -
+     name : gsc
+     parameters : []
+     title :
+      fr-FR : cgv
+      en-GB : gsc
+     description :
+      fr-FR : cgv
+      en-GB : gsc
+   -
+     name : home_mobile
+     parameters : []
+     title :
+      en-GB : Managing the site
+     description :
+      en-GB : Managing the site
+   -
+     name : home_newproducts
+     parameters : []
+     title :
+      fr-FR : eCommerce
+      en-GB : PAGE_Search
+     description :
+      fr-FR : eCommerce
+      en-GB : PAGE_Search
+   -
+     name : home_products
+     parameters : []
+     title :
+      fr-FR : PAGE_IndexBAK
+      en-GB : PAGE_IndexBAK
+     description :
+      fr-FR : PAGE_IndexBAK
+      en-GB : PAGE_IndexBAK
+   -
+     name : home_sections
+     parameters : []
+     title :
+      fr-FR : eCommerce
+      en-GB : eBusiness
+     description :
+      fr-FR : eCommerce
+      en-GB : eBusiness
+   -
+     name : identification
+     parameters : []
+     title :
+      fr-FR : Identifiez-vous
+      en-GB : payment_addresses
+     description :
+      fr-FR : Identifiez-vous
+      en-GB : payment_addresses
+   -
+     name : identification
+     parameters : []
+     title :
+      fr-FR : Identifiez-vous
+     description :
+      fr-FR : Identifiez-vous
+   -
+     name : index
+     parameters : []
+     title :
+      fr-FR : index
+      en-GB : index
+     description :
+      fr-FR : index
+      en-GB : index
+   -
+     name : legalinformation
+     parameters : []
+     title :
+      fr-FR : informationslegales
+     description :
+      fr-FR : informationslegales
+   -
+     name : legalinformation
+     parameters : []
+     title : {}
+     description : {}
+   -
+     name : newfeatures_mobile
+     parameters : []
+     title :
+      fr-FR : Nouveautés
+      en-GB : PAGE_MANAGEMENT_PROMOTION_FORM
+     description :
+      fr-FR : Nouveautés
+      en-GB : PAGE_MANAGEMENT_PROMOTION_FORM
+   -
+     name : newproducts
+     parameters : []
+     title :
+      fr-FR : nouveautes
+      en-GB : newproducts
+     description :
+      fr-FR : nouveautes
+      en-GB : newproducts
+   -
+     name : newproducts
+     parameters : []
+     title : {}
+     description : {}
+   -
+     name : news
+     parameters : []
+     title :
+      fr-FR : actualites
+      en-GB : promotions
+     description :
+      fr-FR : actualites
+      en-GB : promotions
+   -
+     name : news
+     parameters : []
+     title : {}
+     description : {}
+   -
+     name : news_mobile
+     parameters : []
+     title :
+      fr-FR : Actualités
+     description :
+      fr-FR : Actualités
+   -
+     name : opinion_product_mobile
+     parameters : []
+     title : {}
+     description : {}
+   -
+     name : page_error
+     parameters : []
+     title :
+      fr-FR : page_erreur
+      en-GB : page_error
+     description :
+      fr-FR : page_erreur
+      en-GB : page_error
+   -
+     name : page_return_payment_ebusiness
+     parameters : []
+     title :
+      fr-FR : page_retour_paiement_ecommerce
+     description :
+      fr-FR : page_retour_paiement_ecommerce
+   -
+     name : page_return_payment_server_ebusiness
+     parameters : []
+     title :
+      fr-FR : page_retour_paiement_serveur_ecommerce
+      en-GB : Managing the site
+     description :
+      fr-FR : page_retour_paiement_serveur_ecommerce
+      en-GB : Managing the site
+   -
+     name : payment
+     parameters : []
+     title :
+      fr-FR : paiement
+     description :
+      fr-FR : paiement
+   -
+     name : payment_addresses
+     parameters : []
+     title :
+      fr-FR : paiement_adresses
+      en-GB : Identify yourself
+     description :
+      fr-FR : paiement_adresses
+      en-GB : Identify yourself
+   -
+     name : payment_addresses
+     parameters : []
+     title :
+      en-GB : Identify yourself
+     description :
+      en-GB : Identify yourself
+   -
+     name : payment_confirmation_paypal
+     parameters : []
+     title :
+      fr-FR : Confirmation d'une commande via PayPal
+      en-GB : Confirmation of an order via PayPal
+     description :
+      fr-FR : Confirmation d'une commande via PayPal
+      en-GB : Confirmation of an order via PayPal
+   -
+     name : product
+     parameters : []
+     title :
+      fr-FR : produit
+     description :
+      fr-FR : produit
+   -
+     name : product
+     parameters : []
+     title :
+      en-GB : Project name
+     description :
+      en-GB : Project name
+   -
+     name : produit_mobile
+     parameters : []
+     title :
+      en-GB : legalinformation
+     description :
+      en-GB : legalinformation
+   -
+     name : promotions
+     parameters : []
+     title :
+      fr-FR : promotions
+      en-GB : news
+     description :
+      fr-FR : promotions
+      en-GB : news
+   -
+     name : promotions
+     parameters : []
+     title : {}
+     description : {}
+   -
+     name : promotions_mobile
+     parameters : []
+     title :
+      en-GB : PAGE_MANAGEMENT_CUSTOMERS_QUESTIONS
+     description :
+      en-GB : PAGE_MANAGEMENT_CUSTOMERS_QUESTIONS
+   -
+     name : references
+     parameters : []
+     title :
+      fr-FR : references
+      en-GB : references
+     description :
+      fr-FR : references
+      en-GB : references
+   -
+     name : references
+     parameters : []
+     title : {}
+     description : {}
+   -
+     name : search
+     parameters : []
+     title :
+      fr-FR : PAGE_Recherche
+      en-GB : eBusiness
+     description :
+      fr-FR : PAGE_Recherche
+      en-GB : eBusiness
+   -
+     name : search_mobile
+     parameters : []
+     title :
+      en-GB : page_return_payment_ebusiness
+     description :
+      en-GB : page_return_payment_ebusiness
+   -
+     name : services
+     parameters : []
+     title :
+      fr-FR : services
+      en-GB : services
+     description :
+      fr-FR : services
+      en-GB : services
+   -
+     name : services
+     parameters : []
+     title : {}
+     description : {}
+   -
+     name : whoarewe
+     parameters : []
+     title :
+      fr-FR : quisommesnous
+     description :
+      fr-FR : quisommesnous
+   -
+     name : whoarewe
+     parameters : []
+     title : {}
+     description : {}
+ url_rewriting :
+  internal_properties : CAAAAAgAAADkPzcUdUUS7wCiun+MCjqYH70RJdzkSv/nRvXZ3ENdikMa6bcHtsAH
+ code_elements :
+  internal_properties : CAAAAAgAAABseimUYz4VdXZ8hGsGFqoxLDfDcHkNZdBf0iQg2FQcqmw5VrO2lryVMt3efm9RagPlXJBReauIsX3ZdB8=
+  type_code : 0
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAAD6UXnHuykkWU+JVa5fWRuKyk/JV8gKY1EvSE5zGhCCfAnPGNQJILmfa0AtTDCZHRV6M7to5+V+q8fCkGRoOT8HL6l34fNvyf9LxTXrUh1Ot1lhtK8EqXr+1GVtuMfSiiPwQObyX3Vhgw2jtfrpzg==
+     code : |1-
+      // If this example is deployed on a Windows server, a Web IIS server version 5.1 or later is required
+      // The identification is performed by a cookie with redirection if the page is addressed directly without the cookie
+      // This operating mode is supported from IIS 5.1
+      
+      gnConnectedCustomerID is int // Identifier of the customer currently connected
+      gStackAccessNextPages is Stack of strings
+      
+      
+      CONSTANT
+      	csFilePWD		= "eBusiness"		// Password for the data files: don't forget to change this password
+      END
+      
+      InitializeConfiguration()
+      
+      <COMPILe IF ConfigurationType=Webservice>
+      	IF InWebserviceMode() = True THEN
+      		DeclareWebserviceContext(pSiteParameters.gnUserRights,...
+      		pSiteParameters.gsNameCurrentUser,...
+      		pSiteParameters.gsTextSiteError)
+      		
+      	END
+      	
+      	// Create the files
+      	HCreationIfNotFound("*",csFilePWD)						
+      	
+      <ELSE>
+      	IF InWebserviceMode() = False THEN
+      		// Create the files
+      		HCreationIfNotFound("*",csFilePWD)
+      		
+      		// Check the connection
+      		// Used to update the identifier of the client
+      		bIsConnected()
+      		
+      		// Specifies the parameters of the data files
+      		// For the secured payment
+      		DataParameters (fDataDir()+"\payment","column")
+      		
+      		
+      		// For the AWP section only (front office)
+      		IF InAWPMode() THEN
+      			
+      			// Declare an AWP context
+      			ConfigureAWPContext(ctxDisk, ctxIDCookieURL)
+      			
+      			// Initialize the management of ebusiness
+      			COL_EBusiness.InitializeEBusiness()
+      			
+      		END
+      	END	
+      	
+      	DeclareAWPContext(gStackAccessNextPages)	
+      	
+      <END>
+      
+      
+      
+      CASE EXCEPTION:	
+      	AddError("Exception detected",ExceptionInfo(errFullDetails))	
+     type : 196608
+   -
+     code : |1-
+      
+     type : 196610
+   -
+     type : 196621
+   -
+     type : 196627
+     enabled : false
+  orphans :
+   -
+     name : eBusiness
+     identifier : 0x4ee24ab800a2a695
+     code_elements :
+      type_code : 159
+      p_codes : []
+   -
+     name : Webservice
+     identifier : 0x4eb17fe102b1a8c6
+     code_elements :
+      type_code : 159
+      p_codes : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : BijouxEnLigne
+rad :
+ internal_properties : CAAAAAgAAABhIL0UXeZmxDJxY3Xy0Q==
+project_explorer :
+ explorer_type : project
+ children :
+  -
+    explorer_type : pages
+    children :
+     -
+       name : Management
+       explorer_type : custom_folder
+       children :
+        -
+          name : PAGE_MANAGEMENT_NEWS_FORM
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_NEWS_LIST
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_CUSTOMER_LIST
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_ORDER_LIST
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_SITE_CONFIGURATION
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_END_OF_CONNECTION
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_FORM_ORDER
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_CONTACT_FORM
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_IDENTIFICATION
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_LEGAL_INFO
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_NEWPRODUCT_FORM
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_NEWPRODUCT_LIST
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_PRODUCT_FORM
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_PRODUCT_LIST
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_PROMOTION_FORM
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_PROMOTION_LIST
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_COMPANY
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_USERS
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_CHARACTERISTICS
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_FAMILIES
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_SERVICES
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_REFERENCES
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_SECURITY_HISTORY
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_MAINTENANCE
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_CUSTOMIZATION_ORDER
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_POPUP_PRODUCT_CHOICE
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_PRODUCT_REVIEWS
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_PAYMENT_CC_PAYBOX
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_PAYMENT_CC_PAYPAL
+          explorer_type : element
+          type : 65538
+        -
+          name : admin_rest
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_CUSTOMERS_QUESTIONS
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_POPUP_PRODUCT_STOCK
+          explorer_type : element
+          type : 65538
+        -
+          name : PAGE_MANAGEMENT_POPUP_STOCK_VARIATION
+          explorer_type : element
+          type : 65538
+     -
+       name : Mobile
+       explorer_type : custom_folder
+       children :
+        -
+          name : home_mobile
+          explorer_type : element
+          type : 65538
+        -
+          name : search_mobile
+          explorer_type : element
+          type : 65538
+        -
+          name : produit_mobile
+          explorer_type : element
+          type : 65538
+        -
+          name : opinion_product_mobile
+          explorer_type : element
+          type : 65538
+        -
+          name : newfeatures_mobile
+          explorer_type : element
+          type : 65538
+        -
+          name : promotions_mobile
+          explorer_type : element
+          type : 65538
+        -
+          name : basket_mobile
+          explorer_type : element
+          type : 65538
+        -
+          name : news_mobile
+          explorer_type : element
+          type : 65538
+  -
+    explorer_type : procedures
+    children :
+     -
+       name : BackOffice
+       explorer_type : custom_folder
+       children :
+        -
+          name : COL_News
+          explorer_type : element
+          type : 7
+        -
+          name : COL_Address
+          explorer_type : element
+          type : 7
+        -
+          name : COL_ArchiveAddress
+          explorer_type : element
+          type : 7
+        -
+          name : COL_Characteristic
+          explorer_type : element
+          type : 7
+        -
+          name : COL_Customer
+          explorer_type : element
+          type : 7
+        -
+          name : COL_Order
+          explorer_type : element
+          type : 7
+        -
+          name : COL_SITE_CONFIGURATION
+          explorer_type : element
+          type : 7
+        -
+          name : COL_ProductVariation
+          explorer_type : element
+          type : 7
+        -
+          name : COL_ProductVariation_CharacteristicValue
+          explorer_type : element
+          type : 7
+        -
+          name : COL_Family
+          explorer_type : element
+          type : 7
+        -
+          name : COL_OrdLine
+          explorer_type : element
+          type : 7
+        -
+          name : COL_NewProduct
+          explorer_type : element
+          type : 7
+        -
+          name : COL_ProductPhoto
+          explorer_type : element
+          type : 7
+        -
+          name : COL_Product
+          explorer_type : element
+          type : 7
+        -
+          name : COL_Promotion
+          explorer_type : element
+          type : 7
+        -
+          name : COL_TaxRate
+          explorer_type : element
+          type : 7
+        -
+          name : COL_CharacteristicValue
+          explorer_type : element
+          type : 7
+        -
+          name : pBackOffice
+          explorer_type : element
+          type : 7
+  -
+    name : SecurePayment
+    explorer_type : custom_folder
+    children :
+     -
+       name : IPAGE_Payback
+       explorer_type : element
+       type : 65542
+     -
+       name : SecurePayment
+       explorer_type : element
+       type : 4
+     -
+       name : pSecurePayment
+       explorer_type : element
+       type : 7
+resources :
+ string_res :
+  identifier : 0x0
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAAAd98VSJfHHqE3P0QHwrwdhn7ig8dWBR6valpUTgnAMTVXiDg==

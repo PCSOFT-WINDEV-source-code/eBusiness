@@ -1,0 +1,270 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : pBackOffice
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x1eb12ec51101d4de
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAABMV3yVKfCiyrSbglujeckRsFJvuaE98S1tV3YXL2EA3tAp+QqsHb+zb5CTuBrM6pYUCjNaN1Wv+Zcknr/5+Ixrfo9sPk9HT/qq0Sce5N9jiAF7KCdYizGqjwlv40pUabnXu6oCHI9tbnPxC8+T0HaLK5a7v0s=
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAADDEI85duz0oxIsoUc13hgkRXV/YUZxkFXe+YxlgBN5ahM7iWJW2n+utzYbrNsirp88lXiyS1+ruPR9zaF9kR+YQrJSz3D+kg958ZFKM0iASn99T/ZHwrPK9yt2afc/1Z9SkZlSt9offIFtKTPLaEMB80rH3c78zacDh6600SSw3wGiE/HMGX3W+rGNXKc8deEDgkXYp68dEDhFjveKwig=
+     code : |1+
+      
+      CONSTANT
+      	cnRightsNotConnected		= 0
+      	cnAdministratorRights		= 1
+      	cnSuperUserRights	= 2
+      END
+      
+      // Information for the dialog with the REST management page
+      PRIVATE
+      	CONSTANT
+      		CN_ADMIN_REST_OPE_PRODUCT_GENERATION 	= "img_prod_generation"		
+      		CN_ADMIN_REST_OPE_PROMOTION_GENERATION 	= "img_promo_generation"
+      		CN_ADMIN_REST_OPE_FAMILY_GENERATION 	= "img_family_generation"
+      		CN_ADMIN_REST_PARAM_IDOPERATION 		= "idope"
+      		CN_ADMIN_REST_PARAM_PRODUCTID 			= "prodid"
+      		CN_ADMIN_REST_PARAM_PROMOTIONID			= "promotionid"
+      		CN_ADMIN_REST_PARAM_FAMILYID			= "familyid"
+      		CS_ADMIN_REST_PAGENAME					= "admin_rest.awp"
+      	END	
+     type : 720896
+  procedures :
+   -
+     name : ConnectionBackOffice
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 2211684540055687309
+     type_code : 15
+     code : |1-
+      // Summary: Used to connect to the BackOffice
+      // Syntax:
+      //[ <Result> = ] BackOfficeConnection (<sUserName> is string, <sPassword> is string)
+      //
+      // Parameters:
+      //	sUserName (string): User name
+      //	sPassword (string): Password
+      // Return value:
+      // 	boolean: True if the user is connected, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure PUBLIC ConnectionBackOffice(sUserName is string, sPassword is string)
+      
+      // Not connected by default
+      pSiteParameters.gsNameCurrentUser = ""
+      pSiteParameters.gnUserRights = cnRightsNotConnected
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Write into the history
+      NotifyInformation(StringBuild("Attempt to connect with the user: '%1'",sUserName))
+      
+      <COMPILE IF Configuration="eBusiness">
+      	// Load the list of authorized IP addresses if we are in site
+      	IF InTestMode() = False THEN
+      		sListIP is string = GetSiteParameter(csAdmin_Login_ListIP)
+      		IF sListIP <> "" THEN
+      			// Check the current IP address
+      			IF Position(BrowserIPAddress(False),sListIP)<=0 _AND_  Position(BrowserIPAddress(True),sListIP)<=0 THEN
+      				AddError("Attempt to connect with a non-authorized IP address","",False)
+      				RESULT False
+      			END
+      		END
+      	END
+      <END>
+      
+      // Administrator?
+      IF GetSiteParameter(csAdmin_Administrator_Login,csAdmin_Default_Login) ~= sUserName THEN
+      	IF GetSiteParameter(csAdmin_Administrator_PWD,csAdmin_Default_Login) ~= sPassword THEN		
+      		// Connected as Administrator
+      		pSiteParameters.gsNameCurrentUser = sUserName	
+      		pSiteParameters.gnUserRights = cnAdministratorRights
+      		
+      		// Write into the history
+      		NotifyInformation(StringBuild("Connection established for the user '%1' as administrator",sUserName))
+      		
+      		// Notification in case of connection
+      		IF ReadNotificationIfConnectionEnabled() = True THEN
+      			SendMessageToWebmaster("New connection to the BackOffice",...
+      					StringBuild("A new connection was established by %1 on %2 at %3  as administrator"	,...
+      						sUserName,DateToString(DateSys(), maskSystemDate),TimeToString(TimeSys(),maskSystemTime)))
+      		END
+      		RESULT True
+      	END
+      END
+      
+      // Super-User
+      IF GetSiteParameter(csAdmin_User_Login,csAdmin_Default_Login) ~= sUserName THEN
+      	IF GetSiteParameter(csAdmin_User_PWD,csAdmin_Default_Login) ~= sPassword THEN
+      		// Connected as super-user
+      		pSiteParameters.gsNameCurrentUser = sUserName	
+      		pSiteParameters.gnUserRights = cnSuperUserRights
+      		
+      		// Write into the history
+      		NotifyInformation(StringBuild("Connection established for the user '%1' as user",sUserName))
+      		
+      		// Notification in case of connection
+      		IF ReadNotificationIfConnectionEnabled() = True THEN
+      			SendMessageToWebmaster("New connection to the BackOffice",...
+      			StringBuild("A new connection was established by %1 on %2 at %3  as user"	,...
+      			sUserName,DateToString(DateSys(), maskSystemDate),TimeToString(TimeSys(),maskSystemTime)))
+      		END
+      		
+      		
+      		RESULT True
+      	END
+      END
+      
+      // Write into the history
+      NotifyInformation(StringBuild("Connection not established for the user '%1'",sUserName))
+      
+      // By default, the user is not connected
+      RESULT False
+      
+      CASE EXCEPTION:	
+      	AddError("Exception detected in BackOfficeConnection",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : bIsConnectedWSBackOffice
+     internal_properties : CAAAAAgAAADsF4ju7Ri0+QKin62CTkNqz/yMZOKL/SZdCDCl1UA2DoST8YQBUnD9YNg6uI4WtY4s3Ly1No41k5gU7a4kJEz9t0i6oiwKr2rGnuoIKvsUR9QpB6+bvIGeagdinJFyzPGBYPd9wjcjXK5pRAMCPq/S61nt5L5pTWaDCNejAC+dkHxWgPSNPGNOOlcp/zJ6A9+BNsG8V3w=
+     procedure_id : 2211684647429959409
+     type_code : 15
+     code : |1-
+      // Summary: Is the user connected to the WebService of BackOffice
+      // Syntax:
+      //[ <Result> = ] bIsConnectedWSBackOffice ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the user is connected, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure RESTRICTED bIsConnectedWSBackOffice()
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // In AWP mode, ability to access the data
+      IF InAWPMode() = True THEN
+      	RESULT True
+      END
+      
+      // In WebService mode
+      IF InWebserviceMode() THEN
+      
+      	// You must be administrator
+      	IF pSiteParameters.gnUserRights IN (cnAdministratorRights) THEN
+      		RESULT True
+      	ELSE
+      		RESULT False
+      	END
+      	
+      ELSE // In dynamic site mode (management section)
+      	
+      	// You must have the management rights or the super-user rights
+      	IF pSiteParameters.gnUserRights IN (cnAdministratorRights, cnSuperUserRights) THEN
+      		RESULT True
+      	ELSE
+      		RESULT False
+      	END
+      	
+      END
+      
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected in IsConnectedWSBackOffice",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : bIsConnectedAsAdmin
+     procedure_id : 2211697356660643923
+     type_code : 15
+     code : |1-
+      // Summary: Is the user identified as administrator
+      // Syntax:
+      //[ <Result> = ] bIsConnectedAsAdmin ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the user is identified as administrator, False otherwise
+      //
+      
+      Procedure RESTRICTED bIsConnectedAsAdmin()
+      
+      // Check the rights
+      IF pSiteParameters.gnUserRights IN (cnAdministratorRights) THEN
+      	RESULT True
+      ELSE
+      	RESULT False
+      END
+     type : 458752
+   -
+     name : bIsConnectedAsSuperUser
+     procedure_id : 2211697532765812372
+     type_code : 15
+     code : |1-
+      // Summary: Is the user identified as super-user?
+      // Syntax:
+      //[ <Result> = ] bIsConnectedAsSuperUser ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the user is identified as super-user, False otherwise
+      //
+      
+      Procedure RESTRICTED bIsConnectedAsSuperUser()
+      
+      
+      // Check the rights
+      IF pSiteParameters.gnUserRights IN (cnAdministratorRights, cnSuperUserRights) THEN
+      	RESULT True
+      ELSE
+      	RESULT False
+      END
+     type : 458752
+   -
+     name : sErrorInfoBackOffice
+     procedure_id : 2214623080189676259
+     type_code : 15
+     code : |1-
+      // Summary: Returns the error if there was one (empty string in this case)
+      // Syntax:
+      //[ <Result> = ] sErrorInfoBackOffice ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	string: Text of the error
+      //
+      
+      PROCEDURE sErrorInfoBackOffice()
+      
+      RESULT pSiteParameters.sReturnError()
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_SansNom1
+resources :
+ string_res :
+  identifier : 0x1fa19c5a01e3528e
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

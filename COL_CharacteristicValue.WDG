@@ -1,0 +1,39 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_CharacteristicValue
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c8c8ee4b793
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAABPOo5wfzL5PtlmH9g6pVlcqG1md+uM4GM8B/k/aVja5R6ZseBzxTGWZbo12UeE8bWym5Rl91AKrNq9wTYnFyamg2lAMw==
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACko1DOYSGWiEfmi47+g0xrryBFucjRJOZNM28b4cO+S1M4MC2h4adn0pITUUH+X+gT4JsjJwu3rpWi0Nt9BiXJMn3gzThsJTpDY5C2E6bDK8jnmlOjc+813c/t3AK14IdkK2kd7CvOV5R9lQ==
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the CharacteristicValue file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_CharacteristicValue is Structure
+      		CharacteristicValueID is int 
+      		Value 					is string//Color
+      		Color 				is string
+      		CharacteristicID 		is int 
+      END
+       
+       
+     type : 720896
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_ValeurCaractéristique
+resources :
+ string_res :
+  identifier : 0x1fa19c5a025a530b
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

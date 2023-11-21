@@ -1,0 +1,263 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_Customer
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c868d5e9f32
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAAD8LenGHegytYX2/ereVThXdjaoVnPK4hWY397RysER4S0ELJXJSNqdffTMA8uLVG5PZIRI82MBeXBhyijXPFWzIFMYOvuQ
+  type_code : 31
+  p_codes :
+   -
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the Customer file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_Customer is Structure
+      		CustomerID 			is int //Identifier of Customer
+      		Password 			is string//Password
+      		Title 			is 1-byte unsigned int //Title
+      		LastName 				is string//Name
+      		FirstName 				is string//First name
+      		Email 				is string//Email
+      		Phone 			is string//Phone
+      		Answer 			is string//Answer
+      		CreationDate 		is date //Creation date
+      		QuestionID 			is int //QuestionID
+      		DisplayName		is string
+      END
+       
+       PUBLIC
+       	garrCustomers is array of STCOL_Customer
+       
+     type : 720896
+  procedures :
+   -
+     name : CustomerList
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730106379870002
+     type_code : 15
+     code : |1-
+      // Summary: Lists the customers
+      // Syntax:
+      //[<Result> = ] ListCustomers (<nCustomerID> is int, <sCustomerName> is string, <sCustomerEmail> is string)
+      //
+      // Parameters:
+      //	nCustomerID (integer): Identifier of the customer (-1 to ignore)
+      //	sCustomerName (string): Name of the customer to find (empty string to ignore)
+      //	sCustomerEmail (string): Email of the customer to find (empty string to ignore)
+      // Return value:
+      // 	array: Array of STCOL_Customer
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure CustomerList(nCustomerID is int, sCustomerName is string, sCustomerEmail is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT garrCustomers
+      END
+      
+      // Have the customers been initialized?
+      IF garrCustomers..Occurrence = 0 THEN
+      	// Initialize the content
+      	RefreshCustomers(nCustomerID,sCustomerName,sCustomerEmail)
+      END
+      
+      // Return the list of customers
+      RESULT garrCustomers
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT garrCustomers
+     type : 458752
+   -
+     name : RefreshCustomers
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730106379935538
+     type_code : 15
+     code : |1-
+      // Summary: Refreshes the list of customers
+      // Syntax:
+      //[<Result> = ] RefreshCustomers (<nCustomerID> is int, <sCustomerName> is string, <sCustomerEmail> is string)
+      //
+      // Parameters:
+      //	nCustomerID (integer): Identifier of the customer (-1 to ignore)
+      //	sCustomerName (string): Name of the customer to find (empty string to ignore)
+      //	sCustomerEmail (string): Email of the customer to find (empty string to ignore)
+      // Return value:
+      // 	boolean: True if the data is updated, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure RefreshCustomers( nCustomerID is int, sCustomerName is string, sCustomerEmail is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Initializing the query: by default, all the criteria are ignored
+      QRY_SEARCH_CUSTOMER.pCustomerEmail 	= Null
+      QRY_SEARCH_CUSTOMER.pCustomerName		= Null
+      QRY_SEARCH_CUSTOMER.pCustomerID		= Null
+      
+      // Do we have to use parameters
+      IF nCustomerID >0 THEN QRY_SEARCH_CUSTOMER.pCustomerID = nCustomerID
+      IF sCustomerName <>"" THEN QRY_SEARCH_CUSTOMER.pCustomerName = sCustomerName
+      IF sCustomerEmail <>"" THEN QRY_SEARCH_CUSTOMER.pCustomerEmail = sCustomerEmail
+      
+      // Run the query
+      IF HExecuteQuery(QRY_SEARCH_CUSTOMER) = False THEN
+      	AddError("Unable to run the search query")
+      	RESULT False
+      END
+      
+      // Fill the array
+      FileToArray(garrCustomers,QRY_SEARCH_CUSTOMER)
+      
+      RESULT True
+      
+      CASE EXCEPTION:	
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : bHasAnOrderInProcess
+     internal_properties : CAAAAAgAAADdaU1xHuwlGyVd7DwodtkdZZjj8D3nV8M0hOyDTCPtnq49ef7Yxie67bnk+xpBiYk7PyMvEh+HgYg6ojk1Ckv3CW49PZvgcfWn4dYAB7Df7W7SBCNSfE6sZSYQb9J+v43TgMOcEDLSqAZiRF/GzbJ8wOrtyPy0Z4ZuwB3CIH2VoKiheWOJv5/AGFgsot7Cjk3+57RILCPhMycgM7ttXr68wSQqGW4pqwvF9QvHMvdcDxjoLgJwFVgaMKl53JTt0HbEP3cRwDm8s8pYz7e5BMn4kvLXAPevywSpWSlEXOeBCX5+n0a+pCjFr433dpFGs17WUrt7UbnueWmCovs5/6WnGofv5Pf1oBuEih/Wc6Z6iVTsqsnKiu8iMjz+Tro=
+     procedure_id : 1416730106380001074
+     type_code : 15
+     code : |1-
+      // Summary: Indicates whether a customer has unprocessed orders (neither received, nor canceled)
+      // Syntax:
+      //[ <Result> = ] bHasAnOrderInProcess (<nCustomerID> is int)
+      //
+      // Parameters:
+      //	nCustomerID (integer): Identifier of the customer
+      // Return value:
+      // 	boolean: True if at least one order is waiting to be processed
+      //
+      // Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure bHasAnOrderInProcess(nCustomerID is int)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // For all the orders of this customer
+      FOR EACH Orders WHERE CustomerID = nCustomerID
+      	// If the order is currently processed
+      	IF Orders.OrderStatus IN (ORD_WAITINGFORPAYMENT, ORD_DELIVERY, ORD_PREPARATION, ORD_PAID_CC_NOTCHECKED, ORD_PAID_CC_CHECKED, ORD_PAID_CC_SUSPECT) THEN
+      		// At least one is found, return True
+      		RESULT True
+      	END
+      	
+      END
+      // No order is currently processed
+      RESULT False
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : DeleteCustomer
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730106380066610
+     type_code : 15
+     code : |1-
+      // Summary: Deletes a customer if he has no pending orders
+      // Syntax:
+      //[ <Result> = ] DeleteCustomer (<nCustomerID> is int)
+      //
+      // Parameters:
+      //	nCustomerID (integer): Identifier of the customer
+      // Return value:
+      // 	boolean: True if the deletion was performed, False otherwise
+      //
+      // Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure DeleteCustomer(LOCAL nCustomerID is int)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // The customer cannot be deleted if he has pending orders
+      IF bHasAnOrderInProcess(nCustomerID) THEN
+      	AddError(<§@1eb15acf0550ddf60000§>)
+      	RESULT False
+      END
+      
+      // Read the customer
+      HReadSeekFirst(Customer,CustomerID,nCustomerID) 
+      IF HFound(Customer) = False THEN
+      	AddError(<§@1eb15acf0550ddf60001§>)
+      	RESULT False
+      END
+      
+      // Delete the customer
+      IF HDelete(Customer) = False THEN
+      	AddError(<§@1eb15acf0550ddf60002§>)
+      	RESULT False
+      END
+      
+      // The deletion is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Client
+resources :
+ string_res :
+  identifier : 0x1eb15acf0550ddf6
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      en-GB : This customer has pending orders and he cannot be deleted
+     index : 0
+   -
+     text :
+      en-GB : Unable to find the customer in the database
+     index : 1
+   -
+     text :
+      en-GB : Unable to delete the customer
+     index : 2
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

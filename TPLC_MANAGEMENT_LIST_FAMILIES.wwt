@@ -1,0 +1,207 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : TPLC_MANAGEMENT_LIST_FAMILIES
+ major_version : 28
+ minor_version : 0
+ type : 65543
+ description : List of categories/families
+ subtype : 0
+page :
+ name : TPLC_MANAGEMENT_LIST_FAMILIES
+ identifier : 0x23a93c96dd69de25
+ internal_properties : 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
+ properties :
+  width : 295
+  height : 306
+ controls :
+  -
+    name : TPLC_MANAGEMENT_LIST_FAMILIES
+    identifier : 0x23a93c96dd6ade25
+    internal_properties : CAAAAAgAAAAyJRQB38CoYLLsMC3cslKYEMFtFp+LxAdpexohtck3VKi592VJm+ybwCDP93HHELSWG1rZd9wm+PLFSEK6Vm+wP2TV3a44G2fILcJJFE/LiYE24GxjgFM8QVlaEe7BL1qdxLyX3sDzhGhHYtPt1DQNiCZc5DE/78Gkg1QYvabuwU2hqm2o28GwQ0ICLH3qdjZKxYLiv0MCZHfg6jDQLe0UtJEQRJH+cA9C3P8CGqUcnZRP9Sm0/nl/+rOG7N835gsKG+gvj3La0W2Rqt4EvB8giQYoZR1AoxX9XsXyRD6e5n2XLalBPFUc+JJR6+pbhHZb9vmXZmV4+G8GT+FUzQ4LvDSVECzozHfM40KwLs5/p5h3AYoYzBpDcv1Xv11l11+70DEVrNtO2lqcosNvnFh1+sKt9NklTzNqEE5wiJuxRNOGhG2gMQyj30cIcZj1/SqRXl17LVDhGGR3vOFiUlAw3tRYukYgVCYkpy+zrE3tKaztUdbG+qdWr+4IEIoBugsliLWxUVf0qjdKUbpS6uuCtG48vhjNQVf/TwlXIr5c+a9zqts+5X3OOW30oqn8huIjRkWZWj3dkQIfbVrnBRdodgW44lXiUMSS1YHIymHCdYl+LLlff1YdxnyHQhmAYq2N4giOhA9B6wYv3B2p14DXRXs9BdaTEP43LWRVu/n2eSEN0hAqMU636CyLLatXyXCkvNu82Os/jAosbYDZASeKZIXAJNvxTHKtTabi7srD1gyOKv6QBbexuNMLbmJiazTAfPc0orWl6OXs1vwlR1qrHSwnQ9d3ScdqtMumWGAE8deHyU1iU9goEw1N1Jp7H0VDmLk58pufBHV4HD+vRCq7UeTpoZU=
+    properties :
+     width : 980
+     height : 303
+    controls :
+     -
+       name : TREE_Families
+       identifier : 0x23a93c96dd6bde25
+       internal_properties : CAAAAAgAAABm1ihF/OfTQc1BW8mFwxjyKY378a116O9jhaNiYLroXqx6TvwuJjSZWhIcux6QwXT2gZAtRxmk1UkwMS8XwyMKrqXqCdyGbyN4Ffdsiab5OGGxyWyc9JLjZk/s0auFUif6QTtRv+ZjK6bwj65i9Mo0kf5MTAve7y8K9MhcE40NzD6XbeAgwXC+BGUxvCeTuPrbbb3AaLSingoLDcP0UbUTgFOyB/zOoMwalBAQr384n7eyws+vBw/RR0LoaJazf8aUp+sXdTkIijWqB/DtiyW2LMgq2KjdOl3Zas1GyqiKafOWvwIoCSFhoEEJlfjCejnZ3UnK3edYPCOa1vi00nTwtEoAjTKx9MhMcWU9jmmWasXRTZKOsT9r+9uJp1I06KWPV3Offg+/z0ROt4xY8WrHOgen9bzIEhSBN3TrW+Fipjsc32wTY6TKADFe6XoUcNDBzSYjDFX3vv21uyGX2LeVTblNHGJxiBnaYgaPf+LAMzZQqCJFpifWqEuypl+i2YcpC/oIBthDuJ97NhT0fa+Td7fF8awjcqXCkv7BIPg30DUUk/mmp3bSdaDC0eEOlNHVlteU7bHUo9fHHUhyEd/rVlLyeJ4Es32ObbsUZn8KrA4bNZEkmX1sVl1jRCnzp/Em81sjWLTyCwXS5nKHIQN17jzUjKPzl+WgZm7iaS9DRpGOr4L3M5EQ0jomBQW1nCDHWlUa9Q5fHutyUsBYHsfP1qLivY9vMovkBM2ZsGwvAkpZbSHBB2AodkdZajdqvA9dMAT/gFqQDtbnev00QPJedf1ZHlKMY97UUnkuEQNJdGuMajb2APwbNfhi4eb+Nq3RJEZlRXh55TvfPlqOZt75wETPJsjhrm2iawB7hh5US56D63vnUWChwCJuXOS8gEtONd79kcB8Ratu0a1kwZERvrz/jRItaEuoZ97BQR2ZMSQK066G96Wn4whTzTdfm02noOTjwX+bTele1TTDq9n9yDYMfPW1rIWSUJnTLHYUHCqGQs3L/fzwXhEOfY2UFLAI4mdTngBMOlQQAuS0VGZYeHb+8Xo5nCGLFxxK9ChiZaHN3gkzJ7raPZJvs3ocaBGq70Ux3A0MQw3e3HJvKWRD2tGZR3k47ZV3Ann3M14SBz4RVpa+g4wzw1oWgEGmhkQs7zf7MR0skhvn53gDP1tjDllJEEnbRDgQhEIuN4pvlPKTo+Xz//7gCjk+SCbbh8MHdmH8Qe8uoQxf5nR1voK7SH/DNqqN0naLv1V8zOXoFJopCEmitiCkMfEQnLsw3+n1J/2Ya1yPuo7pwshin4UPE0Bap5C9QaLAmbggnhsI5pVqUNFdjHfP3CrlxSUJJkrzYURt3FeGK1zgCxstLIvpS5O21l9KX/SyPsRswXTZRGH765/HJTj/LXQJAmFvc0ZQHuUflvYRb2800CmexkODNRT5T3gpbF8gggQUtPlLyjOpJdgr/ttqRQK2zS4U4wuRF45qx7j5rhG9+TaA1N1RPMQ13I8mjLnh6YoIKFQn2vHwkAU2/o7Yfth7tLeIvY+maVR1SjBdNrN+jzU2DAEVh7lgs05rwOLiJErlt19KVidPMhWadAdsQlo6BrfWlgAFwklEsKlI03zGLcp4OVgmwgDZWmJzZenZ05lmQ+mMuKlfzgJ5UI7ZXMgQk7wRNsy6umetcji4A7hlviTchUoaIliiqwJSpJDFPcSNBunSisHoyEaE6gRT3ZhAo/FwvS6f3a6VjkXnr1qJwwrfy7D2ganukBOKRJXLO4F4LymFbuE=
+       properties :
+        width : 289
+        height : 301
+       type : 25
+       code_elements :
+        type_code : 25
+        alias : C1
+        p_codes :
+         -
+           code : |1-
+            
+           type : 851980
+         -
+           code : |1-
+            
+           type : 851998
+           role : N
+         -
+           internal_properties : CAAAAAgAAAAbUbshpY0HFzos9eSOQ+XeCZmtxqZZrG58A2HCnw5radoA0NvwIG8c33rVAcgxg9E1QmhcsxB7/93kRXEgQTEJFUPsUicTM1WvUVuYWp/z55gkDTzi/Q==
+           code : |1-
+            
+           type : 851984
+         -
+           type : 852149
+           role : N
+    type : 42
+    code_elements :
+     type_code : 92
+     alias : C2
+     p_codes :
+      -
+        code : |1-
+         
+        type : 851968
+      -
+        type : 852298
+        role : N
+      -
+        type : 851999
+        role : N
+      -
+        type : 852227
+        enabled : false
+      -
+        type : 1310979
+        enabled : false
+      -
+        type : 852228
+        role : N
+        enabled : false
+ type : 1
+ languages :
+  - en-GB
+ code_elements :
+  internal_properties : CAAAAAgAAAAbtNmSqtsOkx+QsZf2+WanOeFBVnc5uYmf5qmuvsRGWGuytMQn3hxD44bzPpedRjj3oPOr98XPV19NTS+YHw==
+  type_code : 91
+  p_codes :
+   -
+     type : 852298
+     role : N
+   -
+     type : 851999
+     role : N
+   -
+     type : 852000
+     role : N
+   -
+     internal_properties : CAAAAAgAAAC8gmh+MC4QrU0utgNBfl0Ba/jqg1LK+Dwp8MhpUhqrFXKYnYkcdsFAaHOY6ObpQ/xfKfSxjrQterWfXIxYE+XU8eTa3dgHHYih6pD5FI+viG7ChbqMzBs=
+     type : 852167
+   -
+     type : 852169
+     role : N
+   -
+     type : 852225
+     role : N
+   -
+     internal_properties : CAAAAAgAAAC8gmh+MC4QrU0utgNBfl0Ba/jqg1LK+Dwp8MhpUhqrFXKYnYkcdsFAaHOY6ObpQ/xfKfSxjrQterWfXIxYE+XU8eTa3dgHHYih6pD5FI+viG7ChbqMzBs=
+     type : 852227
+   -
+     type : 1310979
+     enabled : false
+   -
+     type : 852228
+     role : N
+  procedures :
+   -
+     name : FillFamilyTreeview
+     internal_properties : CAAAAAgAAADJoQEwpNcvTWemB8WB9uyQa8REDnX43LWHjyR5efOd/lMppgKl24TBps4+PkOU3VMgbvgVGpoRZOSVnbWnH0NVNkg3qei1uYT3vqGotpJB2f+IvkYkhOKEoTKg0PjR44KOp/vc3Blckquspqp+uED9YQq0BkqTy+XLmoZbhYG+e0NGnMbVMZCDClYse7osy6bCJWTqn9EaJcny+9gWgQIqt5kHsyZKeF4UWCjKxxCaeOJ3HvCcTSqOPJ0VHQepPYXkEdF8ypxtW0zKRg==
+     procedure_id : 1416730175125642789
+     type_code : 14
+     code : |1-
+      // Summary: Fills the treeview of families
+      // Syntax:
+      //FillFamilyTreeview ([<sNode> [, <nParentIdentifier>]])
+      //
+      // This procedure is used to fill the treeview of families.
+      // CAUTION: IT IS RECURSIVE
+      // 
+      // Parameters:
+      //	sNode: Parent node into which the elements found must be added
+      //	nParentIdentifier (default value=0): Identifier of the parent whose children must be found
+      // Return value:
+      // 	None
+      //
+      
+      Procedure FillFamilyTreeview(sNode = <§$0000§>, nParentIdentifier = 0)
+      
+      // Local variables
+      arrListFamilies 	is array of STCOL_Family
+      stFamily			is STCOL_Family
+      
+      // Search for the families
+      arrListFamilies = COL_Family.ListFamilies(nParentIdentifier)
+      
+      // Browse the families
+      FOR ALL ELEMENT stFamily of arrListFamilies
+      	// Add the family into the treeview
+      	// with the node of the parent + TAB + caption of the family
+      	TreeAdd(TREE_Families,sNode + TAB + stFamily.Caption,tvDefault,tvDefault,stFamily.FamilyID,tvLast)
+      		
+      	// Find the children of the family currently processed
+      	FillFamilyTreeview(sNode + TAB + stFamily.Caption,stFamily.FamilyID)
+      	
+      END
+     type : 458752
+   -
+     name : FillTreeview
+     internal_properties : CAAAAAgAAABGrmJ/b1iiYK/stLVjDx/kPPmnpr1yisTwuUyz/h/Tda+V7QRdcRJp2izbU7vGn75HBviR7ZCMyd2yQhkCZ/TXFXiWYc/pIFy7QWSI5/1XfcuI6QpbdMz6IQVVx3qqnh/k4FHbPEW9alkzBbCL/ABP/M/lxHd9jI97teuxki3GwbJXsYA8yY3Jns9pffuQS3DNdPPKLnOVIefriiaX++xgg0zSgK4/Nl0uxHg7IPp2oibvLq3mmMNwC+B78tGoMLYeN9WXSg3Fz4Gr
+     procedure_id : 1416730175125708325
+     type_code : 14
+     code : |1-
+      // Summary: Fills the treeview of families
+      // Syntax:
+      // FillTreeview ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      
+      Procedure FillTreeview()
+      
+       // Delete everything from the treeview
+      TreeDeleteAll(TREE_Families)
+      
+      // Add the root of the family
+      TreeAdd(TREE_Families,<§$0000§>,tvDefault,tvDefault,-1,tvFirst)
+      
+      // Fill the treeview of families
+      FillFamilyTreeview()
+      
+      // Expands the entire treeview
+      TreeExpandAll(TREE_Families)
+      
+      // Reload the entire data to be consistent with the treeview
+      LoadFamilies(True, 0)
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : MDLC_SansNom1
+resources :
+ string_res :
+  identifier : 0x1eb7c03d05d0fe6d
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      en-GB : < All the families >
+     index : 0
+webification :
+ internal_properties : CAAAAAgAAACYzxT95H3qP7nIys4LqA==
+custom_note :
+ internal_properties : CAAAAAgAAAC68/W0/adbG0nFCRhrE42B5HRnbDzVHaz86sSQyxlBk7I=
+rad :
+ internal_properties : CAAAAAgAAABoAN7PLpwJW3EiA7WVZdCA5EwrCA1rvutcDHooMWKe

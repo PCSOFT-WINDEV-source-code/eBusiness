@@ -1,0 +1,448 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_Order
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c868d6ea0b8
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAADQCGNsFNTirTPHNITuyxQRhrEnYSEjfpxD/UNGhzdJvWEeRSQ5TWf66lhq9hYFV2kYhI/o9ZcOKqaua3p1mRbQWuy81brbTgOqptfjD8tiKgkO9fVkCvmplmgyq+ZEbrxRNo+aaF7gkkiWZ6EGmP2aaB7sxLnEGt1XucRgHzPglwO465FqcUaBpCLmDalVbdEhzXSIUddL0OPjaY3jObXCYgzmLB75LDG5ol6Lqdom
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACko1DOYSGWiEfmi47+g0xrryBFucjRJOZNM28b4cO+S1M4MC2h4adn0pITUUH+X+gT4JsjJwu3rpWi0Nt9BiXJMn3gzThsJTpDY5C2E6bDK8jnmlOjc+813c/t3AK14IdkK2kd7CvOV5R9lQ==
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the Orders file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_Order is Structure
+      		OrderID 				is int 
+      		OrdersDate 			is date 
+      		OrderStatus 			is 1-byte unsigned int 
+      		TotalIOT 				is currency 
+      		TotalBT 				is currency 
+      		TotalVAT 				is currency 
+      		ShippingCost 				is currency 
+      		ShippingCostBT				is currency
+      		OrderNum 			is string
+      		InvoiceNum 				is string
+      		PaymentType 			is 2-byte int
+      		arrOrdLine 			is array of STCOL_OrdLine //dynamic
+      		CustomerID 				is int 
+      		InvoicingAddressID	is int 
+      		DeliveryAddressID 		is int 
+      		CustomerEmail				is string
+      		FullCustomerName		is string
+      END
+       
+       // Structure used to return the list of statuses of orders by WebService
+      STCOL_ORDERSTATUS is Structure
+      	OrderStatus		is int
+      	CaptionOrderStatus	is string
+      END
+       
+       // Array of orders
+       garrOrders is array of STCOL_Order
+       
+       // Array of possible states for an order
+       garrOrderStatus is array of STCOL_ORDERSTATUS
+       
+      // States of an order (used in the Orders.OrderStatus item)
+      CONSTANT
+      	ORD_WAITINGFORPAYMENT = 1		// Order waiting for payment
+      	ORD_PREPARATION = 2				// Order paid, currently prepared
+      	ORD_DELIVERY = 3				// Order currently delivered
+      	ORD_DELIVERED = 4					// Order delivered
+      	ORD_PAID_CC_NOTCHECKED = 5		// Order paid by CC but payment not checked
+      	ORD_PAID_CC_CHECKED = 6		// Order paid by CC and payment checked (manually or by process)
+      	ORD_ORDER_CANCELED = 7		// Order canceled
+      	ORD_PAID_CC_SUSPECT = 8		// Order paid by CC but not validated (a check was not performed)
+      END 
+     type : 720896
+  procedures :
+   -
+     name : CancelOrder
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730106380918968
+     type_code : 15
+     code : |1-
+      // Summary: Cancels an order
+      // Syntax:
+      //[<Result> = ] CancelOrder (<nOrderID> is int)
+      //
+      // Parameters:
+      //	nOrderID (integer): Identifier of the order
+      // Return value:
+      // 	boolean: True if the order was canceled, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure CancelOrder(nOrderID is int)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Canceling an order",""+nOrderID,"")
+      
+      // Search for the order in the order file
+      HReadSeekFirst(Orders,OrderID,nOrderID)
+      IF HFound(Orders) = False THEN
+      	AddError("Unable to find the order")
+      	RESULT False
+      END	
+      
+      // Switch the order status to canceled
+      Orders.OrderStatus = ORD_ORDER_CANCELED
+      	
+      // Modify the status
+      IF HModify(Orders) = False THEN
+      	AddError(<§@1eb15ad00555def00000§>)				
+      	RESULT False
+      END
+      
+      // Check whether the order contained products with stock management
+      FOR EACH OrdLine WHERE OrderID = Orders.OrderID
+      	// Is the product associated with a stock management?
+      	HReadSeekFirst(product,Reference,OrdLine.Reference)
+      	IF HFound(product) = False THEN
+      		AddError(<§@1eb15ad00555def00002§>)
+      		RESULT False
+      	END
+      	
+      	IF product.LimitedQuantity = True THEN
+      		// Is there a variation for the product
+      		IF OrdLine.ProductVariationID>0 THEN
+      			IncreaseVariationStock(OrdLine.ProductVariationID,OrdLine.Quantity)
+      		ELSE
+      			IncreaseProductStock(product.ProductID,OrdLine.Quantity)
+      		END
+      	END
+      END
+      
+      // The modification is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : ListOrders
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730106380984504
+     type_code : 15
+     code : |1-
+      // Summary: Lists the orders
+      // Syntax:
+      //[ <Result> = ] ListOrders (<nCustomerID> is int, <sCustomerName> is string, <sCustomerEmail> is string, <nOrderStatus> is int, <sStartDate> is string, <sEndDate> is string)
+      //
+      // Parameters:
+      //	nCustomerID (integer): Identifier of the customer (-1 to ignore)
+      //	sCustomerName (ANSI string): Name of the customer to find (empty string to ignore)
+      //	sCustomerEmail (ANSI string): Email of the customer to find (empty string to ignore)
+      //	nOrderStatus (integer): status of the order (-1 to ignore)
+      //	sStartDate (ANSI string): Start date for the search (empty string to ignore)
+      //	sEndDate (ANSI string): End date for the search (empty string to ignore)
+      // Return value:
+      // 	array: Array of STCOL_Order
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ListOrders(nCustomerID is int, sCustomerName is string, sCustomerEmail is string, nOrderStatus is int, sStartDate is string, sEndDate is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT garrOrders
+      END
+      
+      // Delete the previous content
+      ArrayDeleteAll(garrOrders)
+      
+      // Parameters of the 'QRY_ORDERS' query
+      QRY_Orders.pCustomerName	= sCustomerName <> "" ? sCustomerName ELSE Null
+      QRY_Orders.pCustomerEmail	= sCustomerEmail <> "" ? sCustomerName ELSE Null
+      QRY_Orders.pMinTotal 	= Null
+      QRY_Orders.pMaxTotal 	= Null
+      QRY_Orders.pOrderStatus = nOrderStatus <> -1 ? nOrderStatus ELSE Null
+      QRY_Orders.pStartDate 	= sStartDate <> "" ? sStartDate ELSE Null
+      QRY_Orders.pEndDate 		= sEndDate <> "" ? sEndDate ELSE Null
+      QRY_Orders.pCustomerID		= nCustomerID <> -1 ? nCustomerID ELSE Null
+      
+      // Run the query
+      IF HExecuteQuery(QRY_Orders) = False THEN
+      	AddError("Unable to run the query")
+      	RESULT garrOrders
+      END
+      
+      // Browse the result
+      FOR EACH QRY_Orders 
+      	// Transfer in memory
+      	stOrder is STCOL_Order	
+      	FileToMemory(stOrder,QRY_Orders)
+      	
+      	// add the additional information
+      	stOrder.TotalBT = QRY_Orders.Total_BT
+      	stOrder.TotalIOT = QRY_Orders.Total_IOT
+      	stOrder.TotalVAT = QRY_Orders.Total_VAT
+      	stOrder.CustomerEmail = QRY_Orders.Email
+      	stOrder.FullCustomerName = QRY_Orders.LastName + " " +QRY_Orders.FirstName
+      	
+      	// Add to the results
+      	ArrayAdd(garrOrders,stOrder)
+      	
+      END
+      
+      // Return the list of orders
+      RESULT garrOrders
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT garrOrders
+     type : 458752
+   -
+     name : SendPDFOrder
+     internal_properties : CAAAAAgAAADHWX1xp+qAJk8PAl5cU4OTRyxE9u8GAtC88Jm5LMeI+hgq+nBSmXMYz//a6BxCx/CqIs6+2y8knG1Znufl/awvCuuEM0fY8ZEbz/4w+XK9/3gh89hnmDTyR0bxbodMWXd0gJjGXEfOthc+I1ceHOS2HjcUo+hpFHo6k8i/IO0K9rhghTqk3qPGAYOkBX+PpttitJlmVrCJmHAEoYFML8fUFmsnbfNnMvhhGZzHv5U8XT40cxQg
+     procedure_id : 1416730106381050040
+     type_code : 15
+     code : |1-
+      // Summary: Sends a message tot he customer with his order in PDF format
+      // Syntax:
+      //[ <Result> = ] SendPDFOrder (<nOrderID> is int)
+      //
+      // Parameters:
+      //	nOrderID (integer): Identifier of the order
+      // Return value:
+      // 	boolean: True if the message was effectively sent, False otherwise
+      //
+      // Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      PROCEDURE SendPDFOrder(nOrderID is int)
+      
+      // Local variables
+      arrAttachment is array of 0 strings
+      sTemplateMessage is string = [
+      %1
+      
+      Please find enclosed the invoice for your order #%2 of 3.
+      
+      Best regards.
+      %4
+      ]
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Sending the PDF of an order ("+nOrderID+")",""+nOrderID,"")
+      
+      HReadSeekFirst(Orders,OrderID,nOrderID)
+      IF HFound(Orders) = False THEN
+      	AddError("Order not found in database")	
+      	RESULT False
+      END
+      // Positions on the customer
+      HReadSeekFirst(Customer,CustomerID,Orders.CustomerID)
+      IF HFound(Customer) = False THEN
+      	AddError("Customer not found in database")
+      	RESULT False
+      END
+      
+      // Build the header...
+      sHeader is string
+      //... with the title...
+      SWITCH Customer.Title
+      	CASE 1 // Mr
+      		sHeader = "Mr "
+      	CASE 2 // Mrs
+      		sHeader = "Mrs "
+      	CASE 3 // Ms
+      		sHeader = "Ms "
+      	OTHER CASE	// Other cases
+      		sHeader = ""
+      END
+      //...followed by the name and first name of the customer
+      sHeader+= Customer.LastName+" "+Customer.FirstName+","
+      
+      sMessage is string = StringBuild(sTemplateMessage, sHeader, Orders.OrderID, DateToString(Orders.OrdersDate, maskSystemDate), ReadCompanyName())
+      
+      // Retrieve the order 
+      QRY_InvoiceDetails.pIDOrder = nOrderID
+      IF HExecuteQuery(QRY_InvoiceDetails) = False THEN
+      	AddError("Unable to run the query")
+      	RESULT False
+      END
+      
+      // Switch to PDF preview
+      iDestination(iGenericPDF)
+      
+      // Print the PDF file
+      iPrintReport(RPT_OrderForm)
+      
+      // Add the PDF file to the array of attachments
+      ArrayAdd(arrAttachment,iLastFile())
+      
+      // Send the order in PDF
+      RESULT SendCustomerMessage(Customer.CustomerID,"Invoice for order #"+nOrderID,sMessage,arrAttachment)
+      	
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : ListOrdersStatus
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730106381115576
+     type_code : 15
+     code : |1-
+      // Summary: <specify the action of the procedure>
+      // Syntax:
+      //[ <Result> = ] ListStatesOfOrders ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	array: Array of STCOL_Order
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ListOrdersStatus()
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT garrOrderStatus
+      END
+      
+      // If the array is already filled, return it
+      IF garrOrderStatus..Occurrence > 0 THEN
+      	RESULT garrOrderStatus
+      END
+      
+      // Fill the array
+      FOR i = 1 TO 8
+      	stStatus is STCOL_ORDERSTATUS
+      	
+      	// Store the status
+      	stStatus.OrderStatus = i
+      	stStatus.CaptionOrderStatus = COL_EBusiness.OrderStatusToString(stStatus.OrderStatus)
+      	
+      	// Add to the list of states
+      	ArrayAdd(garrOrderStatus,stStatus)
+      END
+      
+      // Return the list of states
+      RESULT garrOrderStatus
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT garrOrderStatus
+     type : 458752
+   -
+     name : ReadPDFORder
+     internal_properties : CAAAAAgAAABrcFcLWfYPBeqmnswS/sMqDLoYpuqrQFlG7ks/xcwO8Q2A/IYmKZ0nC9w4q3oBVZu8QU4LpZZVkVB0vfhlG9ME58wxX7ciGE3JDz9wOkSueReMXLqCL9X7SL9zjo/tEVhiff9O9qpqATabUwXM++DN8jRrB7j22NdzGgY5Xiomw6rpLGKm59lt1JTkgyF6puhyU/vA1vufzakPQYOUel+d7ib5XviZrkQKIOKq1jIYVp5BxvE=
+     procedure_id : 1416730106381181112
+     type_code : 15
+     code : |1-
+      // Summary: Returns the order form in PDF format
+      // Syntax:
+      //[ <Result> = ] ReadPDFOrder (<nOrderID> is int)
+      //
+      // Parameters:
+      //	nOrderID (integer): Identifier of the order
+      // Return value:
+      // 	buffer: Buffer of PDF (empty string if an error occurred)
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ReadPDFORder(nOrderID is int)
+      
+      // Local variables
+      sFileName	is string
+      bufResult_	is buffer
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT bufResult_
+      END
+      
+      // Retrieve the order 
+      QRY_InvoiceDetails.pIDOrder = nOrderID
+      IF HExecuteQuery(QRY_InvoiceDetails) = False THEN
+      	AddError("Unable to run the query")
+      	RESULT bufResult_
+      END
+      
+      // Build the file name
+      sFileName = sReturnGenerationDir()+["\"]+StringBuild("ORF_%1.pdf",nOrderID)
+      
+      // Switch to PDF preview
+      iDestination(iGenericPDF,sFileName)
+      
+      // Print the PDF file
+      iPrintReport(RPT_OrderForm)
+      
+      // Return the file
+      bufResult_ = fLoadBuffer(sFileName)
+      RESULT bufResult_
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT bufResult_
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Commande
+resources :
+ string_res :
+  identifier : 0x1eb15ad00555def0
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      en-GB : The status of the order cannot be modified
+     index : 0
+   -
+     text :
+      en-GB : ORF_%1.pdf
+     index : 1
+   -
+     text :
+      en-GB : Product not found
+     index : 2
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

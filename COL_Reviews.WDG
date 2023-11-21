@@ -1,0 +1,170 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_Reviews
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c858c449ab0
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAADmt/Rox/K49scHJvPs2zzb2d/rvs3AXBSw3cYzbSMVCC3NssaEOdsA9TnKK+Ea+ASRp7MZC4T6FPRYKnZFyVf5TIcBM222YemkjA==
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACko1DOYSGWiEfmi47+g0xrryBFucjRJOZNM28b4cO+S1M4MC2h4adn0pITUUH+X+gT4JsjJwu3rpWi0Nt9BiXJMn3gzThsJTpDY5C2E6bDK8jnmlOjc+813c/t3AK14IdkK2kd7CvOV5R9lQ==
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the Review file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_Reviews is Structure
+      		ReviewID 				is int
+      		date 				is date
+      		Title 				is string
+      		Description 		is string
+      		Mark 				is 1-byte unsigned int		
+      		CustomerID 			is int
+      		ProductID			is int
+      		ProductReference	is string
+      		ProductCaption		is string
+      END
+       
+       GLOBAL
+       	garrReviews is array of STCOL_Reviews
+     type : 720896
+  procedures :
+   -
+     name : ListReviews
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730102066420400
+     type_code : 15
+     code : |1-
+      // Summary: Lists the reviews of customers about the products
+      // Syntax:
+      //[<Result> = ] ListReviews ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	array: Array of STCOL_REVIEW
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ListReviews()
+      
+      // Local variables
+      stReview is STCOL_Reviews
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT garrReviews
+      END
+      
+      // Delete the former content
+      ArrayDeleteAll(garrReviews)
+      
+      // Run the query for browsing and sorting the reviews
+      QRY_ProductReview_DetailedList.pProductID = Null
+      HExecuteQuery(QRY_ProductReview_DetailedList)
+      
+      
+      // Browse the reviews
+      FOR EACH QRY_ProductReview_DetailedList 
+      	// retrieve the data
+      	FileToMemory(stReview,QRY_ProductReview_DetailedList)
+      	
+      	// Retrieve the additional information
+      	stReview.ProductReference = QRY_ProductReview_DetailedList.Reference	
+      
+      	// Add into the array
+      	ArrayAddLine(garrReviews,stReview)	
+      END
+      
+      // Return the table of reviews
+      RESULT garrReviews
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo(errFullDetails))
+      	RESULT garrReviews
+     type : 458752
+   -
+     name : DeleteReview
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730102066485936
+     type_code : 15
+     code : |1+
+      // Summary: Delete the specified review
+      // Syntax:
+      //[<Result> = ] DeleteReview (<nSoughtReviewID> is int)
+      //
+      // Parameters:
+      //	nSoughtReviewID (integer): Identifier of the sought review
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION DeleteReview( nSoughtReviewID is int )
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Local variables
+      nReviewSubscript is int
+      
+      
+      // Search for the review in database
+      HReadSeekFirst(Review,ReviewID,nSoughtReviewID)
+      IF HFound(Review) = False THEN
+      	AddError("Record not found in database")
+      	RESULT False
+      END
+      
+      // Deletion in database
+      IF HDelete(Review) = False THEN
+      	AddError("Cannot delete record")
+      	RESULT False
+      END
+      
+      // Search in the table of reviews
+      nReviewSubscript = ArraySeek(garrReviews,asLinearFirst,"ReviewID",nSoughtReviewID)
+      IF nReviewSubscript>0 THEN
+      	// Deletion 
+      	ArrayDelete(garrReviews,nReviewSubscript)
+      END
+      
+      // The deletion is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Avis
+resources :
+ string_res :
+  identifier : 0x1fa19c5a00725156
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

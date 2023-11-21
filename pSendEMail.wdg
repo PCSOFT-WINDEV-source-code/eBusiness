@@ -1,0 +1,498 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : pSendEMail
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93e5aafbac549
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAAB+zxOwQ9dPAbfWjcAwtjhczVFbr0rH9tZtmSjhIIxr9CrHT0HlGDkEzkhP5quMy3Pq6mtsRmtzSwEtKrTSCtaH7cWaBaOaaUL5MhgkWFAxRDAipljLj701R2kwv+UNX4Z0fS7eb+eUKoOdc4/vZwow6A8Llys1FFbGQT+cpHTNYKpm//g=
+  type_code : 31
+  p_codes :
+   -
+     code : |1+
+      // Contact
+      gstConfig_SMTPContact is COL_SITE_CONFIGURATION.ST_SMTP_CONFIGURATION
+      
+      // Orders
+      gstConfig_SMTPOrder is COL_SITE_CONFIGURATION.ST_SMTP_CONFIGURATION
+      
+      CONSTANT
+      	cs_MARKER_EMAIL_DATE					= "[DATE]"
+      	cs_MARKER_EMAIL_TIME					= "[TIME]"
+      	cs_MARKER_EMAIL_CUSTOMERNAME				= "[CUSTOMER_NAME]"
+      	cs_MARKER_EMAIL_ORDER_DETAILS		= "[ORDER_DETAILS]"
+      	cs_MARKER_EMAIL_PAYMENT_REMINDER		= "[PAYMENT_INFO]"
+      	cs_MARKER_EMAIL_DELIVERY_ADDRESS		= "[DELIVERY_ADDRESS]"
+      	cs_MARKER_EMAIL_INVOICING_ADDRESS	= "[INVOICING_ADDRESS]"
+      	
+      	cs_TEMPLATE_EMAIL_ORDER				= "Order %1, Total Article IOT: %2 including shipping costs IOT: %3"
+      	cs_TEMPLATE_EMAIL_ORDER_LINE			= "%1 x %2 (UPIOT: %3)"
+      	
+      END
+     type : 720896
+  procedures :
+   -
+     name : SendContactMessage
+     internal_properties : CAAAAAgAAAAR4lreH2J4Rd3V+mugsaqaPcWRc4a891NpZJfs2OxfqFa5a92hvxVeSKTrhFvcWX4DMfp144kV6W9tlQg1duY9FWSL3glxb2OhliT9RXcYO65IOySiRO54Oq6F+pqJEiUXcR2SIadA5NSWdTO7g+8Qq9JsOWaSH0agxF5hQxsyBfPip1UsqUsWWV2BZk2oeCg7zlRJgPiL6Oa4h73vEnr0BQ==
+     procedure_id : 1416732117001028937
+     type_code : 15
+     code : |1-
+      // Summary: Sends a message for taking contact
+      // Syntax:
+      //[ <Result> = ] SendContactMessage (<sCustomerEmail> is string, <sHTMLMessage> is string)
+      //
+      // Parameters:
+      //	sCustomerEmail (string): Email of the customer
+      //	sHTMLMessage (string): Text of the message
+      // Return value:
+      // 	boolean: True if the message was successfully sent, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      PROCEDURE SendContactMessage(sCustomerEmail is string, sHTMLMessage is string)
+      
+      // Local variables
+      sRecipient		is string
+      sSender			is string
+      
+      // Read the configuration
+      gstConfig_SMTPContact 	= COL_SITE_CONFIGURATION.ReadSMTPConfiguration()
+      sRecipient			= COL_SITE_CONFIGURATION.ReadEmailAddressRecipientCompanyContact()
+      sSender			= COL_SITE_CONFIGURATION.ReadEmailAddressSenderCompanyContact()
+      
+      // Reinitialize the variables 
+      EmailReset()
+      
+      // Start the SMTP session
+      IF StartSMTPSession(gstConfig_SMTPContact) = False THEN RESULT False
+      
+      // Fill the structure
+      Email.NbRecipient 	= 2
+      Email.Sender 		= sSender
+      Email.Recipient[1]	= sRecipient
+      Email.Recipient[2]	= sCustomerEmail
+      Email.Subject 			= <§@14a3f3cc022cdc4d0000§>
+      Email.HTML				= sHTMLMessage
+      
+      // Send the message
+      IF EmailSendMessage(gstConfig_SMTPContact.sUserLogin) = False THEN 
+      	AddError("The message was not sent",ErrorInfo())
+      	RESULT False
+      END
+      
+      // Close the POP3 session
+      EmailCloseSession(gstConfig_SMTPContact.sUserLogin)	
+      
+      // The sending is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	
+      	// Close the SMTP session
+      	EmailCloseSession(gstConfig_SMTPContact.sUserLogin)	
+      		
+      	// Message not sent
+      	RESULT False
+     type : 458752
+   -
+     name : SendCustomerMessage
+     internal_properties : CAAAAAgAAADIE/+aT0jm/8/zPgUlMIWkb6SSxpYzsKoLJzUzZw/feC1U1sFvJ9g1YySMf+lBzK4pkRt4bXUKe6Zb8YeGWzSn0xL0YxxkeS/ircHLzyqp3bcjSSspPwiKVdX8QK4XqSHKWLTZYKaQkkcvVlcdsTfnx1kknHhkhzgccCZZrh8JvGuub5htwh0mlstcIFm7hWmvjGlDlhE29RUlGGYS1bAOyc3HyKuS0Q==
+     procedure_id : 1416732117001094473
+     type_code : 15
+     code : |1-
+      // Summary: Sending a message to a customer
+      // Syntax:
+      //[ <Result> = ] SendCustomerMessage (<nCustomerID> is int, <sSubject> is string, <sHTMLMessage> is string, <arrAttachments> is array)
+      //
+      // Parameters:
+      //	nCustomerID (integer): Identifier of the recipient customer
+      //	sSubject (string): Subject of the message
+      //	sHTMLMessage (string): Message in HTML format
+      //	arrAttachments (array): Array containing the attachments
+      // Return value:
+      // 	boolean: True if the email was successfully sent, False otherwise
+      //
+      // Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      PROCEDURE SendCustomerMessage(nCustomerID is int,sSubject is string , sHTMLMessage is string, arrAttachments is array of strings)
+      
+      // Local variables
+      i 					is int
+      nUpperBound			is int
+      sRecipient		is string
+      sSender			is string
+      
+      // Read the configuration
+      gstConfig_SMTPOrder 	= COL_SITE_CONFIGURATION.ReadSMTPConfiguration()
+      sRecipient			= COL_SITE_CONFIGURATION.ReadEmailAddressRecipientCompanyOrder()
+      sSender				= COL_SITE_CONFIGURATION.ReadEmailAddressSenderCompanyOrder()
+      
+      // Searching for the client
+      HReadSeekFirst(Customer, CustomerID, nCustomerID)
+      IF HFound(Customer) = False THEN
+      	AddError("Unable to find the customer in the database")
+      	RESULT False
+      END
+      
+      // Reinitialize the variables 
+      EmailReset()
+      
+      // Start the SMTP session
+      IF StartSMTPSession(gstConfig_SMTPOrder) = False THEN RESULT False
+      
+      // Fill the structure
+      Email.NbRecipient 	= 2
+      Email.Sender 		= sSender
+      Email.Recipient[1]	= sRecipient
+      Email.Recipient[2]	= Customer.Email
+      Email.Subject 			= sSubject
+      Email.HTML				= sHTMLMessage
+      
+      // Is there any attachment?
+      IF arrAttachments <> Null THEN
+      
+      	// Process the attachments
+      	Email.NbAttach = Dimension(arrAttachments)
+      	nUpperBound = Dimension(arrAttachments)
+      	// Attach the attachments
+      	FOR i = 1 _TO_ nUpperBound
+      		Email.Attach[i] = arrAttachments[i]		
+      	END
+      ELSE
+      	// No attachment
+      	Email.NbAttach = 0	
+      END
+      
+      
+      // Send the message
+      IF EmailSendMessage(gstConfig_SMTPOrder.sUserLogin) = False THEN
+      	AddError("The message was not sent: ",ErrorInfo())
+      	RESULT False
+      END
+      
+      // Close the POP3 session
+      EmailCloseSession(gstConfig_SMTPOrder.sUserLogin)	
+      
+      // The sending is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	
+      	// Close the SMTP session
+      	EmailCloseSession(gstConfig_SMTPOrder.sUserLogin)	
+      
+      	// Message not sent
+      	RESULT False
+     type : 458752
+   -
+     name : StartSMTPSession
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416732117001160009
+     type_code : 15
+     code : |1-
+      // Summary: Starts an SMTP session
+      // Syntax:
+      //[ <Result> = ] StartSMTPSession (<stConfiguration> is ST_SMTP_CONFIGURATION)
+      //
+      // Parameters:
+      //	stConfiguration (ST_SMTP_CONFIGURATION): <specify the role of stConfiguration>
+      // Return value:
+      // 	boolean: True if the session was started, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      PROCEDURE StartSMTPSession(stConfiguration is COL_SITE_CONFIGURATION.ST_SMTP_CONFIGURATION)
+      
+      // Configure the maximum time-out
+      EmailSetTimeOut(10)
+      
+      // Start the SMTP session
+      IF stConfiguration.bSecuredMode = True THEN
+      	IF EmailStartSMTPSession(stConfiguration.sUserLogin,stConfiguration.sUserPWD,stConfiguration.sServerAddress,stConfiguration.nPort,emailOptionSecuredTLS) = False THEN
+      		AddError("Unable to start the SMTP session",ErrorInfo(),False)
+      		RESULT False
+      	END
+      ELSE
+      	IF EmailStartSMTPSession(stConfiguration.sUserLogin,stConfiguration.sUserPWD,stConfiguration.sServerAddress,stConfiguration.nPort,emailOptionDefault) = False THEN
+      		AddError("Unable to start the SMTP session",ErrorInfo(),False)	
+      		RESULT False
+      	END	
+      END
+      
+      // The connection is established by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : SendMessageToWebmaster
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416732117001225545
+     type_code : 15
+     code : |1-
+      // Summary: Sends a message to the WebMaster
+      // Syntax:
+      //[ <Result> = ] SendMessageToWebMaster (<sSubject> is string, <sMessage> is string)
+      //
+      // Parameters:
+      //	sSubject (string): Subject of the message
+      //	sMessage (string): Message
+      // Return value:
+      // 	boolean: True if the message was send, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      PROCEDURE SendMessageToWebmaster(sSubject is string, sMessage is string)
+      
+      // Local variables
+      sRecipient		is string
+      sSender			is string
+      
+      // Read the configuration
+      gstConfig_SMTPOrder = COL_SITE_CONFIGURATION.ReadSMTPConfiguration()
+      sRecipient			= COL_SITE_CONFIGURATION.ReadEmailAddressNotificationRecipient()
+      sSender			= COL_SITE_CONFIGURATION.ReadEmailAddressNotificationSender()
+      
+      // Reinitialize the variables 
+      EmailReset()
+      
+      // Start the SMTP session
+      IF StartSMTPSession(gstConfig_SMTPOrder) = False THEN RESULT False
+      
+      // Fill the structure
+      Email.NbRecipient 	= 1
+      Email.Recipient[1] 	= sRecipient
+      Email.Sender 		= sSender
+      Email.Subject 			= sSubject
+      Email.HTML			= sMessage
+      
+      // No attachment
+      Email.NbAttach = 0	
+      
+      // Send the message
+      IF EmailSendMessage(gstConfig_SMTPOrder.sUserLogin) = False THEN
+      	// Close the POP3 session
+      	EmailCloseSession(gstConfig_SMTPOrder.sUserLogin)	
+      	
+      	AddError("The message was not sent: ",ErrorInfo())
+      	RESULT False
+      END
+      
+      // Close the POP3 session
+      EmailCloseSession(gstConfig_SMTPOrder.sUserLogin)	
+      
+      // The sending is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      
+      	// Close the SMTP session
+      	EmailCloseSession(gstConfig_SMTPOrder.sUserLogin)	
+      
+      	// Message not sent
+      	RESULT False
+     type : 458752
+   -
+     name : SendOrderConfirmation
+     internal_properties : CAAAAAgAAADHVDNgRRrrWYHO3mSeTpFClLJjwVg+Js9tJ6ix+Zz7F27K9dvXDwORM+xmFw7ZVQsYpapNn9BnI8zAT8jxi+co31xhtf14BrNlq4lEFtQ2eXdUYDxkMUvdICcq9UhczqvVuO6Vm92lMpcUWjR94vnkaWPabgWhi1Coi/UQr8EHEgEY20HbKjQ+RSHH7qa9a6ZPi9/bu00rV0vcJYrBmRcP554hhuB3jGJUPmghk/FlqXKdqp0=
+     procedure_id : 1416732117001291081
+     type_code : 15
+     code : |1-
+      // Summary: Sends an email for order confirmation
+      // Syntax:
+      //[ <Result> = ] SendOrderConfirmation (<nOrderID> is int, <nPaymentMode> is int)
+      //
+      // Parameters:
+      //	nOrderID (integer): Identifier of the order
+      //	nPaymentMode (integer): payment mode (PAYMENT_XXX constants)
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      PROCEDURE SendOrderConfirmation(nOrderID is int, nPaymentMode is int)
+      
+      // Local variables
+      sCustomerName				is string
+      sInvoicingAddress		is string
+      sDeliveryAddress		is string
+      sOrderDetails			is string
+      sPaymentDetails			is string
+      sConfirmationEmail		is string
+      
+      // Load the order
+      HReadSeekFirst(Orders,OrderID,nOrderID)
+      IF HFound(Orders) = False THEN
+      	AddError("Order not found")
+      	RESULT False
+      END
+      
+      // Load the customer details
+      HReadSeekFirst(Customer,CustomerID,Orders.CustomerID)
+      IF HFound(Orders) = False THEN
+      	AddError("Customer not found")
+      	RESULT False
+      END
+      
+      // Retrieve the full name of the customer
+      sCustomerName = GetFullCustomerName(Customer.CustomerID)
+      
+      // Starts and formats the invoicing address
+      sInvoicingAddress = GetFormattedOrderAddress(Orders.InvoicingAddressID)
+      IF sInvoicingAddress ~="" 
+      	AddError("Invoicing address not found")
+      	RESULT False
+      END
+      
+      // Starts and formats the delivery address
+      sDeliveryAddress = GetFormattedOrderAddress(Orders.DeliveryAddressID)
+      IF sDeliveryAddress ~="" 
+      	AddError("Delivery address not found")
+      	RESULT False
+      END
+      
+      // Build the summary of the order
+      sOrderDetails = StringBuild(cs_TEMPLATE_EMAIL_ORDER,Orders.OrderNum, CurrencyToString(Orders.TotalIOT), CurrencyToString(Orders.ShippingCostIOT))
+      sOrderDetails += CR
+      
+      // Add the content of the order
+      sOrderDetails += <§@14a3f3cc022cdc4d0003§>+CR
+      QRY_InvoiceDetails.pIDOrder = Orders.OrderID
+      IF HExecuteQuery(QRY_InvoiceDetails) = False THEN
+      	AddError("Error while browsing the order")
+      	RESULT False
+      END
+      
+      // Browse the order lines
+      FOR EACH QRY_InvoiceDetails 
+      	sOrderDetails += StringBuild(cs_TEMPLATE_EMAIL_ORDER_LINE,QRY_InvoiceDetails.Quantity,...
+      													QRY_InvoiceDetails.Reference + " " +QRY_InvoiceDetails.ProductCaption,...
+      													CurrencyToString(QRY_InvoiceDetails.UnitPriceBT*(100 + QRY_InvoiceDetails.TaxRate)/100)) + CR
+      END
+      
+      // manage the payment mode
+      SWITCH nPaymentMode
+      	CASE PAYM_CC, PAYM_PAYPAL
+      		sPaymentDetails = <§@14a3f3cc022cdc4d0004§>
+      	CASE PAYM_CHECK
+      		sPaymentDetails = <§@14a3f3cc022cdc4d0005§>+CR+...
+      							ReadCompanyAddress()
+      	OTHER CASE
+      		AddError(<§@14a3f3cc022cdc4d0006§>)
+      		RESULT False
+      END
+      
+      // Replace the preset tags by the generated texts
+      sConfirmationEmail = ReadEmailOrderConfirmation()
+      sConfirmationEmail = Replace(sConfirmationEmail, cs_MARKER_EMAIL_DATE, _sConvertText(DateToString(Orders.OrdersDate, maskSystemDate)))
+      sConfirmationEmail = Replace(sConfirmationEmail, cs_MARKER_EMAIL_TIME, _sConvertText(TimeToString(Orders.OrderTime,maskSystemTime)))
+      sConfirmationEmail = Replace(sConfirmationEmail, cs_MARKER_EMAIL_CUSTOMERNAME, _sConvertText(sCustomerName))
+      sConfirmationEmail = Replace(sConfirmationEmail, cs_MARKER_EMAIL_ORDER_DETAILS, _sConvertText(sOrderDetails))
+      sConfirmationEmail = Replace(sConfirmationEmail, cs_MARKER_EMAIL_PAYMENT_REMINDER, _sConvertText(sPaymentDetails))
+      sConfirmationEmail = Replace(sConfirmationEmail, cs_MARKER_EMAIL_DELIVERY_ADDRESS, _sConvertText(sDeliveryAddress))
+      sConfirmationEmail = Replace(sConfirmationEmail, cs_MARKER_EMAIL_INVOICING_ADDRESS, _sConvertText(sInvoicingAddress))
+      
+      // Finally, send in email
+      IF SendCustomerMessage(Customer.CustomerID,"Order confirmation",sConfirmationEmail,Null) = False THEN
+      	AddError(<§@14a3f3cc022cdc4d0007§>)
+      	RESULT False
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      
+      	// Message not sent
+      	RESULT False
+     type : 458752
+   -
+     name : _sConvertText
+     procedure_id : 1416732117001356617
+     type_code : 15
+     code : |1-
+      // Summary: Converts a text into HTML text
+      // Syntax:
+      //[ <Result> = ] _sConvertText (<sText> is string)
+      //
+      // Parameters:
+      //	sText (string): Rough text
+      // Return value:
+      // 	string: HTML text
+      //
+      
+      PROCEDURE _sConvertText(sText is string)
+      
+      // Local variables
+      sConvertedText is string = sText
+      
+      <COMPILE IF Configuration="eBusiness">
+      	sConvertedText = TextToHTML(sConvertedText)
+      <END>
+      
+      // Replace the CR characters by <BR>
+      sConvertedText = Replace(sConvertedText,CR,"<br>")
+      
+      RESULT sConvertedText
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Collection1
+resources :
+ string_res :
+  identifier : 0x14a3f3cc022cdc4d
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      en-GB : Contact form from the Internet site
+     index : 0
+   -
+     text :
+      en-GB : "From: "
+     index : 1
+   -
+     text :
+      en-GB : "From: "
+     index : 2
+   -
+     text :
+      en-GB : Details of the order
+     index : 3
+   -
+     text :
+      en-GB : This order was paid by credit card
+     index : 4
+   -
+     text :
+      en-GB : "This order is waiting for the payment check to be received at the following address: "
+     index : 5
+   -
+     text :
+      en-GB : Type of payment not supported in the confirmation by email
+     index : 6
+   -
+     text :
+      en-GB : Unable to send the message for order confirmation
+     index : 7
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

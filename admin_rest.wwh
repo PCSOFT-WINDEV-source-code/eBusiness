@@ -1,0 +1,162 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : admin_rest
+ major_version : 28
+ minor_version : 0
+ type : 65538
+ description : ""
+ subtype : 8192
+page :
+ name : admin_rest
+ identifier : 0x2f1fe006c00be4e4
+ internal_properties : CAAAAAgAAAAKu/acgN4VW6brQNORv0OlCZxOTOqYkedlM4ouVyIfSE9hqzr1RZzeo4JMxG7yOvDmUeDo3WJHJQGU0Q5OKuRS/+Ldq++9XZdGtjyR77uEMYT6bG5hAbkqDmhC7p0AnB21J1CiwgsqxNetBA/hZdPLwVJD+u8CLdoCx3N37czUeEJd1Fy2tYUrh0nzpxFf79MOAXdZqGEOtdky/ZrR71QH7vJs+2c1wlFkD19+K8/ixDyQFrWqFn0/DYdzB38axtPdrwwgCnFTl0TrBg9JSI9YRYVS7DPlSkks4rhAIz290mIUMs0bC25dwcyVR7en4o128J9s1GLdJ218wRIoYYFMg7v8tRhnSTCDobCpEJJs3htOTltqbtYybHamyJd7nUYtrr1DQiBw5LoJNMkCYThSMMKgYp6uhgFMmIoPDftYYKKNABi66wrbCSWQQxjAjivkXM2ykEg0yfTjZRsRqatgwLqyLqAJSd7jKjHZfoGbjkT6kdbf1NCCvFcpIxSMfPenp7jGSBkxjCLXOi+9mwepODRInhh/VXjOMZ16Hkjnb1h2DwvuNBc9onReeLYBqzMYTfPQgEwflf86bUs3Yo/7w3eXTLMNtnnHoGCKMndkfpXsQJYNdVtyStlGGnz3NMK7vXGLfvy1Mwqi3XdquC4zqhL5vjGbwAU4erYwATKFLNRUPeJlhS/xU0hV14Es4qFS//wC/u2W+5mO9BwQichSj5m3Egtgh+aMIEWGK9AyGI0vvX508TxdOQvnc3ucmtzfIrveqmpT8/pnYVx3V4L9rEaHzx6p7VYuF9opVK5X7kvHcwGB0jqwXvWBucrKLR1ft559hGZJtF3FY8b7N8HvxBF+EObkuWXvnL+U0apei5fiba1GPvx5aWmHpNZvfkzz5cuVgV7/3X1kgM5/ULTPRNx+W5BVebF23QgIT1/abOj3iCZ2VmFLgKgKAhRaGf4GqGOk2QS+YwS76OF2uS1L5dKQVmt2jjw2C4tl42iOrwR/eFhFny1zOuk1JoV2qEQWVDt8fUypn4w25QnZrCbUyENLbzEuV6O83dB7+ICrep/IyyURkmrPBN9zJTFFATAan1nj9eudu5bJhG4mwnsyYAHht80wLnmS1jcSb/J0yxflHKVlw4Pw2+mQRU2QwRUBmwz2dimiah+Um2slXb72D1x1rMqPnT1YwwdmtTszxtXpw5ZXMV28Wb5AVhQ6tF4wx0F0Y/9G1nzdF6ceNB9i9nLyjd0P+QDSUh9PK8Hlik6dUWgse343pYwOcfPxQwWyjYZ/w/PzPSF02pkKsTv7a/USPNlkU75ziehCnpQsDsQbvUmHs92DD6gvPaS81SqSL6Yza3dLFd6X9lfQNyIqfkmtE7jx5JIlBcJ0cJgGLrFQng/OKLv3y+vYoIGetmihEhMrN+pQlt7eb+T5NoHmZnmcOt4sb65rJJQ3zlNKt/kazz1sDDaQcEmDyPZdCbNiITK38RejxYM3ZLywNqEhCypraq69BHSWQOYmMr2vOLdot5TxHTnxPLdnFWSiLBurD6jiVoyz35J21mg90yQnQzZWHYCDtkdBjXJkDAI+/XFJX6dc0ybUQPmwbHmZYirBUqFfPYRO2ycCoPDv7Q65cbvqKDjvXAQXnS7s+W/M+vYgGBmwgPNA3TzUDYtlcLZAHFBttLiCDlza/umkmJeRJUiFGYcRTG0409YvjnU3Lx9j1T7f/tDsXhTOQQaXwabrgHkdvUddRKrTJqLATbDLzpGjULl2VBb6r00c7b9pEsKeQbATJoW6/idbAoPV8hLW1CBoe2qIrCG02pEOGAnt+tq058GvvwDVRFGfWJRfkhCNKXDz5gQpWWbrOotstC3qVhUCmZ707O+GBoYR8vlYuQP1DJrOWhx/cUPoLnMQESm4wjqoVB8PbMAbSXl1nVmWs2fHxO9FxXdrESIqjU3prhNXV0W7zbW/M8w2naBFSIeDcrUCcjpRWOzrVf4rGFWuxr8mTnj57p8No5wJMctnWMpvHY9l2Mr7ESJ9yxRBjwIgQAAYK2S1w6/gX/DWKwjN6xS4vm7jsnBbrYA1+Dip9PUTI3d59VP/M1jirWQ3SVZGrhi1Ih2zY2+B9unNUbNbbe0J6zoOfw9IoBVnicDL9p/6UlgjdXjAmaQQDZVdePhMfO8jCzUNWBXJHNx7TQXQjsE0SZmjYCmUGZms6ojfgBDbXFwdiqVpltDlLV1tKtRN0QOL5Of8bHVqYK3dl/JM5TGBXoHZoHpZ9sV4KihLb/tS5wfiflj+qenx46Q2i4nfVPPQ0x71nVssQCCjElH7UFf7A+bNcssjmL2eGF4QrdUcx7VxYNaKPNe3+wCYoslt1fvHGAtvDq05Dpj6PjJSnv6+l31LGF4POR/1bxMlUMUvrriMtkgNc8ItY9qkw3RSkD2v/b4NA2dN+T3wJpw9xEBKoj/fZtpg1ebVbW2MUCswIvr1RENv8qb4YlvNtdi7GVl15vvejpJ6VO4cs4H+VFHaJLwZ0qriUR2iouFS27QL8i3xIKhz2Hac/dpEmwczWhLxcVb6ChUKtXnbgzNuhrVljj0Z2OaqHSwaAZp5ecKjpgWqK9zBzX3N+kx2hdRjXnjM/HSar2nHRPwZl1pm1NMZ+U1GylMhcIHt5XO4nIKd0LUo2rFV6G73fdhgQB/JCPdpO3eLqj6CIUIH64uwFbx8udS8p9YssBbkxKIoT8l2eTG6ipYnNcIcBiSzbuwXjxb935IBOTWrVVAoIjz9vcJtLY2tdfbZfpx3fwgaRXULj3lXeYTkQjRyG9ZvGSFymnxlA0LMOrQrjwL4JMztQozss+g1d7RaHfO6hy7sWImqHcq9tbnwUlEDycF6ZFbppgzP8Z1WSs654u3+Txp4qkrcXy0BW8ffudSodTq2L4KC1Dz0hzy8gykBYDMErW12C1EZw6LxKFVX9KNU6imqVRE/j2Y/YopoI+H60i5dOg/Z08PzQ8CcIV6CbEqmqtKK6z1tI5CSVZbn9ANkdna6UwwKK7HxouU01crHmFOSI+6l9/y5YgXXeFECOBsLoJpMJS5rgmkzHKh40VWfpGMMUx6W4XcngIacyKoZKIRA7RkxE14oRC/cbbECJ8VCKwThNFvyEz6TEobefImxoAaOsm1J7hYlbHJZKE5tBYZAk0QM3R3pa5tnHGlnyad6beuWZiGUrHD4Alj0Tg4/tu+otalRrF4AGQRXmdBGkBpbOWc4WRLdl3MrJ+upDONiyn8zPA6a7YvT8KOSYe6zOnm7vt7RHqQOnAHKIVbseDIuWkJrSkt2y2e6rXg+B7/PJ48EREs5nq79vXb/HJFTthaR1Xx0iC8Aqcr85D2HUnkgo56A8CpCJw3nKpgyQNiCzWbF7JaAzHk2gLyHzcbmhEjx/JO7N77Chcelc9dWE11DooCkKgWgjTV/uveRVv+1n4krYpQ4JSw0eaWOq4ZTt5NiPpxUMMfOrAuYlkhefSs3cJcC/RF0w6KR3BylAuEwaGIFxIlayWu10doXNfZ7PgEVuBPmELt2B/6gFiSW/Y23PtHdZ/+q8612wx8uISbfF0X30IsxvECjqpC+OsZhF3cI1a95B6nGlhsBaYqm5Na/xMHRSBw4J2GkcUmM2Zizi9UIL8HK+R2Lb0Sz/UgbZ113LMXIJQyJeVj1DQ5LzKt4JdEjtaCOBXbVArZs86zmXulOD8utPKVIuecqqFD561ZG8xKqhu7KM7Ii6gEk5w5oWXU0pvsWOQ6EV53MkefLbeXq6dh74d4lAyKSYViXaxpuCrBHMW69lR7Kcqya67UzD6tAbq0VpgR7es7gNYh9UkB3cPklgkH/r+3Z8/kU5sk+KiYerNxPn9RpO0RlnHBbIUmCM6Saj4JHPQKSYflzFK1Ir1u2/PpEUXDhMnstQIR/szxhngBpXXEQ4Ah6ilbSSJmxwSlNvpZLQPOesgLUcIHZ8IhBHjfdcTBmGkKhezaXHpSseUYNYddDwxXICTKdClrh6WdyVTHEYiBnjBlFYrDB9IuAQ0z0awjSxnPSTkb8swSZ7wAgukF3wdlkhRCPWBt+5JaAtUqKsT3E8N0ALP9VvVORBugYqz2wwIaqWavAR3vlMW6hdeKpKx6MXkTPKgirAnf3WKUXPns9On1cuPweAI7CR7MQvPRb3ZazXZ21hEBL2RJZs++Q+qja88N2KbiNMS9EFevkIwiiz8L2VpGmgZstb5yg6i8Nw46d9VAWXa/VfXg7wzIVFaMloH6G6vkDiEWTMUUz8FfHfCu8hfuArr2PZWhd16BDdfOjpRdexM+f1WeVSboPOZlrho8Y74OE4niv240lgHTLtIGCnjv03V8l5F68jkoSNiHywJ56VdHpX08e+DwDUuCZPg==
+ properties : {}
+ controls :
+  -
+    name : STC_This_page_is_a
+    identifier : 0x2f1fe018c00d29ef
+    internal_properties : CAAAAAgAAADcv0seeKyZhO9UjLaknOQvafmbsDpBZKi3t6p7GhNPs5AUfIDBKauaWtHlLKgfPziKgicCkr5dzgz8lRI4FPFlXpFZhffxM/kcU8LVO7cXmtwUwtOkYsFwq9peHYh/jD/8Uxheo4VxNCi+D+cN0CnAq41LujnQy6ykEt03pDOu59IFVzzkPz2t5AtXaBLAiM9DbUV2cADbwCFzAWmNyOxcLJ0PjJ/JNiz1TgE6WyjwbbMMjRCRrKFZXhCGEa1OYn3mQyE7oFJfGQ65e2pg2BCUMVazM/tlsjnWF71zTIwWPrn+C4WUaR/GKu1bcNlL+bNacaMHDHszglcScQFL1MEsuUW4CrBJINJWhvY0PD13tfFXZMcGpM3JA664SJpWd54m/51k8JKBD38+HS2GsgHd8vcXLVYlTxuYcJ7CyXzUR2f74G9ovsfPOfYsGnATAT3lC5DmL7eAmBcig2u5IJEo3eTSzIHv6O+Wxg8P3GGMJoILLmI0mR4HRRHrJl4gdxFScetbK8OfUCqq7xlBYUjquT3UlCqPMA/1MUyOJ0gpYhYOYBFH1nNgc7LJr4ThKENdj3c57I4aU5pJ72z5XO6AHfgCYFOWUv38K60fpzDbCma5ulpY7jlxxfaW2IeTP7gjL1ROgG4HnX0dzJe/wF3GBDva0CE/EIX0lJ6RJ+TM8nA0BrwL0UF+nlOghOUdYoA6eLwuWYHmiBXdgdr+Bm8cBRnFyPwh3JSm3D0cdrDGB/f6hbR3CD2Nxu1FWZjtZfRoluoOZQCgPCEMYLnj8e0mAlXAJ3HfvdHWezStxJUDNhE30aUe6YffljBsLkBv6lzwjkzZrUrnT0Go91p9ZprppE9wCDlpSjg47OC7B5RNg0N2AnMjqRR65OLuNNzGxAmAbYfGceqYxeF3jAXXDzouiORaEx+1107s9uEqW4agR8YJ7LTbbaTJuU8Ll0UrLWBU8u5lLsATQv50HAn5O3eRGL8pwY3lP0SUf8ur17r4ZBcXrG/P+Hknvvq7COMqL4jya4P7Oy6xywBbxdxL8DewVloXpkTHlEHxqYfJuAeJxeaczsRN7U1MvjbzbfNAjhhZEmAgQCXax/sH913YcXzNLaYY+2/zi7moiQH4kTb7tycCKeI8yD6ASadqsby5BPv8rdd8F4QgwVd+VVxbH1wfTrjvHO6lsXUUUMcjJ5he6mPz8606/YeeLyOhwdLpnXHsAFJ62ZkmBveahN2soR3iRyQYRymBqfPdseMjky7fm0B9rCgDaAt0jT/D4L1ULCHpdA1nLfW2laSjEjS3395kdtr9bNVL7QuA7m4cnQyFk/tzQi2CiPjSUalRDrnzCrgBNUiOGgi9FfzUx+vI5xt3qhkIaeLtfKxPwOWziMUCysA6/lPFF7UNpxIyqIAxyBd+68Ft7aa3SPoWotBkkzCeEDaoa8fe4TDUmIvVZs1LFCWD4QB75Ky39ugcfWS7vqZYj9b30MHxPiOSAJn0oCukSslcdLXe3xIccUexFInLk8YRxKn4hGptzFpjAnnwgrdkaAGncoclYwokDmaabxuHyA9tS1suX2bjXMOZAYNjxN4XXNp+yRU3V4QBp8p3L2l2FpLMPoJm5zftFht/YwHI31BLGD4XkqIwQhsR2bx0l9CrIWeykAHjaC5CHeFlX0H4AKqOx7GlN6fKkGGohliHzhPIIlR9cvPq8YCZ/3Ph+wNR5K5f0EZkfbfQg0nCtufq4FmP8SXGBPJTVvdFwmWqmG3PWCFjeDWmFzLvMWoiKV7J6GytEJBZ5SKAgc3uwaNyjKOhWxkYFkcPvqk7O7F+aAhb7tPbv5XhpRKlAjV/+CsxsQRJ7kNLs9KdQoOELazGZChOWnvbAiUsEXYntd9UNQe+XTVvg07dg+57wMGYfEkmeSJ2Nn8zz0PdLkTls4+icw2T6M7UsWFSLHNAk8ecj8McuzvA8/+HeaDoRKZrOAuTDLr0Ol6nmmnbWFRV7Mm+V+qK/JSEr2A8epeBULZaZ4UX3QJyzw6DrgUDi/VdDnyGBO9JQANz7JwZlqZIwGJc8M8o80KjVTXkheLAgYecgiRhC+fdnKBZg8wjcN8PWiI0Ln3KE0efIaHFm/3O8E/RzRBXsIbpDe0jrWYTzE6d4l1Phar8zZDa/H+a+7NwovXX/pcGw0uL+RS1/tmjCOqA+/8M7HSUBVTuawh+UdoCr+1y0ZF/Mv6LwCQTfc8p
+    properties :
+     x : 107
+     y : 36
+     width : 766
+     height : 40
+    type : 3
+    code_elements :
+     type_code : 2
+     alias : A1
+     p_codes : []
+ type : 1
+ languages :
+  - en-GB
+ code_elements :
+  type_code : 38
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAAANK99aT578pqrY5vHKk6We4QlF1n4phI60i5kiJ2ajIXqY8ANw+K+Ev0qF5XyF7/X5nkR47wx/A9HQAdXUtV09qS9IbkPPF7nTWSaUTtcQidvXNTL45w==
+     code : |1-
+      _AddSiteHistory(CN_HISTORY_OPETYPE_CALL_WS,"Call to REST 'admin_rest'")
+      
+      LOCAL 
+      	nProductID		is int
+      	nPromotionID	is int
+      	nFamilyID		is int
+      
+      // Do we have an operation number?
+      SWITCH PageParameter(CN_ADMIN_REST_PARAM_IDOPERATION)
+      	CASE ~=CN_ADMIN_REST_OPE_PRODUCT_GENERATION
+      		NotifyInformation("Generating a product image: "+PageParameter(CN_ADMIN_REST_PARAM_PRODUCTID))
+      		
+      		// Ask for generating a product photo
+      		nProductID = Val(PageParameter(CN_ADMIN_REST_PARAM_PRODUCTID))
+      		
+      		// Check the product
+      		IF nProductID <=0 THEN
+      			AddError("Product not recognized",PageParameter(CN_ADMIN_REST_PARAM_PRODUCTID))
+      			StringDisplay("ERR")				
+      		END
+      		
+      		// Start the generation
+      		IF GenerateProductPhotos(nProductID) = False THEN
+      			StringDisplay("ERR")
+      		END
+      
+      	CASE ~= CN_ADMIN_REST_OPE_FAMILY_GENERATION
+      		NotifyInformation("Generating an image of product family: "+PageParameter(CN_ADMIN_REST_PARAM_FAMILYID))
+      		
+      		// Ask for generating a family photo
+      		nFamilyID = Val(PageParameter(CN_ADMIN_REST_PARAM_FAMILYID))
+      		
+      		// Check the family
+      		IF nFamilyID <=0 THEN
+      			AddError("Product not recognized",PageParameter(CN_ADMIN_REST_PARAM_FAMILYID))
+      			StringDisplay("ERR")				
+      		END
+      		
+      		// Start the generation		
+      		IF GenerateFamilyPhoto(nFamilyID) = False THEN
+      			StringDisplay("ERR")
+      		END	
+      	
+      	CASE ~= CN_ADMIN_REST_OPE_PROMOTION_GENERATION
+      		NotifyInformation("Generating a promotion image: "+PageParameter(CN_ADMIN_REST_PARAM_PROMOTIONID))
+      		
+      		// Ask for generating a promotion photo
+      		nPromotionID = Val(PageParameter(CN_ADMIN_REST_PARAM_PROMOTIONID))
+      		
+      		// Check the promotion
+      		IF nPromotionID <=0 THEN
+      			AddError("Promotion not recognized",PageParameter(CN_ADMIN_REST_PARAM_PROMOTIONID))
+      			StringDisplay("ERR")				
+      		END
+      		
+      		// Start the generation
+      		IF GeneratePromotionPhotos(nPromotionID) = False THEN
+      			StringDisplay("ERR")
+      		END	
+      	
+      	OTHER CASE
+      		AddError("Operation not recognized",PageParameter(CN_ADMIN_REST_PARAM_IDOPERATION))
+      		StringDisplay("ERR")	
+      END
+      
+      // By default, everything is performed properly
+      StringDisplay("")
+      
+      CASE EXCEPTION:
+      	AddError("Exception not supported",ExceptionInfo())
+      	StringDisplay("ERR")
+     type : 851968
+   -
+     type : 852017
+     enabled : false
+   -
+     type : 852119
+     enabled : false
+   -
+     type : 852298
+     role : N
+   -
+     type : 851999
+     role : N
+   -
+     type : 852000
+     role : N
+   -
+     type : 852232
+     enabled : false
+   -
+     type : 852167
+     enabled : false
+   -
+     type : 852169
+     role : N
+     enabled : false
+   -
+     type : 852225
+     role : N
+     enabled : false
+   -
+     type : 852227
+     enabled : false
+   -
+     type : 1310979
+     enabled : false
+   -
+     type : 852228
+     role : N
+     enabled : false
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : PAGE_SansNom1
+resources :
+ string_res :
+  identifier : 0x1005bd60294bf99a
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+webification :
+ internal_properties : CAAAAAgAAACYzxT95H3qP7nIys4LqA==
+custom_note :
+ internal_properties : CAAAAAgAAAC68/W0/adbG0nFCRhrE42B5HRnbDzVHaz86sSQyxlBk7I=
+rad :
+ internal_properties : CAAAAAgAAABoAN7PLpwJW3EiA7WVZdCA5EwrCA1rvutcDHooMWKe

@@ -1,0 +1,560 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_Promotion
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x1eb15ad30581ece4
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAACcLXQlJRxWBZLEr3ppFm/r1LSIP8vMSncYKjF6naQOIfN85ZoWqmBr6k52VMOCoa6emmnPlhzccdM38LPpI7WEU57hs/hAil+PK2q0FYnj
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACko1DOYSGWiEfmi47+g0xrryBFucjRJOZNM28b4cO+S1M4MC2h4adn0pITUUH+X+gT4JsjJwu3rpWi0Nt9BiXJMn3gzThsJTpDY5C2E6bDK8jnmlOjc+813c/t3AK14IdkK2kd7CvOV5R9lQ==
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the Promotion file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_Promotion is Structure
+      		PromotionID 		is int 
+      		StartDate 			is date 
+      		EndDate 			is date 
+      		Description 		is string
+      		LimitedQuantity 	is boolean
+      		Quantity 			is int
+      		PromotionTitle 		is string
+      		ReplacementText 	is string
+      		IsMain 		is boolean
+      		ProductID 			is int
+      		arrPromotionPhoto 	is array dynamic of 0 STCOL_PromotionPhoto 
+      		UnitPriceBT		is currency
+      END
+       
+      PUBLIC
+      	garrPromotions 	is array of STCOL_Promotion
+       
+       CONSTANT
+       	ROLE_PROMOTION_LARGE_SQUARE	= 1		// 600x600 format displayed in case of main promotion
+       	ROLE_PROMOTION_SMALL_SQUARE	= 2		// 200x200 format displayed in the list of promotions
+       	ROLE_PROMOTION_LARGE_LANDSCAPE	= 3	// 705x175 format displayed in the home pages
+       END
+     type : 720896
+  procedures :
+   -
+     name : RefreshyPromotions
+     procedure_id : 2211662666044954303
+     type_code : 15
+     code : |1+
+      // Summary: Refreshes the list of promotions
+      // Syntax:
+      //RefreshyPromotions ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      
+      Procedure RefreshyPromotions ( )
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+       	RETURN
+      END
+      
+      // Update the content
+      FileToArray(garrPromotions,Promotion,EndDate)
+     type : 458752
+   -
+     name : ListPromotions
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 2211663550808555161
+     type_code : 15
+     code : |1-
+      // Summary: Returns the list of promotions
+      // Syntax:
+      //[ <Result> = ] ListPromotions (<sStartDate> is string, <sEndDate> is string, <nProductID> is int)
+      //
+      // Parameters:
+      //	sStartDate (ANSI string): Start date of the promotion
+      //	sEndDate (ANSI string): End date of the promotion
+      //	nProductID (integer): Identifier of the product associated with the promotion
+      // Return value:
+      // 	array: Array of STCOL_Promotions
+      //
+      // Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION ListPromotions ( sStartDate is string, sEndDate is string, nProductID is int )
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT garrPromotions
+      END
+      
+      // Configuration of the query
+      QRY_SearchPromos.pStartDate 	= sStartDate  = "" ? Null 	ELSE sStartDate
+      QRY_SearchPromos.pEndDate 	= sEndDate  = "" ? Null 		ELSE sEndDate
+      QRY_SearchPromos.pEmptyEndDate = sEndDate  = "" ? Null 	ELSE ""
+      QRY_SearchPromos.pProductID 	= nProductID = -1 ? Null 	ELSE nProductID
+      
+      // Run the query
+      HExecuteQuery(QRY_SearchPromos)
+      
+      // Delete the former content
+      ArrayDeleteAll(garrPromotions)
+      
+      // Fill the array
+      FOR EACH QRY_SearchPromos 
+      	// Declare the variables
+      	stPromo 	is STCOL_Promotion	
+      	
+      	// Retrieve the promotion
+      	FileToMemory(stPromo,QRY_SearchPromos)
+      	
+      	// Add to the list of promotions
+      	ArrayAdd(garrPromotions,stPromo)
+      END
+      
+      // Return the list of promotions
+      RESULT garrPromotions
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT garrPromotions
+      	
+     type : 458752
+   -
+     name : DeletePromotion
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 2211670615699658614
+     type_code : 15
+     code : |1+
+      // Summary: Delete the specified promotion
+      // Syntax:
+      //[ <Result> = ] DeletePromotion (<nSoughtPromotionID> is int)
+      //
+      // Parameters:
+      //	nSoughtPromotionID (integer): Identifier of the promotion to delete
+      // Return value:
+      // 	boolean: True if the deletion is performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION DeletePromotion ( nSoughtPromotionID is int )
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the promotion in database
+      HReadSeekFirst(Promotion,PromotionID,nSoughtPromotionID)
+      IF HFound(Promotion) = False THEN
+      	AddError("Record not found")
+      	RESULT False
+      END
+      
+      // Deletion in database
+      IF HDelete(Promotion) = False THEN
+      	AddError("Cannot delete record")
+      	RESULT False
+      END
+      
+      // The deletion is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : ModifyPromotion
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 2211677973173943194
+     type_code : 15
+     code : |1+
+      // Summary: Modifies a promotion
+      // Syntax:
+      //[ <Result> = ] ModifyPromotion (<nSoughtPromotionID> is int, <nRole> is int, <stPromotionContent> is STCOL_Promotion)
+      //
+      // Parameters:
+      //	nSoughtPromotionID (integer): Identifier of the promotion to modify
+      //	stPromotionContent (STCOL_Promotion): Content of the promotion
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION ModifyPromotion ( nSoughtPromotionID is int , stPromotionContent is STCOL_Promotion )
+      // Local variables
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Search in database
+      HReadSeekFirst(Promotion,PromotionID,nSoughtPromotionID)
+      IF HFound(Promotion) = False THEN
+      	AddError("Record not found")
+      	RESULT False
+      END
+      
+      // Fill the data
+      MemoryToFile(stPromotionContent,Promotion)
+      Promotion.PromotionID = nSoughtPromotionID
+      
+      // Modification in database
+      IF HModify(Promotion) = False THEN
+      	AddError("Unable to modify the record")
+      	RESULT False
+      END
+      
+      // Is it the main promotion?
+      IF stPromotionContent.IsMain = True THEN
+      	IF DefineMainPromotion(nSoughtPromotionID) = False THEN
+      		RESULT False
+      	END
+      END
+      
+      
+      // The modification is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+      
+     type : 458752
+   -
+     name : AddPromotion
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 2211677973173877377
+     type_code : 15
+     code : |1+
+      // Summary: Adds a promotion
+      // Syntax:
+      //[ <Result> = ] AddPromotion (<stPromotionContent> is STCOL_Promotion)
+      //
+      // Parameters:
+      //	stPromotionContent (STCOL_Promotion): Content of the promotion
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	int: Identifier of the promotion, -1 if an error occurred
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      FUNCTION AddPromotion (stPromotionContent is STCOL_Promotion ):int
+      
+      // Local variables
+      bufDefault		is buffer
+      nPromotionID 	is int
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Initialize the memory
+      HReset(Promotion)
+      
+      // Fill the data
+      MemoryToFile(stPromotionContent,Promotion)
+      Promotion.PromotionID = 0
+      
+      // Modification in database
+      IF HAdd(Promotion) = False THEN
+      	AddError("Unable to add the record")
+      	RESULT -1
+      END
+      
+      // store the promotion
+      nPromotionID = Promotion.PromotionID
+      
+      WHEN EXCEPTION IN
+      	AssociatePromotionPhoto(Promotion.PromotionID,ROLE_PROMOTION_LARGE_SQUARE,bufDefault)
+      	AssociatePromotionPhoto(Promotion.PromotionID,ROLE_PROMOTION_LARGE_LANDSCAPE,bufDefault)
+      DO
+      	dbgAssert(False,"Unable to create the default images of promotions")
+      	// Non-fatal error
+      END
+      
+      IF stPromotionContent.IsMain = True THEN
+      	IF DefineMainPromotion(nPromotionID) = False THEN
+      		RESULT False
+      	END
+      END
+      
+      
+      
+      // The modification is performed properly by default
+      RESULT nPromotionID
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT -1
+     type : 458752
+   -
+     name : ReadCurrentPromotion
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 2217196581147288998
+     type_code : 15
+     code : |1-
+      // Summary: Returns the identifier of the current promotion
+      // Syntax:
+      //[ <Result> = ] ReadCurrentPromotion ()
+      //
+      // Parameters:
+      //	None
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // int: Identifier of the promotion, -1 if there is none or if an error occurred
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      Procedure ReadCurrentPromotion() :int
+      
+      // Initialize the errors
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT -1
+      END
+      
+      // Take the promotions whose start date is less than or equal to today's date
+      // and whose end date is greater than or equal to today's date or empty
+      // The promotions are sorted according to the end date (in ascending order)
+      
+      // Initializes the parameters of the query
+      QRY_SearchPromos.pStartDate 	= DateSys()
+      QRY_SearchPromos.pEndDate 		= DateSys()
+      QRY_SearchPromos.pProductID 	= Null
+      
+      // Run the query
+      HExecuteQuery(QRY_SearchPromos)
+      
+      // Read the first promotion
+      HReadFirst(QRY_SearchPromos)
+      IF HOut(QRY_SearchPromos) = True THEN
+      	// no current promotion
+      	RESULT -1
+      ELSE
+      	// Current promotion found
+      	RESULT QRY_SearchPromos.PromotionID
+      END
+      
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT -1
+     type : 458752
+   -
+     name : ReadPromotion
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 2211662666045019885
+     type_code : 15
+     code : |1-
+      // Summary: Returns the requested promotion
+      // Syntax:
+      //[ <Result> = ] ReadPromotion (<nSoughtPromotionID> is int)
+      //
+      // Parameters:
+      //	nSoughtPromotionID (integer): Identifier of the promotion
+      // Return value:
+      // 	STCOL_Promotion: Content of the promotion
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION ReadPromotion ( nSoughtPromotionID is int )
+      // Local variables
+      nArraySubscript		is int
+      stPromotionErr		is STCOL_Promotion
+      
+      // Initialize the "error" promotion
+      stPromotionErr.PromotionID = -1
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT stPromotionErr
+      END
+      
+      // Load the array of promotions if it was not already loaded
+      IF garrPromotions..Occurrence = 0 THEN
+      	ListPromotions("","",-1)
+      END
+      
+      // Find the promotion
+      nArraySubscript = ArraySeek(garrPromotions,asLinear,"PromotionID",nSoughtPromotionID)
+      IF nArraySubscript <=0 THEN
+      	AddError("Record not found")
+      	RESULT stPromotionErr
+      END
+      
+      // Return the promotion
+      RESULT garrPromotions[nArraySubscript]
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT stPromotionErr
+     type : 458752
+   -
+     name : DefineMainPromotion
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 2218743370583431137
+     type_code : 15
+     code : |1-
+      // Summary: Defines the promotion as main promotion
+      // Syntax:
+      //[ <Result> = ] DefineMainPromotion ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the main promotion was defined, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure DefineMainPromotion(nPromotionID is int)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // notification
+      NotifyConfigurationModification("Changing the default promotion","",""+nPromotionID)
+      
+      // Find the promotion
+      HReadSeekFirst(Promotion,PromotionID,nPromotionID)
+      IF HFound(Promotion) = False THEN
+      	AddError("Promotion not found")
+      	RESULT False
+      END
+      
+      // Check whether a main promotion is already found
+      HReadSeekFirst(Promotion,IsMain,True)
+      WHILE HFound(Promotion) = True
+      	
+      	// Disable
+      	Promotion.IsMain = False
+      	HModify(Promotion)
+      	
+      	// Reads the next one
+      	HReadNext(Promotion,IsMain)
+      END
+      
+      // Find the promotion
+      HReadSeekFirst(Promotion,PromotionID,nPromotionID)
+      IF HFound(Promotion) = False THEN
+      	AddError("Promotion not found")
+      	RESULT False
+      END
+      
+      // Switch to main promotion
+      Promotion.IsMain = True
+      IF HModify(Promotion) = False THEN
+      	AddError("Unable to modify the promotion")
+      	RESULT False
+      END
+      
+      // The modification is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : ReadMainPromotion
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 2219355365174238312
+     type_code : 15
+     code : |1-
+      // Summary: Returns the identifier of the main promotion
+      // Syntax:
+      //[ <Result> = ] ReadMainPromotion ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	int: Identifier of the promotion, -1 if there is none or if an error occurred
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ReadMainPromotion():int
+      
+      // Initialize the errors
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT -1
+      END
+      
+      // Take the promotions whose start date is less than or equal to today's date
+      // and whose end date is greater than or equal to today's date or empty
+      // The promotions are sorted according to the end date (in ascending order)
+      
+      // Finds the main promotion
+      HReadSeekFirst(Promotion,IsMain,True)
+      IF HFound(Promotion) THEN
+      	// Returns the identifier
+      	RESULT Promotion.PromotionID
+      ELSE
+      	// Not found, returns -1
+      	RESULT -1
+      END
+      
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT -1
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+resources :
+ string_res :
+  identifier : 0x1fa19c5a023f52ec
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

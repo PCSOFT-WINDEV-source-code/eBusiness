@@ -1,0 +1,348 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_News
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c848c24962e
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAAAUNQ7TIrMVNQJfWpSBtkiT1PfwB9dSFcVf6nfSwQE6gZQ+i1CEPhLU22Lp4kgeLi5C5LVW8Hl6ySehcRtUYWpWyHARuR6UOVHEO6b4kzwZrUmk1aongNmlUbv40Utfyw5rvkE9kdsO4qUMsgYHoA==
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACko1DOYSGWiEfmi47+g0xrryBFucjRJOZNM28b4cO+S1M4MC2h4adn0pITUUH+X+gT4JsjJwu3rpWi0Nt9BiXJMn3gzThsJTpDY5C2E6bDK8jnmlOjc+813c/t3AK14IdkK2kd7CvOV5R9lQ==
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the News file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_News is Structure
+      		NewsID is int //Identifier of News
+      		NewsText is string//Text of the news
+      		DateNewsCreation is date //Creation Date of the news
+      		Title is string//Title
+      END
+       
+      PUBLIC
+      	garrNews is array of STCOL_News
+       
+     type : 720896
+   -
+     code : |1-
+      
+     type : 720898
+  procedures :
+   -
+     name : ListNews
+     procedure_id : 1416730097769354798
+     type_code : 15
+     code : |1-
+      // Summary: Returns the list of news
+      // Syntax:
+      //[<Result> = ] ListNews ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	array: Array of STCOL_News
+      //
+      
+      FUNCTION ListNews ( )
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT garrNews
+      END
+      
+      // Have the news been initialized?
+      IF garrNews..Occurrence = 0 THEN
+      	// Initialize the content
+      	RefreshNews()
+      END
+      
+      // Return the list of news
+      RESULT garrNews
+     type : 458752
+   -
+     name : AddNews
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730097769420334
+     type_code : 15
+     code : |1-
+      // Summary: Adds a news
+      // Syntax:
+      //[<Result> = ] AddNews (<sNewsText> is string, <sNewsTitle> is string)
+      //
+      // Parameters:
+      //	sNewsText (string): Text of the news
+      //	sNewsTitle (string): Title of the news
+      // Return value:
+      // 	integer: Identifier of the news, -1 if an error occurs
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION AddNews ( sNewsText is string, sNewsTitle is string )
+      
+      // Local variables
+      nNewsID		is int	= -1
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT nNewsID
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Add a news","",sNewsText)
+      
+      // Initialize the record
+      HReset(news)
+      
+      // Fill the data
+      news.DateNewsCreation	= DateSys()
+      news.NewsText	= sNewsText
+      news.Title			= sNewsTitle
+      
+      // Addition in database
+      IF HAdd(news) = False THEN
+      	AddError("Unable to add the record")
+      	RESULT nNewsID
+      END
+      
+      // Store the created news
+      nNewsID = news.NewsID
+      
+      // Update 
+      RefreshNews()
+      
+      // Return the identifier of the news
+      RESULT nNewsID
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT nNewsID
+     type : 458752
+   -
+     name : DeleteNews
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730097769485870
+     type_code : 15
+     code : |1-
+      // Summary: Delete the specified news
+      // Syntax:
+      //[<Result> = ] DeleteNews (<nSoughtNewsID> is int)
+      //
+      // Parameters:
+      //	nSoughtNewsID (integer): Identifier of the news to delete
+      // Return value:
+      // 	boolean: True if the deletion is performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION DeleteNews( nSoughtNewsID is int )
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the news in database
+      HReadSeekFirst(news,NewsID,nSoughtNewsID)
+      IF HFound(news) = False THEN
+      	AddError("Record not found")
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Deleting a news",news.Title)
+      
+      // Deletion in database
+      IF HDelete(news) = False THEN
+      	AddError("Cannot delete record")
+      	RESULT False
+      END
+      
+      // Update 
+      RefreshNews()
+      
+      // The deletion is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : RefreshNews
+     procedure_id : 1416730097769551406
+     type_code : 15
+     code : |1+
+      // Summary: Refreshes the list of news
+      // Syntax:
+      //RefreshNews ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      
+      Procedure RefreshNews ( )
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RETURN
+      END
+      
+      // Update the content
+      FileToArray(garrNews,news,DateNewsCreation)
+     type : 458752
+   -
+     name : ModifyNews
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730097769616942
+     type_code : 15
+     code : |1+
+      // Summary: Modifies a news
+      // Syntax:
+      //[<Result> = ] ModifyNews (<nSoughtNewsID> is int, <sModifiedText> is string, <sModifiedTitle> is string)
+      //
+      // Parameters:
+      //	nSoughtNewsID (integer): Identifier of the news
+      //	sModifiedText (string): New text of the news
+      //	sModifiedTitle (string): New title of the news
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION ModifyNews( nSoughtNewsID is int , sModifiedText is string, sModifiedTitle is string )
+      // Local variables
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the news in database
+      HReadSeekFirst(news,NewsID,nSoughtNewsID)
+      IF HFound(news) = False THEN
+      	AddError("Record not found")
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying a news",news.Title,sModifiedTitle)
+      
+      // Modification in database
+      news.NewsText 	= sModifiedText
+      news.Title			= sModifiedTitle
+      IF HModify(news) = False THEN
+      	AddError("Unable to modify the record")
+      	RESULT False
+      END
+      
+      // Update
+      RefreshNews()
+      
+      // The modification is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+      
+     type : 458752
+   -
+     name : ReadNews
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730097769682478
+     type_code : 15
+     code : |1-
+      // Summary: Returns the requested news
+      // Syntax:
+      //[<Result> = ] ReadNews (<nSoughtNewsID> is int)
+      //
+      // Parameters:
+      //	nSoughtNewsID (integer): Identifier of the news
+      // Return value:
+      // 	STCOL_News: Content of the news
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION ReadNews ( nSoughtNewsID is int )
+      // Local variables
+      nArraySubscript		is int
+      stNewsErr		is STCOL_News
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Initialize the "error" news
+      stNewsErr.NewsID = -1
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT stNewsErr
+      END
+      
+      // Search for the news
+      nArraySubscript = ArraySeek(garrNews,asLinear,"NewsID",nSoughtNewsID)
+      IF nArraySubscript <=0 THEN
+      	AddError("Record not found")
+      	RESULT stNewsErr
+      END
+      
+      // Return the news
+      RESULT garrNews[nArraySubscript]
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT stNewsErr
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Actualités
+resources :
+ string_res :
+  identifier : 0x1eb144c91c9fd57c
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      en-GB : This area is reserved for the site administrator
+     index : 0
+   -
+     text :
+      en-GB : You must connect as administrator to get access to it
+     index : 1
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

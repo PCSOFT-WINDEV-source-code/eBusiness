@@ -1,0 +1,1039 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_Family
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c888e17a71e
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAACcLXQlJRxWBZLEr3ppFm/r1LSIP8vMSncYKjF6naQOIfN85ZoWqmBr6k52VMOCoa6emmnPlhzccdM38LPpI7WEU57hs/hAil+PK2q0FYnj
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACko1DOYSGWiEfmi47+g0xrryBFucjRJOZNM28b4cO+S1M4MC2h4adn0pITUUH+X+gT4JsjJwu3rpWi0Nt9BiXJMn3gzThsJTpDY5C2E6bDK8jnmlOjc+813c/t3AK14IdkK2kd7CvOV5R9lQ==
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the Family file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_Family is Structure
+      		FamilyID 		is int
+      		Caption 		is string
+      		ParentFamilyID is int
+      		Photo			is string
+      		arrSubFamilies	is array of STCOL_Family
+      END
+       
+      PUBLIC
+      	garrFamilies is array of STCOL_Family
+     type : 720896
+  procedures :
+   -
+     name : RefreshFamilies
+     procedure_id : 1416730114981930782
+     type_code : 15
+     code : |1-
+      // Summary: Refreshes the list of families of products
+      // Syntax:
+      //RefreshFamilies ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      
+      Procedure RefreshFamilies ( )
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RETURN
+      END
+      
+      // Update the content
+      FileToArray(garrFamilies,Family,ParentFamilyID)
+      
+      // Update the paths
+     type : 458752
+   -
+     name : AddFamily
+     internal_properties : CAAAAAgAAADki4m3upJbui6ei0WADOf4R6LPus2bi+Xa8PEPbwgiRMr+glRkfjVn1s+i7bCmkyvFAkIeTPKd0HwdPNjQgqQoI17LORb4utq1woI/Mxh5P1Y0nrWKrGsc6yaGt/BEWCElGBpJ1ZtXpCUm7EBrFE9OzR+6Cn9fW2CIpzsivcsNJBG/htv72Rwl3AMQIWSr+j0yt2j0pEXgpFfEJvpR8Qtr3lZpHg==
+     procedure_id : 1416730114981996318
+     type_code : 15
+     code : |1-
+      // Summary: Adds a family of products
+      // Syntax:
+      //[ <Result> = ] AddFamily (<sFamilyCaption> is string, <bufImage> is buffer, <nParentFamilyID> is int)
+      //
+      // Parameters:
+      //	sFamilyCaption (string): Caption of the family
+      //	bufImage (buffer): buffer containing the image of the family
+      //	nParentFamilyID (integer): Identifier of the parent family of products
+      // Return value:
+      // 	integer: Identifier of the family, -1 if an error occurred
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION AddFamily ( sFamilyCaption is string, bufImage is buffer , nParentFamilyID is int )
+      
+      // Local variables
+      nFamilyID		is int	= -1
+      nDisplayOrder	is int	= 0
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT nFamilyID
+      END
+      
+      // If the parent is not found, place it at the root
+      IF nParentFamilyID <>0 THEN
+      	HReadSeekFirst(Family,FamilyID,nParentFamilyID)
+      	IF HFound(Family) = False THEN
+      		AddError("Parent family not found, position at the root")
+      		nParentFamilyID = 0
+      	END
+      END
+      
+      // Find the maximum display order (addition)
+      QRY_MAXORDER_FAMILY_DISPLAY.pParentFamilyID = nParentFamilyID
+      IF HExecuteQuery(QRY_MAXORDER_FAMILY_DISPLAY) = False THEN
+      	AddError("An error occurred while running the QRY_MAXORDER_DISPLAY_FAMILY query")			
+      ELSE
+      	HReadFirst(QRY_MAXORDER_FAMILY_DISPLAY)
+      	nDisplayOrder = QRY_MAXORDER_FAMILY_DISPLAY.the_maximum_DisplayOrder
+      END
+      
+      // Initialize the record
+      HReset(Family)
+      
+      // Fill the data
+      Family.ParentFamilyID = nParentFamilyID
+      Family.Caption 		= sFamilyCaption
+      Family.Binary			= bufImage
+      Family.DisplayOrder	= nDisplayOrder
+      
+      // Is an image defined?
+      IF bufImage = "" THEN
+      	// Take the default image
+      	bufImage = GetSiteParameter(csAdmin_Default_Family_Image,"images/Bullet_Menu.png")
+      END
+      
+      // Addition in database
+      IF HAdd(Family) = False THEN
+      	AddError("Unable to add the record")
+      	RESULT nFamilyID
+      END
+      
+      // Store the created news
+      nFamilyID = Family.FamilyID
+      
+      IF InWebserviceMode() = True THEN
+      	// Generate the miniature
+      	GenerateFamilyPhoto(nFamilyID)
+      	
+      ELSE
+      	// Generate the miniature
+      	Family.Photo = _GenerateFamilyThumbnail(bufImage,nFamilyID)
+      	
+      	// Storage in database
+      	IF HModify(Family) = False THEN
+      		AddError("Unable to modify the record")
+      		RESULT nFamilyID
+      	END
+      END
+      
+      
+      // Update 
+      RefreshFamilies()
+      
+      // Return the identifier of the family
+      RESULT nFamilyID
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT nFamilyID
+     type : 458752
+   -
+     name : ReadFamilies
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730114982061854
+     type_code : 15
+     code : |1-
+      // Summary: Returns the requested family
+      // Syntax:
+      //[ <Result> = ] ReadFamilies (<nSoughtFamilyID> is int)
+      //
+      // Parameters:
+      //	nSoughtFamilyID (integer): Identifier of the family
+      // Return value:
+      // 	STCOL_Family: Content of the family
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION ReadFamilies ( nSoughtFamilyID is int )
+      // Local variables
+      nArraySubscript		is int
+      stFamilyErr		is STCOL_Family
+      
+      // Initialize the "error" family
+      stFamilyErr.FamilyID = -1 
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT stFamilyErr
+      END
+      
+      // Search for the news
+      nArraySubscript = ArraySeek(garrFamilies,asLinear,"FamilyID",nSoughtFamilyID)
+      IF nArraySubscript <=0 THEN
+      	AddError("Record not found")
+      	RESULT stFamilyErr
+      END
+      
+      // Return the family
+      RESULT garrFamilies[nArraySubscript]
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT stFamilyErr
+     type : 458752
+   -
+     name : ModifyFamily
+     internal_properties : CAAAAAgAAABhwyN63EZUaJkjWR7rhsvYRwrI4tvGvHmeNgrLYXb+FA0RcbhnVnmORclySAwIxWQogKz4HwyFi9z2Y5920d2eCcwiOBIUDVzce1ig/7BBobdqz3CyaZOxXIy+F9uqn5+QhcQHQqcCzSCElprKCpJeAjoYwqqHEp2LmeEG1GWu/mzxc9H8ji9XOH/xWkXl3C77MT5uk3TzO4GxyC0HXhO+FXVxLsGROQ0lcL6p6JPKG+k+0g==
+     procedure_id : 1416730114982127390
+     type_code : 15
+     code : |1+
+      // Summary: Modifies a family of products
+      // Syntax:
+      //[ <Result> = ] ModifyFamily (<nSoughtFamilyID> is int, <bufImage> is buffer, <sFamilyCaption> is string)
+      //
+      // Parameters:
+      //	nSoughtFamilyID (integer): Identifier of the family to modify
+      //	bufImage (buffer): New image of the family
+      //	sFamilyCaption (string): New caption for the family
+      // Return value:
+      // 	boolean: True if the family was updated, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION ModifyFamily ( LOCAL nSoughtFamilyID is int , LOCAL bufImage is buffer , LOCAL sFamilyCaption is string)
+      // Local variables
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Search in database
+      HReadSeekFirst(Family,FamilyID,nSoughtFamilyID)
+      IF HFound(Family) = False THEN
+      	AddError("Record not found")
+      	RESULT False
+      END
+      
+      // Fill the data
+      Family.Caption 		= sFamilyCaption
+      
+      // In Web Service mode,  don't modify the database directly
+      IF InWebserviceMode() = True THEN
+      	// Generate the miniature
+      	IF bufImage<>"" THEN		
+      		
+      		// Store the buffer
+      		Family.Binary	= bufImage	
+      		
+      		// Modification in database
+      		IF HModify(Family) = False THEN
+      			AddError("Unable to modify the record")
+      			RESULT False
+      		END
+      	END	
+       	
+      	// Call the REST API
+      	GenerateFamilyPhoto(nSoughtFamilyID)
+       	
+      ELSE
+      	// Generate the miniature
+      	IF bufImage<>"" THEN
+      		Family.Binary	= bufImage	
+      		Family.Photo = _GenerateFamilyThumbnail(bufImage,nSoughtFamilyID)
+      	END
+      	
+      	// Modification in database
+      	IF HModify(Family) = False THEN
+      		AddError("Unable to modify the record")
+      		RESULT False
+      	END
+      	
+      	// Update
+      	RefreshFamilies()
+      	
+      END
+      
+      
+      // The modification is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+      
+     type : 458752
+   -
+     name : DeleteFamily
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730114982192926
+     type_code : 15
+     code : |1-
+      // Summary: Delete the specified family of products
+      // Syntax:
+      //[ <Result> = ] DeleteFamily (<nSoughtFamilyID> is int)
+      //
+      // Parameters:
+      //	nIDSoughtFamily (integer): Identifier of the family to delete
+      // Return value:
+      // 	boolean: True if the deletion is performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION DeleteFamily ( nSoughtFamilyID is int )
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Search in database
+      HReadSeekFirst(Family,FamilyID,nSoughtFamilyID)
+      IF HFound(Family) = False THEN
+      	AddError(<§@1eb15ad20568e6400000§>)
+      	RESULT False
+      END
+      
+      // Deletion in database
+      IF HDelete(Family) = False THEN
+      	AddError(<§@1eb15ad20568e6400001§>)
+      	RESULT False
+      END
+      
+      // Update 
+      RefreshFamilies()
+      
+      // The deletion is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : ListFamilies
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730114982258462
+     type_code : 15
+     code : |1-
+      // Summary: Lists the families of a parent family
+      // Syntax:
+      //[ <Result> = ] ListFamilies (<nIdentifierParentFamily> is int)
+      //
+      // Parameters:
+      //	nIdentifierParentFamily (integer): Identifier of the parent family
+      // Return value:
+      // 	array: array of STCOL_Family
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION ListFamilies ( nIdentifierParentFamily is int )
+      
+      // Local variables
+      arrFamilies 	is array of STCOL_Family
+      stFamilyErr	is STCOL_Family
+      
+      // Configuration in case of error
+      stFamilyErr.FamilyID = -1
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	// Add the family in error to the array of families
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	ArrayAdd(arrFamilies,stFamilyErr)	
+      	RESULT arrFamilies
+      END
+      
+      // For all the families whose parent is nParentIdentifier, 
+      QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.pIDParent = nIdentifierParentFamily
+      
+      // Run the query
+      IF HExecuteQuery(QRY_LIST_FAMILIES_ACCORDING_TO_PARENT) = False THEN
+      	AddError("Unable to run the query for browsing families")
+      	ArrayAdd(arrFamilies,stFamilyErr)	
+      	RESULT arrFamilies
+      END
+      
+      FOR EACH QRY_LIST_FAMILIES_ACCORDING_TO_PARENT
+      	// Create the structure
+      	stFamily	is STCOL_Family
+      	FileToMemory(stFamily,QRY_LIST_FAMILIES_ACCORDING_TO_PARENT)
+      	
+      	// Add it to the array of families
+      	ArrayAdd(arrFamilies,stFamily)	
+      END
+      
+      // Return the array
+      RESULT arrFamilies
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	ArrayAdd(arrFamilies,stFamilyErr)	
+      	RESULT arrFamilies
+     type : 458752
+   -
+     name : LoadFamilies
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730114982323998
+     type_code : 15
+     code : |1-
+      // Summary: Loads the list of families
+      // Syntax:
+      //[ <Result> = ] LoadFamilies (<bClearContent> is boolean, <nBaseFamily> is int)
+      //
+      // Parameters:
+      //	bClearContent (boolean):True to clear the array of families before the load operation, default value=1
+      //	nBaseFamily (int):Identifier of the "root" family for the load operation, default value=0
+      // Automatic Process of Exceptions:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	boolean: True if the load operation is performed, False otherwise
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      FUNCTION LoadFamilies ( bClearContent is boolean , nBaseFamily is int )
+      // Local variables
+      arrNewFamilies is array of STCOL_Family
+      stFamily		is STCOL_Family
+      
+      IF bClearContent = True THEN
+      	// Delete the previous content
+      	ArrayDeleteAll(garrFamilies)
+      END
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Retrieve the families from the root
+      arrNewFamilies = ListFamilies(nBaseFamily)
+      FOR ALL ELEMENT stFamily of arrNewFamilies
+      	// Add to the family
+      	ArrayAdd(garrFamilies,stFamily)
+      	// Does this family have children?
+      	LoadFamilies(False,stFamily.FamilyID)
+      END
+      
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+     type : 458752
+   -
+     name : _GenerateFamilyThumbnail
+     internal_properties : CAAAAAgAAADDq25ULfuUU88Kh7r5WNmOg33bsrZNart4twlQS8R6rsky8pl1s47oNzI1Th7YsPTgE64Pm99SAeoeVnWSTXR3QUpsO3VjgeZ8O6dNCRya6n1d97bsZe/gFKZ5OwsBLrF2KPkx8yG2/n5FzxIWC170YRMjUh8r/EKjTB5S3Abi3AmdLRAmS2gtKRsR4RD162/jrLP2YksOmTBjZp7czP7skG4EgT1oRHIZM3PNsE9I/Tj3mcbTrcgAW1LmWHn04ZRSXqxVzs1Kyw==
+     procedure_id : 1416730114982389534
+     type_code : 15
+     code : |1-
+      // Summary: Generates the miniature of a family
+      // Syntax:
+      //[ <Result> = ] _GenerateFamilyThumbnail (<bufPhoto> is buffer, <nFamilyID> is int)
+      //
+      // Parameters:
+      //	bufPhoto (buffer): Buffer containing the source image
+      //	nFamilyID (integer): identifier of the family
+      // Return value:
+      // 	ANSI string: Path of the photo
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION PRIVATE _GenerateFamilyThumbnail( LOCAL bufPhoto is buffer , nFamilyID is int)
+      
+      // Local variables
+      sFullPathDataDirectory	is string
+      sFullPathWebDirectory		is string
+      sWebPath						is string
+      Thumbnail						is a Image
+      
+      // This procedure must not be run in Web Service mode
+      IF InWebserviceMode() THEN
+      	AddError("This process must not be run in Web Service mode",dbgInfo(dbgStack))
+      	RESULT ""
+      END
+      
+      // Loading the image
+      IF bufPhoto <> "" THEN
+      	Thumbnail = bufPhoto
+      END
+      
+      // Resize to 50x50
+      dResize(Thumbnail,50,50,drHomotheticCentered)
+      Thumbnail..Width = 50
+      Thumbnail..Height = 50
+      
+      // Build the full names
+       sFullPathDataDirectory	= CompleteDir(sReturnGenerationDir())+"family_"+nFamilyID+".jpg"
+      sFullPathWebDirectory 		= CompleteDir(sReturnDirWebUpload())+"family_"+nFamilyID+".jpg"
+      
+      
+      // Save the image
+      IF Thumbnail..WithAlpha = False THEN
+      
+      	// Backup in BMP format
+      	IF dSaveImageJPEG(Thumbnail,sFullPathDataDirectory) = False THEN
+      		AddError("Error while saving the thumbnail",ErrorInfo())
+      		RESULT ""
+      	END
+      ELSE
+      	
+      	// Save in PNG format to keep the alpha layer
+      	IF dSaveImagePNG(Thumbnail,sFullPathDataDirectory) = False THEN
+      		AddError("Error while saving the thumbnail",ErrorInfo())
+      		RESULT ""			
+      	END
+      END
+      
+      <COMPILE IF ConfigurationType=Webservice>
+      	// This procedure must not be run in Web Service mode
+      <ELSE>
+      	// Copy the image into the _WEB directory
+      	IF fCopyFileWebFolder(sFullPathDataDirectory,sFullPathWebDirectory) = False THEN
+      		AddError("Error while transferring the thumbnail into the _WEB directory",ErrorInfo())
+      		RESULT ""
+      	END	
+      <END>
+                                                                    
+      // Delete the generation image
+      IF fFileExist(sFullPathDataDirectory) = True THEN
+      	IF fDelete(sFullPathDataDirectory) = False THEN
+      		AddError("Unable to delete the temporary generation image",ErrorInfo())
+      		// non-fatal error, continue
+      	END
+      END
+      
+      <COMPILE IF ConfigurationType=Webservice>
+      	// This procedure must not be run in Web Service mode
+      <ELSE>	
+      	// Build the path of the image in relation to fWebDir
+      	sWebPath = Replace(sFullPathWebDirectory,fWebDir()+"\UK","")	
+      <END>
+      
+      // Build the path of the image
+      sWebPath = Replace(sWebPath,"\","/")
+      IF Left(sWebPath,1)~="/" THEN sWebPath = Right(sWebPath,Length(sWebPath)-1)
+      
+      
+      
+      // Return the Web path
+      RESULT sWebPath
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT ""
+     type : 458752
+   -
+     name : ReadFamilyPhoto
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730114982455070
+     type_code : 15
+     code : |1-
+      // Summary: Returns the photo of a family
+      // Syntax:
+      //[ <Result> = ] ReadFamilyPhoto (<nFamilyID> is int)
+      //
+      // Parameters:
+      //	nFamilyID (int): Identifier of the family
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	string: Path of the photo
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      Procedure ReadFamilyPhoto(nFamilyID is int) :string
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Initialize the mechanism for managing the errors
+      InitializeError()
+      
+      // Find the photo in database
+      HReadSeekFirst(Family,FamilyID,nFamilyID)
+      IF HFound(Family) = True THEN
+      	IF InAWPMode() = True THEN
+      		RESULT Family.Photo	
+      	ELSE
+      		RESULT "UK/"+Family.Photo
+      	END
+      ELSE
+      	AddError("No photo for this identifier")
+      	RESULT ""
+      END
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT ""
+     type : 458752
+   -
+     name : ListFamiliesAndSubFamilies
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730114982520606
+     type_code : 15
+     code : |1-
+      // Summary: Lists the families and the sub-families of a parent family
+      // Syntax:
+      //[ <Result> = ] ListFamiliesAndSubFamilies (<nIdentifierParentFamily> is int, <bInitializeList> is boolean)
+      //
+      // Parameters:
+      //	nIdentifierParentFamily (int):Identifier of the parent family
+      //	bInitializeList (boolean):True to initialize the list, False to fill an existing list, default value=True
+      // Automatic Process of Exceptions:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	array: array of STCOL_Family
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      FUNCTION ListFamiliesAndSubFamilies( nIdentifierParentFamily is int, bInitializeList is boolean)
+      
+      // CAUTION, RECURSIVE process
+      
+      // Local variables
+      arrErrFamilies 	is array of STCOL_Family
+      stFamilyErr	is STCOL_Family
+      nSubscript			is int
+      ListSubFamilies	is string
+      sFamilyID		is string
+      
+      // Configuration in case of error
+      stFamilyErr.FamilyID = -1
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	// Add the family in error to the array of families
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	ArrayAdd(arrErrFamilies,stFamilyErr)	
+      	RESULT arrErrFamilies
+      END
+      
+      // Do we have to initialize the list of current families
+      IF bInitializeList =  True THEN
+      	ArrayDeleteAll(garrFamilies)
+      END
+      
+      // For all the families whose parent is nParentIdentifier, 
+      FOR EACH Family WHERE ParentFamilyID = nIdentifierParentFamily
+      	// Create the structure
+      	stFamily	is STCOL_Family
+      	FileToMemory(stFamily,Family)
+      	
+      	// Is this family already found as parent?
+      	nSubscript = ArraySeek(garrFamilies,asLinear,"FamilyID",stFamily.ParentFamilyID)
+      	IF nSubscript>0 THEN
+      		ArrayAdd(garrFamilies[nSubscript].arrSubFamilies,stFamily)	
+      	ELSE
+      		ArrayAdd(garrFamilies,stFamily)	
+      	END	
+      	
+      	// A new family was added, process the sub-families
+      	ListSubFamilies = ListSubFamilies + [CR] + stFamily.FamilyID
+      	
+      END
+      
+      // Process the sub-families (moved from the main loop to simplify the implementation)
+      FOR EACH string sFamilyID of ListSubFamilies separee by CR
+      	// Find the sub-families
+      	ListFamiliesAndSubFamilies(Val(sFamilyID),False)	
+      END
+      
+      // Return the array
+      RESULT garrFamilies
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	ArrayAdd(arrErrFamilies,stFamilyErr)	
+      	RESULT arrErrFamilies
+     type : 458752
+   -
+     name : ListIDSubFamilies
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730114982586142
+     type_code : 15
+     code : |1-
+      // Summary: Lists the identifier of families and the sub-families of a parent family
+      // Syntax:
+      //[ <Result> = ] ListIDSubFamilies (<nIdentifierParentFamily> is int)
+      //
+      // Parameters:
+      //	nIdentifierParentFamily (integer): Identifier of the parent family
+      // Return value:
+      // 	ANSI string: list of family identifiers, separated by CR characters
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION ListIDSubFamilies( nIdentifierParentFamily is int)
+      
+      // CAUTION, RECURSIVE process
+      
+      // Local variables
+      ListSubFamilies	is string = nIdentifierParentFamily
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      // It is a public information: there is no code for checking the connection
+      
+      
+      // For all the families whose parent is nParentIdentifier, 
+      FOR EACH Family WHERE ParentFamilyID = nIdentifierParentFamily
+      	
+      	// A new family was added, process the sub-families
+      	ListSubFamilies = ListSubFamilies + [CR] + ListIDSubFamilies(Family.FamilyID)	
+      END
+      
+      // Return the list of sub-families
+      RESULT ListSubFamilies
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT ""
+     type : 458752
+   -
+     name : GenerateFamilyPhoto
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730114982651678
+     type_code : 15
+     code : |1+
+      // Summary: Generates the image for a family of products
+      // Syntax:
+      //[ <Result> = ] GenerateFamilyPhoto (<nSoughtFamilyID> is int)
+      //
+      // Parameters:
+      //	nSoughtFamilyID (integer): Identifier of the family to modify
+      // Return value:
+      // 	boolean: True if the family was updated, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION GenerateFamilyPhoto( LOCAL nSoughtFamilyID is int)
+      // Local variables
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Search in database
+      HReadSeekFirst(Family,FamilyID,nSoughtFamilyID)
+      IF HFound(Family) = False THEN
+      	AddError("Record not found")
+      	RESULT False
+      END
+      
+      // In Web Service mode,  don't modify the database directly
+      IF InWebserviceMode() = True THEN
+      	// Generate the miniature
+      	IF Family.Binary<>"" THEN		
+      		
+      		// Call the REST API
+      		IF CallWSRestManagement(CN_ADMIN_REST_PARAM_IDOPERATION+"="+CN_ADMIN_REST_OPE_FAMILY_GENERATION+"&"+CN_ADMIN_REST_PARAM_FAMILYID+"="+nSoughtFamilyID) = False THEN
+      			AddError("Error while calling the REST API")
+      			RESULT False
+      		END
+      	END	
+      
+      ELSE
+      	// Generate the miniature
+      	IF Family.Binary<>"" THEN		
+      		Family.Photo = _GenerateFamilyThumbnail(Family.Binary,nSoughtFamilyID)
+      	END
+      	
+      	// Modification in database
+      	IF HModify(Family) = False THEN
+      		AddError("Unable to modify the record")
+      		RESULT False
+      	END
+      	
+      	// Update
+      	RefreshFamilies()
+      	
+      END
+      
+      
+      // The modification is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+      
+     type : 458752
+   -
+     name : MoveUpFamilyOrder
+     internal_properties : CAAAAAgAAADoQzQSDLS7oRZWOxU6uvs+49CETNJvSd7RnHw1TWTWoqBHocxpdqQF3OR2SFbCFeoI8JQlFmJh48RwIf4cCKxRg/SKgmR+czLK4h5m0HnqUXJvVXEpcgekYE2IQscAstsX/p1vcLVZkoS3kvmAZKUMme/7/sSny2SJTv0RLvWrmpJsLrbz4uG8oPXHZXgYQVSS0mUYC4A=
+     procedure_id : 1416730114982717214
+     type_code : 15
+     code : |1-
+      // Summary: Moves a family up in the database
+      // Syntax:
+      //[ <Result> = ] MoveUpFamilyOrder (<nSoughtFamilyID> is int)
+      //
+      // Parameters:
+      //	nSoughtFamilyID (integer): Identifier of the family
+      // Return value:
+      // 	boolean: True if the product was moved up, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure MoveUpFamilyOrder(nSoughtFamilyID is int)
+      
+      // Local variables
+      nProductID				is int	= -1
+      nDisplayOrder			is int 	= 0
+      nPreviousFamilyID	is int
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the display order of a family","",""+nSoughtFamilyID)
+      
+      // Check the family
+      IF nSoughtFamilyID <=0 THEN RESULT False
+      HReadSeekFirst(Family,FamilyID,nSoughtFamilyID)
+      IF HFound(Family) = False THEN
+      	AddError("Family not found")
+      	RESULT False
+      END
+      
+      // Find the listed products, sorted
+      QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.pIDParent = Family.ParentFamilyID
+      IF HExecuteQuery(QRY_LIST_FAMILIES_ACCORDING_TO_PARENT) = False THEN
+      	AddError("An error occurred while running the QRY_LIST_FAMILIES_ACCORDING_TO_PARENT query")			
+      	RESULT False
+      END
+      
+      // Browse the families of the parent until we find the one to move up
+      FOR EACH QRY_LIST_FAMILIES_ACCORDING_TO_PARENT 
+      	// Is it the sought product?
+      	IF QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.FamilyID = nSoughtFamilyID THEN
+      		// Can it be moved up according to the previous one?
+      		IF nPreviousFamilyID <> 0 THEN
+      			// Yes, modify
+      			HReadSeekFirst(Family,FamilyID,nSoughtFamilyID)			
+      			
+      			// If the display order is the same, force the difference
+      			IF Family.DisplayOrder = nDisplayOrder THEN
+      				Family.DisplayOrder = Family.DisplayOrder - 1
+      			ELSE
+      				// Take the display order of the previous one
+      				Family.DisplayOrder = nDisplayOrder				
+      			END
+      			IF HModify(Family) = False THEN
+      				AddError("Unable to update the display order of the family")
+      				RESULT False
+      			END
+      			
+      			// And move the previous one down
+      			HReadSeekFirst(Family,FamilyID,nPreviousFamilyID)
+      			Family.DisplayOrder = QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.DisplayOrder
+      			IF HModify(Family) = False THEN
+      				AddError("Unable to update the display order of the previous family")
+      				RESULT False				
+      			END
+      			
+      			RESULT True
+      		END
+      	END
+      	
+      	// Store the current display order as well as the current link
+      	nPreviousFamilyID 	= QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.FamilyID
+      	nDisplayOrder		= QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.DisplayOrder
+      	
+      END
+      
+      // By default, the family was not moved up
+      RESULT False
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : MoveDownFamilyOrder
+     internal_properties : CAAAAAgAAADoQzQSDLS7oRZWOxU6uvs+49CETNJvSd7RnHw1TWTWoqBHocxpdqQF3OR2SFbCFeoI8JQlFmJh48RwIf4cCKxRg/SKgmR+czLK4h5m0HnqUXJvVXEpcgekYE2IQscAstsX/p1vcLVZkoS3kvmAZKUMme/7/sSny2SJTv0RLvWrmpJsLrbz4uG8oPXHZXgYQVSS0mUYC4A=
+     procedure_id : 1416730114982782750
+     type_code : 15
+     code : |1-
+      // Summary: Moves a family down in the database
+      // Syntax:
+      //[ <Result> = ] MoveDownFamilyOrder (<nSoughtFamilyID> is int)
+      //
+      // Parameters:
+      //	nSoughtFamilyID (integer): Identifier of the family
+      // Return value:
+      // 	boolean: True if the product was moved up, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure MoveDownFamilyOrder(nSoughtFamilyID is int)
+      
+      // Local variables
+      nProductID				is int	= -1
+      nDisplayOrder			is int 	= 0
+      nPreviousFamilyID	is int
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the display order of a family","",""+nSoughtFamilyID)
+      
+      // Check the family
+      IF nSoughtFamilyID <=0 THEN RESULT False
+      HReadSeekFirst(Family,FamilyID,nSoughtFamilyID)
+      IF HFound(Family) = False THEN
+      	AddError("Family not found")
+      	RESULT False
+      END
+      
+      // Find the listed products, sorted
+      QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.pIDParent = Family.ParentFamilyID
+      IF HExecuteQuery(QRY_LIST_FAMILIES_ACCORDING_TO_PARENT) = False THEN
+      	AddError("An error occurred while running the QRY_LIST_FAMILIES_ACCORDING_TO_PARENT query")			
+      	RESULT False
+      END
+      
+      // Browse the families of the parent until we find the one to move down
+      FOR EACH QRY_LIST_FAMILIES_ACCORDING_TO_PARENT FromEnd
+      	// Is it the sought product?
+      	IF QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.FamilyID = nSoughtFamilyID THEN
+      		// Can it be moved up according to the previous one?
+      		IF nPreviousFamilyID <> 0 THEN
+      			// Yes, modify
+      			HReadSeekFirst(Family,FamilyID,nSoughtFamilyID)			
+      			
+      			// If the display order is the same, force the difference
+      			IF Family.DisplayOrder = nDisplayOrder THEN
+      				Family.DisplayOrder = Family.DisplayOrder + 1
+      			ELSE
+      				// Take the display order of the previous one
+      				Family.DisplayOrder = nDisplayOrder				
+      			END
+      			IF HModify(Family) = False THEN
+      				AddError("Unable to update the display order of the family")
+      				RESULT False
+      			END
+      			
+      			// And move the previous one down
+      			HReadSeekFirst(Family,FamilyID,nPreviousFamilyID)
+      			Family.DisplayOrder = QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.DisplayOrder
+      			IF HModify(Family) = False THEN
+      				AddError("Unable to update the display order of the previous family")
+      				RESULT False				
+      			END
+      			
+      			RESULT True
+      		END
+      	END
+      	
+      	// Store the current display order as well as the current link
+      	nPreviousFamilyID 	= QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.FamilyID
+      	nDisplayOrder		= QRY_LIST_FAMILIES_ACCORDING_TO_PARENT.DisplayOrder
+      	
+      END
+      
+      // By default, the family was not moved up
+      RESULT False
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Famille
+resources :
+ string_res :
+  identifier : 0x1eb15ad20568e640
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      en-GB : Record not found
+     index : 0
+   -
+     text :
+      en-GB : Cannot delete record
+     index : 1
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

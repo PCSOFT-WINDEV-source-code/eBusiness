@@ -1,0 +1,733 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_ProductPhoto
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c8a8e5aaedc
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAAB29t/YmUlZcfLUCzyqGUAheSRqJ+QSRKf2RW6PMVIzMLcatf4w5jTM7xV5RPnh4GV73TB1GhP1xlDkEa+/0L/St8YwRZD6XQ==
+  type_code : 31
+  p_codes :
+   -
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the ProductPhoto file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_ProductPhoto is Structure
+      		ProductPhotoID 			is int
+      		Photo 					is string
+      		Role 					is int
+      		ByDefault 				is boolean
+      		arrProductVariation 	is STCOL_ProductVariation 
+      		ProductID				is int
+      		Binary 				is buffer
+      		PhotoNumber				is int
+      END
+       
+       
+     type : 720896
+  procedures :
+   -
+     name : AddProductPhoto
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730123576258268
+     type_code : 15
+     code : |1-
+      // Summary: Adds a product photo
+      // Syntax:
+      //[ <Result> = ] AddProductPhoto (<nProductID> is int, <bufProductPhoto> is buffer)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product
+      //	bufProductPhoto (buffer): Buffer of the product photo
+      // Return value:
+      // 	boolean: True if the photo was added, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION AddProductPhoto ( nProductID is int , bufProductPhoto is buffer )
+      // Local variables
+      sListRole 		is string
+      sCurrentRole	is string
+      nPhotoNumber	is int
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Initialize the mechanism for managing the errors
+      InitializeError()
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Unable to find the corresponding product")
+      	RESULT False
+      END
+      
+      // Find the greatest photo number for this product
+      QRY_MAX_PHOTO_NUMBER.pProductID = nProductID
+      HExecuteQuery(QRY_MAX_PHOTO_NUMBER)
+      HReadFirst(QRY_MAX_PHOTO_NUMBER)
+      IF HOut(QRY_MAX_PHOTO_NUMBER) = True THEN
+      	// First photo
+      	nPhotoNumber = 1
+      ELSE
+      	// Take the next one
+      	nPhotoNumber = QRY_MAX_PHOTO_NUMBER.the_maximum_PhotoNumber + 1
+      END
+      
+      // Initialize the list of roles
+      sListRole = ROLE_PHOTO_NORMAL + TAB + ROLE_PHOTO_SQUARE_SMALL + TAB + ROLE_PHOTO_LARGE_SQUARE
+      
+      // In WebService, a single photo is created: the default photo of the role to create the binary
+      IF InWebserviceMode() = True THEN
+      	HReadSeekFirst(ProductPhoto,ProductIDPhotoNumberRole,[product.ProductID,nPhotoNumber,ROLE_PHOTO_NORMAL])
+      	IF HFound(ProductPhoto) = True THEN
+      		AddError("Photo already found")
+      		RESULT False		
+      	END
+      	
+      	// Initialize the record
+      	HReset(ProductPhoto)
+      	
+      	// Store the binary
+      	ProductPhoto.ByDefault		= False
+      	ProductPhoto.Binary 		= bufProductPhoto
+      	ProductPhoto.Role			= ROLE_PHOTO_NORMAL
+      	ProductPhoto.PhotoNumber	= nPhotoNumber
+      	ProductPhoto.ProductID 		= product.ProductID		
+      	
+      	// The square photo is the default one
+      	IF nPhotoNumber = 1 _AND_ ProductPhoto.Role = ROLE_PHOTO_NORMAL THEN
+      		ProductPhoto.ByDefault = True
+      	END
+      	
+      	// Add into database
+      	IF HAdd(ProductPhoto) = False THEN
+      		AddError("Unable to add the miniature")
+      		RESULT False			
+      	END
+      	
+      	// Ask for generation via the REST API of the site
+      	IF CallWSRestManagement(CN_ADMIN_REST_PARAM_IDOPERATION+"="+CN_ADMIN_REST_OPE_PRODUCT_GENERATION+"&"+CN_ADMIN_REST_PARAM_PRODUCTID+"="+nProductID) = False THEN
+      		AddError("Unable to call the management API")	
+      		RESULT False
+      	END
+      	
+      	// In WebService mode, it's over
+      	RESULT True
+      END
+      
+      // Create the different photos corresponding to the different roles defined in the COL_EBUSINESS collection
+      FOR EACH string sCurrentRole of sListRole separee by TAB
+      	HReadSeekFirst(ProductPhoto,ProductIDPhotoNumberRole,[product.ProductID,nPhotoNumber,Val(sCurrentRole)])
+      	IF HFound(ProductPhoto) = True THEN
+      		CONTINUE
+      	END
+      	
+      	// Initialize the record
+      	HReset(ProductPhoto)
+      		
+      	// Configuration 
+      	// Store the binary for the default image only
+      	IF Val(sCurrentRole) = ROLE_PHOTO_NORMAL THEN
+      		ProductPhoto.Binary = bufProductPhoto
+      	END
+      	
+      	ProductPhoto.ByDefault		= False	
+      	ProductPhoto.ProductID = product.ProductID		
+      	ProductPhoto.Role		= Val(sCurrentRole)
+      	ProductPhoto.PhotoNumber	= 	nPhotoNumber
+      	
+      	// The square photo is the default one
+      	IF nPhotoNumber = 1 _AND_ ProductPhoto.Role = ROLE_PHOTO_NORMAL THEN
+      		ProductPhoto.ByDefault = True
+      	END
+      		
+      	// Build the image
+      	ProductPhoto.Photo = _GenerateThumbnail(bufProductPhoto,Val(sCurrentRole),ProductPhoto.ProductID,nPhotoNumber)	
+      		
+      	// Addition in database
+      	IF HAdd(ProductPhoto) = False THEN
+      		AddError("Unable to add the miniature")
+      		RESULT False			
+      	END
+      
+      END
+      
+      
+      
+      // By default, the addition is performed properly
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : _GenerateThumbnail
+     internal_properties : CAAAAAgAAACy3Xdv0HyhKF2/Sz5qQw+Y17Wqz4IPa7VquAG3n9h6zErearRkDo1/Hl+KDXieQ3stWsLmZIrt4KwlHGDAUvzAgz7TedYYsmK9Auof++CZ3z4sklHuENeQf9JqozxQ1I25vL412Z9juFkiUAz3oBuq0XPeZhNTV1QsA5+OiedZ0DVjKpc/bZiZYP+EXfAn6vo08mIK9oNr9ysg0c4RHT9/rKQ/yA==
+     procedure_id : 1416730123576323804
+     type_code : 15
+     code : |1-
+      // Summary: Generates the thumbnail of a product
+      // Syntax:
+      //[ <Result> = ] _GenerateThumbnail (<bufProductPhoto>, <nRole> is int, <nProductID> is int, <nPhotoNumber> is int)
+      //
+      // Parameters:
+      //	bufProductPhoto: Buffer containing the source image
+      //	nRole (integer): Role of the photo
+      //	nProductID (integer): Identifier of the product
+      //	nPhotoNumber (integer): Number of the photo
+      // Return value:
+      // 	string: Path of the photo
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION PRIVATE _GenerateThumbnail ( bufProductPhoto , nRole is int , nProductID is int, nPhotoNumber is int )
+      
+      // Local variables
+      sFullPath				is string
+      sWebPath					is string
+      Thumbnail					is a Image
+      sFullGenerationPath	is string
+      
+      // This procedure must not be run in Web Service mode
+      IF InWebserviceMode() THEN
+      	AddError("This process must not be run in Web Service mode",dbgInfo(dbgStack))
+      	RESULT ""
+      END
+      
+      
+      // Loading the image
+      Thumbnail = bufProductPhoto
+      Thumbnail..FillColor = iWhite
+      // Resize according to the role
+      SWITCH nRole
+      	CASE ROLE_PHOTO_NORMAL	// Standard square photo, 512x512 without enlargement
+      		dResize(Thumbnail,512,512,drHomotheticCentered)
+      
+      		// Resize to square format to allow the stretched mode
+      		Thumbnail..FillColor = iWhite
+      		Thumbnail..Width = 512		
+      		Thumbnail..Height = 512
+      		
+      	CASE ROLE_PHOTO_SQUARE_SMALL	// Small square photo: 128x128
+      		dResize(Thumbnail,128,128,drHomotheticCentered)
+      		
+      		// Resize to square format to allow the stretched mode
+      		Thumbnail..FillColor = iWhite
+      		Thumbnail..Width = 128
+      		Thumbnail..Height = 128		
+      	CASE ROLE_PHOTO_LARGE_SQUARE  // Large square photo: 256x256		
+      		dResize(Thumbnail,256,256,drHomotheticCentered)
+      		
+      		// Resize to square format to allow the stretched mode
+      		Thumbnail..FillColor = iWhite
+      		Thumbnail..Width = 256
+      		Thumbnail..Height = 256		
+      
+      	OTHER CASE
+      		AddError("Role of photo not supported")
+      		RESULT ""
+      END
+      
+      // Build the full path of the file
+      sFullPath = CompleteDir(sReturnDirWebUpload())+"product_"+nProductID+"_"+nPhotoNumber+"_"+nRole+".jpg"
+      sFullGenerationPath = CompleteDir(sReturnGenerationDir())+"product_"+nProductID+"_"+nPhotoNumber+"_"+nRole+".jpg"
+      	
+      // Backup in BMP format
+      IF dSaveImageJPEG(Thumbnail,sFullGenerationPath) = False THEN
+      	AddError("Error while saving the thumbnail",ErrorInfo())
+      	RESULT ""
+      END
+      
+      // Transfer the generated image into the _WEB directory
+      <COMPILE IF ConfigurationType=Webservice>
+      	// This procedure must not be run in Web Service mode
+      <ELSE>
+      	// Direct transfer
+      	IF fCopyFileWebFolder(sFullGenerationPath,sFullPath) = False THEN
+      		AddError("Unable to transfer the image into the _WEB directory",ErrorInfo())
+      		RESULT ""
+      	END	
+      <END>
+      
+      // Delete the generation file
+      IF fFileExist(sFullGenerationPath) = True THEN
+      	IF fDelete(sFullGenerationPath) = False THEN
+      		AddError("Unable to delete the temporary generation file",ErrorInfo())
+      		// Non-fatal error
+      	END
+      END
+      
+      <COMPILE IF ConfigurationType=Webservice>
+      	// This procedure must not be run in Web Service mode
+      <ELSE>
+      	// Build the path of the image in relation to fWebDir
+      	sWebPath = Replace(sFullPath,fWebDir()+"\UK","")	
+      <END>
+      
+      sWebPath = Replace(sWebPath,"\","/")
+      IF Left(sWebPath,1)~="/" THEN sWebPath = Right(sWebPath,Length(sWebPath)-1)
+      
+      // Return the Web path
+      RESULT sWebPath
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT ""
+     type : 458752
+   -
+     name : ModifyDefaultProductPhoto
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730123576389340
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the default photo of a product
+      // Syntax:
+      //[ <Result> = ] ModifyProductDefaultPhoto (<nProductID> is int, <nIDNewPhoto> is int)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product
+      //	nNewPhotoID (integer): Identifier of the new photo
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION ModifyDefaultProductPhoto ( nProductID is int , nNewPhotoID is int )
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Initialize the mechanism for managing the errors
+      InitializeError()
+      
+      //Removes the "default" flag from the current default photo, in the database
+      HReadSeekFirst(ProductPhoto,ByDefaultProductID,[True,nProductID])
+      IF HFound(ProductPhoto)=True THEN
+      	ProductPhoto.ByDefault = False
+      	IF HModify(ProductPhoto) = False THEN
+      		AddError("Unable to change the default image")
+      		RESULT False
+      	END	
+      END
+      
+      // Enables the "default" flag on the new default photo, in the database
+      HReadSeekFirst(ProductPhoto,ProductPhotoID,nNewPhotoID)
+      IF HFound(ProductPhoto) THEN
+      	
+      	ProductPhoto.ByDefault = True
+      	IF HModify(ProductPhoto) = False THEN
+      		AddError("Unable to define the default image")
+      		RESULT False
+      	END	
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+      	
+     type : 458752
+   -
+     name : ReadProductPhoto
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730123576454876
+     type_code : 15
+     code : |1-
+      // Summary: Returns a specific product photo
+      // Syntax:
+      //[ <Result> = ] ReadProductPhoto (<nPhotoID> is int)
+      //
+      // Parameters:
+      //	nPhotoID (int): Identifier of the photo
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	string: Path of the photo
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      Procedure ReadProductPhoto(nPhotoID is int):string
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Initialize the mechanism for managing the errors
+      InitializeError()
+      
+      // Find the photo in database
+      HReadSeekFirst(ProductPhoto,ProductPhotoID,nPhotoID)
+      IF HFound(ProductPhoto) = True THEN
+      	IF InAWPMode() = True THEN
+      		RESULT ProductPhoto.Photo	
+      	ELSE
+      		RESULT "UK/"+ProductPhoto.Photo
+      	END
+      ELSE
+      	AddError("No photo for this identifier")
+      	RESULT ""
+      END
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT ""
+     type : 458752
+   -
+     name : ReadNumberProductPhotos
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730123576520412
+     type_code : 15
+     code : |1-
+      // Summary: Returns the number of photos found for a product
+      // Syntax:
+      //[ <Result> = ] ReadNumberProductPhotos (<nProductID> is int, <nRole> is int)
+      //
+      // Parameters:
+      //	nProductID (int): Identifier of product
+      //	nRole (int): Role of the photo (see the corresponding constants)
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	int: Number of photos for the product
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      Procedure ReadNumberProductPhotos(nProductID is int, nRole is int) :int
+      
+       // Local variables
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT 0
+      END
+      
+      // Initialize the mechanism for managing the errors
+      InitializeError()
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Unable to find the corresponding product")
+      	RESULT 0
+      END
+      
+      // Find the greatest photo number for this product
+      QRY_NUMBER_PRODUCT_PHOTOS.pProductID = nProductID
+      QRY_NUMBER_PRODUCT_PHOTOS.pRole = nRole
+      HExecuteQuery(QRY_NUMBER_PRODUCT_PHOTOS)
+      HReadFirst(QRY_NUMBER_PRODUCT_PHOTOS)
+      IF HOut(QRY_NUMBER_PRODUCT_PHOTOS) = True THEN
+      	// no photo
+      	RESULT 0
+      ELSE
+      	// Return the number
+      	RESULT QRY_NUMBER_PRODUCT_PHOTOS.Count_1
+      END
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT 0
+     type : 458752
+   -
+     name : GenerateProductPhotos
+     procedure_id : 1416730123576585948
+     type_code : 15
+     code : |1-
+      // Summary: Generates the different photos for a product
+      // Syntax:
+      //[ <Result> = ] GenerateProductPhotos (<nProductID> is int)
+      //
+      // Parameters:
+      //	nProductID (int): Identifier of the product
+      
+      // Return value:
+      // 	boolean: True if the generation was successfully performed, False otherwise
+      Procedure GenerateProductPhotos(nProductID is int) : boolean
+      
+      // Local variables
+      sListRole 		is string
+      arrListPhoto	is array of int
+      nPhotoNumber	is int
+      nPhotoID		is int
+      bufProductPhoto	is buffer
+      sNamePreviousPhoto	is string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // This procedure must not be run in Web Service mode
+      IF InWebserviceMode() THEN
+      	AddError("This process must not be run in Web Service mode",dbgInfo(dbgStack))
+      	RESULT False
+      END
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // Retrieve the list of photos for this product: find the greatest one to get its buffer
+      arrListPhoto = ReadListPhotos(nProductID)
+      
+      // Initialize the list of roles
+      sListRole = ROLE_PHOTO_NORMAL + TAB + ROLE_PHOTO_SQUARE_SMALL + TAB + ROLE_PHOTO_LARGE_SQUARE
+      
+      // Browse all the photos
+      FOR ALL ELEMENT nPhotoID of arrListPhoto
+      	// Read the photo: we must have a binary buffer
+      	HReadSeekFirst(ProductPhoto,ProductPhotoID,nPhotoID)
+      	IF HFound(ProductPhoto) = False THEN
+      		AddError("A photo was not found")
+      		CONTINUE
+      	END
+      	
+      	// Load the buffer of the photo
+      	bufProductPhoto = ProductPhoto.Binary
+      	IF bufProductPhoto = "" THEN
+      		AddError("A photo has no associated binary")
+      		CONTINUE
+      	END
+      	
+      	// Retrieve its number and its identifier
+      	nPhotoNumber = ProductPhoto.PhotoNumber
+      		
+      	// Create the different photos corresponding to the different roles defined in the COL_EBUSINESS collection
+      	FOR EACH string sCurrentRole of sListRole SEPAREE by TAB
+      		HReadSeekFirst(ProductPhoto,ProductIDPhotoNumberRole,[nProductID,nPhotoNumber,Val(sCurrentRole)])
+      		IF HFound(ProductPhoto) = True THEN
+      			// Update the existing product
+      			IF Val(sCurrentRole) = ROLE_PHOTO_NORMAL THEN
+      				ProductPhoto.Binary = bufProductPhoto
+      			ELSE
+      				ProductPhoto.Binary = ""
+      			END
+      			
+      			// Build the image
+      			sNamePreviousPhoto = ProductPhoto.Photo
+      			ProductPhoto.Photo = _GenerateThumbnail(bufProductPhoto,Val(sCurrentRole),ProductPhoto.ProductID,nPhotoNumber)
+      			
+      			// Modification in database
+      			IF Val(sCurrentRole) = ROLE_PHOTO_NORMAL _OR_ ProductPhoto.Photo <> sNamePreviousPhoto _OR_ ProductPhoto.Binary <> bufProductPhoto THEN
+      				IF HModify(ProductPhoto) = False THEN
+      					AddError("Unable to modify the miniature")
+      					RESULT False			
+      				END
+      			END
+      		ELSE
+      			// Initialize the record
+      			HReset(ProductPhoto)
+      			
+      			// Configuration
+      			IF Val(sCurrentRole) = ROLE_PHOTO_NORMAL 
+      				ProductPhoto.Binary = bufProductPhoto
+      			END
+      			
+      			ProductPhoto.ProductID = nProductID	
+      			ProductPhoto.Role		= Val(sCurrentRole)
+      			ProductPhoto.PhotoNumber	= 	nPhotoNumber
+      			
+      			// The square photo is the default one
+      			IF ProductPhoto.Role = ROLE_PHOTO_NORMAL THEN
+      				ProductPhoto.ByDefault = True
+      			END
+      			
+      			// Build the image
+      			ProductPhoto.Photo = _GenerateThumbnail(bufProductPhoto,Val(sCurrentRole),ProductPhoto.ProductID,nPhotoNumber)	
+      			
+      			// Addition in database
+      			IF HAdd(ProductPhoto) = False THEN
+      				AddError("Unable to add the miniature")
+      				RESULT False			
+      			END
+      		END
+      		
+      	END
+      END
+      
+      RESULT True
+     type : 458752
+   -
+     name : GenerateProductPhotosAccordingToIndex
+     internal_properties : CAAAAAgAAACs91BklxzGtVrzkSAlcI9q2uzpneX2uXWFg96myBJlYZm39XAe9pIB4s3Z7MhLaGu8/RG753EzvzNbWIWW/vyvFqCmRjlmI/X+nZO+jBjTYHMIUGMKlHhBzvA2I+ORY4ERHGAsiRFjO0sD1RRnC8yZnQhMmcY69K2Yqk4yhxXFO7a8
+     procedure_id : 1416730123576651484
+     type_code : 15
+     code : |1+
+      // Summary: Generates the different photos of a product according to its subscript in the array
+      // Syntax:
+      //[ <Result> = ] GenerateProductPhotosAccordingToIndex (<nProductIndex> is int)
+      //
+      // Parameters:
+      //	nProductIndex (integer): Identifier of the product
+      // Return value:
+      // 	boolean: True if the generation was successfully performed, False otherwise
+      //
+      
+      Procedure GenerateProductPhotosAccordingToIndex(nProductIndex is int):boolean
+      
+      // Local variables
+      nProductID		is int
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Check the position
+      IF nProductIndex<=0 _OR_ nProductIndex>COL_Product.garrProducts..Occurrence THEN
+      	AddError("Request for generating a non-authorized subscript")
+      	RESULT False
+      END
+      
+      // Retrieve the identifier of the product
+      nProductID = COL_Product.garrProducts[nProductIndex].ProductID
+      
+      RESULT GenerateProductPhotos(nProductID)
+     type : 458752
+   -
+     name : DeleteProductPhoto
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730123576717020
+     type_code : 15
+     code : |1-
+      // Summary: Deletes a product photo
+      // Syntax:
+      //[ <Result> = ] DeleteProductPhoto (<nPhotoID> is int)
+      //
+      // Parameters:
+      //	nPhotoID (integer): Identifier of the photo
+      // Return value:
+      // 	boolean: True if the photo was deleted, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION DeleteProductPhoto( nPhotoID is int)
+      
+      // Local variables
+      bDefaultPhoto 	is boolean
+      nProductID		is int
+      nPhotoNumber	is int
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Initialize the mechanism for managing the errors
+      InitializeError()
+      
+      //Delete the image of product
+      HReadSeekFirst(ProductPhoto,ProductPhotoID,nPhotoID)
+      IF HFound(ProductPhoto) = False THEN
+      	AddError("Product photo not found: "+nPhotoID)
+      	RESULT False
+      END
+      
+      // Is it a default photo?
+      bDefaultPhoto = ProductPhoto.ByDefault
+      
+      // Store the product
+      nProductID	= ProductPhoto.ProductID
+      
+      // Store the number of the photo
+      nPhotoNumber = ProductPhoto.PhotoNumber
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("The product was not found")
+      	RESULT False
+      END
+      
+      // Deleting the photo: the photo must be deleted from all the roles
+      HReadSeekFirst(ProductPhoto,ProductIDPhotoNumberRole,[nProductID,nPhotoNumber,ROLE_PHOTO_LARGE_SQUARE])
+      IF HFound(ProductPhoto) THEN
+      	IF HDelete(ProductPhoto) = False THEN
+      		AddError("The photo was not deleted in the SQUARE_LARGE role")
+      		RESULT False
+      	END	
+      END
+      
+      HReadSeekFirst(ProductPhoto,ProductIDPhotoNumberRole,[nProductID,nPhotoNumber,ROLE_PHOTO_SQUARE_SMALL])
+      IF HFound(ProductPhoto) THEN
+      	IF HDelete(ProductPhoto) = False THEN
+      		AddError("The photo was not deleted in the SQUARE_SMALL role")
+      		RESULT False
+      	END	
+      END
+      
+      HReadSeekFirst(ProductPhoto,ProductIDPhotoNumberRole,[nProductID,nPhotoNumber,ROLE_PHOTO_NORMAL])
+      IF HFound(ProductPhoto) THEN
+      	IF HDelete(ProductPhoto) = False THEN
+      		AddError("The photo was not deleted in the NORMAL role")
+      		RESULT False
+      	END	
+      END
+      
+      
+      //If the deleted photo was the default photo for the product, take another one.. 
+      //It will be the 1st one of the list..
+      IF bDefaultPhoto = True THEN
+      	HReadSeekFirst(ProductPhoto,ProductID,nProductID)
+      	IF HFound(ProductPhoto) = True THEN
+      		ProductPhoto.ByDefault = True
+      		IF HModify(ProductPhoto) = False THEN
+      			AddError("The new default photo cannot be selected")
+      			RESULT False
+      		END
+      		
+      	END	
+      END
+      
+      
+      // Bu default, the deletion is performed properly
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+resources :
+ string_res :
+  identifier : 0x1fa19c5a008c5175
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

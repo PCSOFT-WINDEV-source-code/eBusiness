@@ -1,0 +1,157 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_Address
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c848c3598ad
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAACad/Tknar+VszCbzpkN17TM4vwd3Ph+FNGGe7L1R8UbBzKGejp00g4kCPeg84j+s04YY/pp0wvODlOJBjC4hYrU0KvoxVzs3I=
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACko1DOYSGWiEfmi47+g0xrryBFucjRJOZNM28b4cO+S1M4MC2h4adn0pITUUH+X+gT4JsjJwu3rpWi0Nt9BiXJMn3gzThsJTpDY5C2E6bDK8jnmlOjc+813c/t3AK14IdkK2kd7CvOV5R9lQ==
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the Address file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_Address is Structure
+      		AddressID is int 
+      		AddressCaption is string
+      		FullName is string
+      		Address is string
+      		Complement is string
+      		ZipCode is string
+      		City is string
+      		Country is string
+      		AddressType is int
+      		DefaultAddress is boolean 
+      		Company is string
+      		CustomerID is int 
+      END
+       
+       
+     type : 720896
+  procedures :
+   -
+     name : GetFormattedAddress
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730097770469549
+     type_code : 15
+     code : |1-
+      // Summary: Retrieves a formatted address
+      // Syntax:
+      //[ <Result> = ] GetFormattedAddress (<nIDAddress> is int)
+      //
+      // Parameters:
+      //	nAddressID (integer): Identifier of the address
+      // Return value:
+      // 	ANSI string: Formatted string
+      //
+      // Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure GetFormattedAddress(nAddressID is int)
+      
+      // Local variables
+      sAddress is string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      // Finds the address (you must use the ArchiveAddress file that contains the addresses when the order was placed)
+      HReadSeekFirst(Address, AddressID, nAddressID)
+      IF HFound(Address) THEN
+      
+      	// Formats the address
+      	sAddress = FormatAddress(Address.FullName, Address.Company, Address.Road, Address.Complement, Address.ZipCode, Address.City, Address.StateProvince, Address.Country)
+      	
+      	// Returns the address
+      	RESULT sAddress
+      ELSE
+      	AddError("Address not found")
+      	RESULT ""	
+      END
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT ""
+     type : 458752
+   -
+     name : FormatAddress
+     procedure_id : 1416730097770535085
+     type_code : 15
+     code : |1-
+      // Summary: Formats an address
+      // Syntax:
+      //[ <Result> = ] FormatAddress (<sFullName> is string, <sCompany> is string, <sStreet> is string, <sComplement> is string, <sZipCode> is string, <sCity> is string, <sStateProvince> is string, <sCountry> is string)
+      //
+      // Parameters:
+      //	sFullName (ANSI string): Full name
+      //	sCompany (ANSI string): Company
+      //	sStreet (ANSI string): Street
+      //	sComplement (ANSI string): Complement
+      //	sZipCode (ANSI string): Zip code
+      //	sCity (ANSI string): City
+      //	sStateProvince (ANSI string): State/Province
+      //	sCountry (ANSI string): Country
+      // Return value:
+      // 	ANSI string: Formatted address
+      //
+      
+      Procedure FormatAddress(sFullName is string, sCompany is string, sStreet is string, sComplement is string, sZipCode is string, sCity is string, sStateProvince is string, sCountry is string)
+      
+      sFormattedAddress is string
+      
+      // Template for the address format
+      sTemplateAddressFormat is string = [
+      [%NAME%]
+      [%COMPANY%]
+      [%ROAD%]
+      [%COMPLEMENT%]
+      [%CITY%],[%STATE%] [%ZIPCODE%] 
+      [%COUNTRY%]
+      ]
+      
+      // Replaces each element of the address
+      sFormattedAddress = sTemplateAddressFormat
+      sFormattedAddress = Replace(sFormattedAddress, "[%NAME%]", sFullName)
+      sFormattedAddress = Replace(sFormattedAddress, "[%COMPANY%]", sCompany)
+      sFormattedAddress = Replace(sFormattedAddress, "[%ROAD%]", sStreet)
+      sFormattedAddress = Replace(sFormattedAddress, "[%COMPLEMENT%]", sComplement)
+      sFormattedAddress = Replace(sFormattedAddress, "[%ZIPCODE%]", sZipCode)
+      sFormattedAddress = Replace(sFormattedAddress, "[%CITY%]", sCity)
+      sFormattedAddress = Replace(sFormattedAddress, "[%STATE%]", sStateProvince)
+      sFormattedAddress = Replace(sFormattedAddress, "[%COUNTRY%]", sCountry)
+      
+      // Deletes the double CR characters
+      WHILE Position(sFormattedAddress, CR+CR) > 0
+      	sFormattedAddress = Replace(sFormattedAddress, CR+CR, CR)
+      END
+      sFormattedAddress = StringFormat(sFormattedAddress,ccIgnoreSpace)
+      
+      // Returns the formatted address
+      RESULT sFormattedAddress
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Adresse
+resources :
+ string_res :
+  identifier : 0x1fa19c5a0266531b
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

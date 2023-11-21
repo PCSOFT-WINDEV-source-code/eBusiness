@@ -1,0 +1,495 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : pInternet_Catalog
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93e5aaf95c2e8
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAADIAVkA+HTxH+ndPDqgCw0rOwoDyH8EI/vheWhJd6Y6IlJq/Ok7lTwlj4NbL0aubV/ytuLgJmTDPzf5r8UdzJu8vIekNZtcJ8FrWP3htiiBtq0TWzyQuU+JCg/C5uSd2vMUnMhdPfshVpr8hr2A46BTqc2fDPCTE2rqJT0=
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACLbVKp8WZOhk8cDwpkr0DJI738DIjN03sf0vOAWIWv/wFsLtjD4NF9OHPzxMhmLT732mog4LQqzFa14NXoaBZs5Rms0+3EwKC8ppq0nmpQosPxsIsiA05PmMDFnJ95z3xNHZ9pCvNSUgTWdyw=
+     code : |1+
+      CONSTANT
+      	
+      	// Name of the cookie
+      	CS_NAME_IDENTIFICATION_COOKIE	= "IDENTIFICATION"
+      	CS_PASSWORD					= "jfdiezaophrhéàç(_èfjqlm"
+      	
+      	// Type of address
+      	CN_INVOICING					= 1	// Billing address
+      	CN_DELIVERY					= 2	// Delivery address
+      	
+      	// Constants of the project
+      	CS_CAPTION_FAMILIES			= <§@1402ca6d007a0b4a0003§>
+      	
+      	CS_PHOTO_CHARACTERISTIC = <§@1402ca6d007a0b4a000e§>
+      	
+      END
+      
+      STPERIOD is Structure
+      	dStartDate is date
+      	dEndDate is date
+      END
+      
+     type : 720896
+  procedures :
+   -
+     name : FindTitle
+     procedure_id : 1416732116998603496
+     type_code : 15
+     code : |1-
+      // Summary: Retrieves the title in string format according to the corresponding integer
+      // Syntax:
+      //[<Result> = ] FindTitle (<nTitle>)
+      //
+      // Parameters:
+      //	nTitle: Integer for the title
+      // Return value:
+      // 	string: Title in text
+      //
+      
+      Procedure FindTitle(nTitle)
+      
+      // According to the title
+      SWITCH nTitle
+      	
+      	CASE 1 // Mr
+      		RESULT <§@1402ca6d007a0b4a0000§>
+      	CASE 2 // Mrs
+      		RESULT <§@1402ca6d007a0b4a0001§>
+      	CASE 3 // Ms
+      		RESULT <§@1402ca6d007a0b4a0002§>
+      	// Unknown title
+      	OTHER CASE
+      		RESULT ""
+      END
+     type : 458752
+   -
+     name : Connection
+     internal_properties : CAAAAAgAAADqLS2hFwD8WCVEkBIGcjhWtNP7OXZ94N64t6FZMueJWJFlHWn94WxaWxf2atwR8jBV584npcHXGYkduayv+h5/XyJPrNutRb+HGrApT6uAPQ1pxL1DWz/hVe9OK8vCw1jWiqYrgrapaVN7KthMlNx/NkdI0HS4qNC5lXC1f38wa5jhBk3kQJbsgGKA9++3hkuTzMbCW17HW8s0m2ekZ6evXg==
+     procedure_id : 1416732116998669032
+     type_code : 15
+     code : |1+
+      // Summary: Writes the identification cookie indicating the connection of a customer
+      // Syntaxe :
+      //Connection (<nCustomerID>, <sLogin>)
+      //
+      // Paramètres :
+      //	nCustomerID : Identifier of he customer
+      //	sLogin : Login of the customer
+      
+      Procedure connection(nCustomerID <useful>, sLogin <useful>)
+      
+      <COMPILE IF Configuration="eBusiness">
+      	// Write the identification cookie
+      	CookieWrite(CS_NAME_IDENTIFICATION_COOKIE,Crypt(nCustomerID + TAB + sLogin ,CS_PASSWORD,cryptFast),1)	
+      <END>
+     type : 458752
+   -
+     name : bIsConnected
+     internal_properties : CAAAAAgAAAA6tWYwXy4/uVRka6n2iPOqBTIe8ualAcbuMBBJuc4ihzBtO8r5SAQ5HkbSELZUoRr+DoZbHiSxQz6asWZsOkx99UYwJFDs265kDC49xVJZAjekhFI2G6A/zeJ9Tej1bch0o7Qo3f6CPXFsp5iZkfzl6qi+C8WOaY5Bvt1pDuamV8MdRZcUt+ZDOVb4wGUhxPkbdIdmudI=
+     procedure_id : 1416732116998734568
+     type_code : 15
+     code : |1-
+      // Summary: Indicates whether a customer is connected or not (according to the presence or not of an identification cookie)
+      // Syntax:
+      //[<Result> = ] bIsConnected ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if a customer is connected, False otherwise
+      //
+      
+      Procedure bIsConnected()
+      
+      <COMPILE IF Configuration="eBusiness">
+      	sCookieContent is string
+      	
+      	// Read the identification cookie
+      	sCookieContent = CookieRead(CS_NAME_IDENTIFICATION_COOKIE)
+      	
+      	// Decrypt the cookie
+      	sCookieContent = Uncrypt(sCookieContent,CS_PASSWORD,cryptFast)
+      	
+      	// If the cookie is empty, exit
+      	IF sCookieContent ~= "" THEN
+      		gnConnectedCustomerID = -1
+      		RESULT False
+      	END
+      	
+      	HReadSeekFirst(Customer,CustomerID,ExtractString(sCookieContent,1))
+      	IF HFound(Customer) THEN
+      		// Compare the password and the login of the customer
+      		IF ExtractString(sCookieContent,2) = Customer.Email THEN
+      			gnConnectedCustomerID = Customer.CustomerID
+      			RESULT True
+      		END
+      	END
+      <END>
+      
+      // No connected customer by default
+      gnConnectedCustomerID = -1
+      RESULT False	
+     type : 458752
+   -
+     name : CheckConnection
+     internal_properties : CAAAAAgAAACxK/bmendl4x/ywUS2DoCb13Rlae7FVptuTTvIGwRurAu06A6PfaK2VZtI4a3cWUPFBxQRgOnvQo3WNwu4A5UcafHgf6++wCsE53+MDJWnFzQLFdlPgKvufvEYqlR1r1MKHW6eKkEEVBMzvi24OriYBtdoKhYO7h4vGzaD3ROcH/mCpyrZW6OdW7spApqzhxka58IAwu6qtnY/pj8gJaqDEtAg2T6MRphBDb+AZBmoIgCtYqjewO+YwFOjf+boYR5aPCGuF1GmAWJ9ke5W1knBCu7YhC26gsSKHID9FlXfRJU=
+     procedure_id : 1416732116998800104
+     type_code : 15
+     code : |1+
+      // Summary: Checks whether a customer is connected: used as check for the pages in which an identification is required
+      // Syntax:
+      //CheckConnection ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      
+      Procedure CheckConnection()
+      
+      <COMPILE IF ConfigurationType=Webservice>
+      	IF gnConnectedCustomerID = -1 THEN RETURN
+      <ELSE>
+      	IF gnConnectedCustomerID = -1 THEN PageDisplay(identification)
+      	RETURN	
+      <END>
+     type : 458752
+   -
+     name : CustomerDisconnection
+     procedure_id : 1416732116998865640
+     type_code : 15
+     code : |1+
+      // Summary: Disconnects a customer: clears the cookie
+      // Syntax:
+      //CustomerDisconnection ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      
+      Procedure CustomerDisconnection()
+      
+      <COMPILE IF Configuration="eBusiness">
+      	CookieWrite(CS_NAME_IDENTIFICATION_COOKIE,"")
+      <END>
+      
+      gnConnectedCustomerID = -1
+     type : 458752
+   -
+     name : GetFullCustomerName
+     procedure_id : 1416732116998931176
+     type_code : 15
+     code : |1-
+      // Summary: Retrieves the full name of a customer
+      // Syntax:
+      //[ <Result> = ] GetFullCustomerName ([<nCustomerID>])
+      //
+      // Parameters:
+      //	nCustomerID: Identifier of he customer
+      // Return value:
+      // 	string: Full name (last name, first name) of the customer
+      //
+      
+      Procedure GetFullCustomerName(nCustomerID=gnConnectedCustomerID)
+      
+      // If the current record is not the proper one
+      IF Customer.CustomerID <> nCustomerID THEN
+      	// Positions on the requested record
+      	HReadSeekFirst(Customer,CustomerID,nCustomerID)
+      	IF HFound(Customer) = False THEN
+      		RESULT ""
+      	END
+      END
+      	
+      // Returns the full name of the customer
+      RESULT Customer.LastName+[" "]+Customer.FirstName
+     type : 458752
+   -
+     name : bProductIsInPromotion
+     procedure_id : 1416732116998996712
+     type_code : 15
+     code : |1-
+      // Summary: Indicates whether a product is in promotion
+      // Syntax:
+      //[ <Result> = ] bProductIsInPromotion (<nProductID>)
+      //
+      // Parameters:
+      //	nProductID: Identifier of the product
+      // Return value:
+      // 	boolean: True if the product is in promotion, False otherwise
+      //
+      
+      Procedure bProductIsInPromotion(nProductID)
+      
+      // Positions on the product
+      HReadSeekFirst(product, productid, nProductID)
+      IF HFound(product) = False THEN
+      	RESULT False
+      END
+      
+      // Is a promotion currently applied to this product?
+      QRY_CurrentPromotions.pProductID = nProductID
+      HExecuteQuery(QRY_CurrentPromotions)
+      RESULT (HNbRec(QRY_CurrentPromotions) > 0)
+     type : 458752
+   -
+     name : ReplaceWildcard
+     procedure_id : 1416732116999127784
+     type_code : 15
+     code : |1+
+      // Summary: Replaces all the occurrences of a word (with wildcard) found in another by another word
+      // Syntax:
+      //[<Result> = ] ReplaceWildcard (<sSourceString>, <sStringToReplace>, <sReplacementString> [, <nOptions>])
+      //
+      // Parameters:
+      //	sSourceString: string in which the replacements must be performed
+      //	sStringToReplace: string to replace in the source string
+      //	sReplacementString: string that will replace <sStringToReplace>
+      //	nOptions (default value=0): search options (WholeWord, IgnoreCase)
+      // Return value:
+      // 	string: New character string
+      //
+      
+      Procedure ReplaceWildcard(sSourceString,sStringToReplace,sReplacementString,nOptions = 0)
+      
+      
+      sReturnString is string = sSourceString // The string that will be returned
+      nPosition is int	// The position of the first block
+      nPositionFirstWildcard is int // The position of the first wildcard character (we only manage one at this time)
+      nPositionEndBlockSought is int // The position of the end of block (the block found after the wildcard character)
+      sStringBeforeWildcard is string		// The string found before the wildcard character
+      sStringAfterWildcard is string		// The string found after the wildcard character
+      
+      // Searches for the wildcard character
+      nPositionFirstWildcard = Position(sStringToReplace, "*")
+      
+      // Retrieve the string found before the wildcard character
+      sStringBeforeWildcard = sStringToReplace[[ TO nPositionFirstWildcard -1]]
+      // Get the string found after the wildcard character
+      sStringAfterWildcard = sStringToReplace[[nPositionFirstWildcard +1 TO ]]
+      
+      // In the source string, search for the characters found before the first wildcard character
+      nPosition = Position(sReturnString,sStringBeforeWildcard, 0, nOptions)
+      WHILE nPosition > 0
+      	
+      	// A position was found, search for the position of the string found after the wildcard character
+      	nPositionEndBlockSought = Position(sReturnString,sStringAfterWildcard, nPosition+1, nOptions)
+      	IF nPositionEndBlockSought > 0 THEN
+      		// A position was found, replace the string by the replacement string
+      		// Replace in the string
+      		sReturnString[[nPosition TO nPositionEndBlockSought + Length(sStringAfterWildcard)-1]] = sReplacementString
+      		
+      		// Recalculates the position (remove the entire block that was replaced)
+      		nPosition = Max(0, nPosition - (nPositionEndBlockSought + Length(sStringAfterWildcard)-1 - nPosition))
+      		// then add the size of the replacement string
+      		nPosition += Length(sReplacementString)
+      		
+      	END
+      	
+      	// Searches for the next position
+      	nPosition = Position(sReturnString,sStringBeforeWildcard, nPosition+1 , nOptions)	
+      END
+      
+      RESULT sReturnString
+     type : 458752
+   -
+     name : CallWSRestManagement
+     procedure_id : 1416732116999193320
+     type_code : 15
+     code : |1-
+      // Summary: Calling the REST API
+      // Syntax:
+      //[ <Result> = ] CallWSRestManagement (<sParamURL> is string)
+      //
+      // Parameters:
+      //	sParamURL (ANSI string): Parameter of the REST URL
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      
+      Procedure CallWSRestManagement(sParamURL is string)
+      
+      // Call the REST API of the site
+      sURLAPI is string = ReadURLRestAdminPage()
+      IF sURLAPI~="" THEN
+      	AddError("URL of REST management page not configured")
+      	RESULT False
+      END
+      
+      // Call the URL
+      NotifyInformation("Call to REST API: "+sURLAPI+"?"+sParamURL)
+      IF HTTPRequest(sURLAPI+"?"+sParamURL) = False THEN
+      	AddError("Unable to contact the URL of the REST management page",ErrorInfo())
+      	RESULT False
+      END
+      
+      // Check the result
+      SWITCH HTTPGetResult(httpResult) 
+      	CASE ""
+      	// Successful
+      	CASE "ERR"
+      		// Error in the page
+      		AddError("An error occurred in the site while generating the image")
+      		RESULT False
+      		
+      	OTHER CASE
+      		// Unknown error
+      		AddError("An unknown error occurred in the site while generating the image")
+      		RESULT False
+      END		
+      
+      RESULT True
+     type : 458752
+   -
+     name : ReplaceWildcardCharact
+     procedure_id : 1416732116999258856
+     type_code : 15
+     code : |1+
+      // Summary: Replaces the jokers found in a string
+      // Syntax:
+      //[ <Result> = ] ReplaceWildcardCharact (<sSourceString>, <sStringToReplace>, <sReplacementString> [, <nOptions>])
+      //
+      // Parameters:
+      //	sSourceString: String where the replacement must be performed
+      //	sSTringToReplace: String that must be replaced (ex: Replacing all the links: ReplaceWildcard(sSourceString,"<A*>","", ignoreCase)
+      //	sReplacementString: String that must replace the source string
+      //	nOptions (default value=0): Options, only accepts the IgnoreCase constant at this time
+      // Return value:
+      // 	ANSI string: result string
+      //
+      
+      Procedure ReplaceWildcardCharact(sSourceString,sStringToReplace,sReplacementString,nOptions = 0)
+      
+      // Local variables
+      sReturnString 				is string  	// The string that will be returned
+      nPosition 					is int		// The position of the first block
+      nPositionFirstWildcard 		is int 		// The position of the first wildcard character (we only manage one at this time)
+      nPositionEndBlockSought 	is int 		// The position of the end of block (the block found after the wildcard character)
+      sStringBeforeWildcard 			is string		// The string found before the wildcard character
+      sStringAfterWildcard 			is string		// The string found after the wildcard character
+      
+      // Initialize the return string
+      sReturnString = sSourceString 
+      
+      // Searches for the wildcard character
+      nPositionFirstWildcard = Position(sStringToReplace, "*")
+      
+      // Retrieve the string found before the wildcard character
+      sStringBeforeWildcard = sStringToReplace[[ TO nPositionFirstWildcard -1]]
+      
+      // Get the string found after the wildcard character
+      sStringAfterWildcard = sStringToReplace[[nPositionFirstWildcard +1 TO ]]
+      
+      // In the source string, search for the characters found before the first wildcard character
+      nPosition = Position(sReturnString,sStringBeforeWildcard, 0, nOptions)
+      WHILE nPosition > 0
+      	
+      	// A position was found, search for the position of the string found after the wildcard character
+      	nPositionEndBlockSought = Position(sReturnString,sStringAfterWildcard, nPosition+1, nOptions)
+      	IF nPositionEndBlockSought > 0 THEN
+      		// A position was found, replace the string by the replacement string
+      		// Replace in the string
+      		sReturnString[[nPosition TO nPositionEndBlockSought + Length(sStringAfterWildcard)-1]] = sReplacementString
+      		
+      		// Recalculates the position (remove the entire block that was replaced)
+      		nPosition = Max(0, nPosition - (nPositionEndBlockSought + Length(sStringAfterWildcard)-1 - nPosition))
+      		// then add the size of the replacement string
+      		nPosition += Length(sReplacementString)
+      		
+      	END
+      	
+      	// Searches for the next position
+      	nPosition = Position(sReturnString,sStringBeforeWildcard, nPosition+1 , nOptions)	
+      END
+      
+      RESULT sReturnString
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Collection1
+resources :
+ string_res :
+  identifier : 0x1402ca6d007a0b4a
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      en-GB : Mr
+     index : 0
+   -
+     text :
+      en-GB : Mrs
+     index : 1
+   -
+     text :
+      en-GB : Ms
+     index : 2
+   -
+     text :
+      en-GB : < All the families >
+     index : 3
+   -
+     text :
+      en-GB : Today
+     index : 4
+   -
+     text :
+      en-GB : "In "
+     index : 5
+   -
+     text :
+      en-GB : " minute%1"
+     index : 6
+   -
+     text :
+      en-GB : "From "
+     index : 7
+   -
+     text :
+      en-GB : "There are "
+     index : 8
+   -
+     text :
+      en-GB : " hour%1"
+     index : 9
+   -
+     text :
+      en-GB : "Yesterday, "
+     index : 10
+   -
+     text :
+      en-GB : "Tomorrow, "
+     index : 11
+   -
+     text :
+      en-GB : MM/DD/YYYY
+     index : 12
+   -
+     text :
+      en-GB : " at "
+     index : 13
+   -
+     text :
+      en-GB : _Photo
+     index : 14
+   -
+     text :
+      en-GB : _VariationID
+     index : 15
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

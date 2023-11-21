@@ -1,0 +1,914 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : pSiteParameters
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93e5baff5c98d
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAACRIObWESjkPVWcde5oPLpOoiiaPMmaWkM4kV33cxKyqB9xJABDA/Eg0PqkgeFe2WH0ogr4DsEm/ABuPAuFgCJGDtKGd4rDnes2I6YXFDPsDTJl65ZuuMoF3OL92qyCQyKELxk9eO+7wcejVHs3Cq5+kw==
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAAD6K6+gmAHIffbh15FdpenkDrZyI/stp/qXEuYXO0LbpA9T4FA0/lyxP6KbN8PT0v/tvTNB0kF9hVg0wdO9gKJovVGqYcged396tZX8vtBuVgAPM9IhkBWRpYoZNh4IOBBMzw7PBKIA8MJUsPOidLmQDyZTwT/ic1fxQTN3tblvG+hXBH6TN0bFYoGwmD0xULiQbHvV6mFHtXyO/rBYmeny5+dPb90WzXg1Xwc4/qBv7DpI8HuqtJSaEOLbos4dSNxPhZo+ZTpEd4CLLCGVhB6D2lIa5+Vi5Hzl5XCPxq4DyCRe1V8xR8LW0RfLpLgK0xhCJUrb2qXg
+     code : |1-
+      GLOBAL
+      	// Manage the current user
+      	gsNameCurrentUser is string
+      	
+      	// Rights granted to the current user
+      	gnUserRights is int
+      	
+      	// Store the parameters in BackOffice mode
+      	gaaBackOfficeStoredInfo	is ASSOCIATIVE ARRAY of strings
+      
+      // Manage the parameters of the site
+      CONSTANT
+      
+      	// Type of the site parameters
+      	CN_INTEGER = 1
+      	CN_STRING = 2
+      	CN_REAL = 4
+      	CN_BINARY = 5
+      	
+      	CN_IMG_BANNER 	= 2
+      	CN_IMG_CUSTOM	= 8
+      	CN_IMG_PDT 		= 16
+      	CN_IMG_FAM		= 32
+      	CN_IMG 			= 64
+      	
+      	// The constants of the parameters can be modified by the administrator of the site
+      	csAdmin_SSL						= "SSL"						// Are the account management and the order validation secured?
+      	csAdmin_LegalInfo 			= "LEGAL_INFO"				// Text of the legal information (string)
+      	csAdmin_References				= "INFO_REFERENCES"			// Text of the reference information (string)
+      	csAdmin_Services				= "INFO_SERVICES"				// Text of the information regarding the available services (string)
+      	csAdmin_Contacts				= "INFO_CONTACT"				// Text of the information regarding the method for contact (string)
+      	csAdmin_SiteLogo				= "SITE_LOGO"					// Image of the company, logo (binary)	
+      	csAdmin_SiteName					= "SITE_NAME"					// The name of the site (string)
+      	csAdmin_DisplaySiteName		= "DISPLAY_SITE_NAME"			// Display the name of the site (integer)
+      	csAdmin_Banner					= "BANNER"					// Type of banner to display (Flash or image)
+      	csAdmin_CompanyName				= "COMPANY_NAME"				// Name of the company corresponding to the site
+      	csAdmin_CompanyAddress			= "COMPANY_ADDRESS"			// Company address
+      	csAdmin_CompRegNumber					= "COMPREGNUMBER_COMPANY"				// Company Registration Number
+      	csAdmin_TextContactForm	= "TEXT_CONTACT_FORM"	// Text of the form for contact
+      		
+      	// List of constants for the availability of pages
+      	csAdmin_HomePage				= "HOMEPAGE"
+      	csAdmin_AvailPage_News 	= "NEWS_AVAIL"					// Availability of the news page (Integer)
+      	csAdmin_AvailPage_NewProducts 	= "NEWPRODUCTS_AVAIL"			// Availability of the page for the new products (integer)
+      
+      	csAdmin_AvailPage_Promotions 	= "PROMO_AVAIL"				// Availability of the page for the promotions (integer)
+      	csAdmin_AvailPage_References 	= "REFERENCES_AVAIL"			// Availability of the page for the references (integer)
+      	csAdmin_AvailPage_Services 		= "SERVICES_AVAIL"				// Availability of the page for the services (integer)
+      	csAdmin_AvailPage_LegalInfo 	= "LEGAL_INFO_AVAIL"		// Availability of the page for the legal information (integer)
+      	csAdmin_AvailPage_Presentation	= "PRESENTATION_AVAIL"		// Availability of the presentation page (integer)
+      	csAdmin_AvailPage_ContactForm	= "CONTACT_FORM_AVAIL"	// Availability of the page for the form of contacts (integer)
+      	
+      	// List of constants for managing the users
+      	csAdmin_Administrator_Login	= "LOGIN_Administrator"		// Administrator login
+      	csAdmin_User_Login		= "LOGIN_User"			// User login
+      	csAdmin_Administrator_PWD		= "PWD_Administrator"		// Administrator PWD
+      	csAdmin_User_PWD			= "PWD_User"			// User PWD
+      	csAdmin_Default_Login			= "admin"					// Default login
+      	csAdmin_Login_ListIP			= "IP_LOGIN"					// Lists the authorized IP addresses
+      	
+      	
+      	// Email configuration
+      	csAdmin_Contact_EmailSender		= "CONTACT_SENDER_EMAIL"		// Email address for sending the contact form
+      	csAdmin_Contact_RecipientEmail	= "CONTACT_RECIPIENT_EMAIL"		// Recipient email address for the contact form
+      	csAdmin_SMTPCONFIG				= "CONFIG_SMTP"				// Configuration of the SMTP server for sending the emails
+      	
+      
+      	// PayBox/PayPal configuration
+      	csAdmin_Paybox_Configuration	= "PAYBOX_CONFIGURATION"	// Configuration of PayBox solution
+      	csAdmin_Paypal_Configuration	= "PAYPAL_CONFIGURATION"		// Configuration of PayPal solution
+      	
+      	// Management of orders
+      	csAdmin_ORDER_EmailSender	= "ORDER_SENDER_EMAIL"			// Email address for sending the confirmations of orders
+      	csAdmin_ORDER_RecipientEmail	= "ORDER_RECIPIENT_EMAIL"		// Address of order recipient
+      	csAdmin_ORDER_GSC				= "ORDERS_GSC"				// Text for the general sales conditions	
+      	csAdmin_ORDER_ConfirmationEmail	= "ORDER_CONFIRMATION_EMAIL"		// Content of the email for order confirmation
+      	csAdmin_ORDER_TextORF 			= "ORDER_TEXTORF"	// Custom text for the order form
+      	
+      	// Management of stocks
+      	csAdmin_ORDER_BasketTextMaxStock				= "ORDER_BASKET_TEXT_MAX_STOCK"	// Custom text for the basket if the maximum quantity is ordered
+      	csAdmin_ORDER_BasketTextInsufficientStock		= "ORDER_BASKET_TEXT_INSUFFICIENT_STOCK"	// Custom text for the basket if the quantity in stock is insufficient
+      	csAdmin_ORDER_StockTextLow					= "ORDER_STOCK_TEXT_LOW"	// Text if the quantity in stock is low for the product
+      	csAdmin_ORDER_StockLevelLow					= "ORDER_STOCK_LEVEL_LOW"	// Level defining whether the stock is low for a product
+      	
+      	csAdmin_COSTS_Limit					= "SHIPPINGCOST_LIMIT"
+      	csAdmin_COSTS_Deal					= "SHIPPINGCOST_DEAL"
+      	csAdmin_COSTS_FixedTaxRate			= "SHIPPINGCOST_FIXED_TAX_RATE"
+      	
+      	csAdmin_LimitNewProductsDisplayed	= "LIMIT_NEWPRODUCTS"		// Maximum number of new products displayed in the page of new products
+      	csAdmin_TitleLinkedProductsSection	= "SECTIONTITLE_LINKEDPRODUCTS"	// Title of the "linked products" section of the "product" form
+      	
+      	// Configuration of notifications
+      	csAdmin_NOTIFICATION_SenderEmail	= "NOTIFICATION_SENDER_EMAIL"
+      	csAdmin_NOTIFICATION_RecipientEmail	= "NOTIFICATION_RECIPIENT_EMAIL"
+      	csAdmin_NOTIFICATION_IF_ORDER		= "NOTIFICATION_IF_ORDER"
+      	csAdmin_NOTIFICATION_IF_CONNECTIONBO		= "NOTIFICATION_IF_CONNECTIONBO"
+      	csAdmin_NOTIFICATION_IF_ERROR			= "NOTIFICATION_IF_ERROR"
+      		
+      	// Configuration of default images
+      	csAdmin_Default_Family_Image	= "IMAGE_DEFAULT_FAMILY"
+      	csAdmin_Default_Promotion_Image	= "DEFAUT_PROMOTION_IMAGE"
+      	csAdmin_Default_Product_Image	= "IMAGE_DEFAULT_PRODUCT"
+      	
+      	// Dialog with the REST management page
+      	csAdmin_URLRESTPAGE_Management	= "URL_RESTPAGE_Management"
+      	
+      	// Constants of the history
+      	CN_HISTORY_WEB_TYPE			= 0
+      	CN_HISTORY_WS_TYPE			= 1
+      	
+      	CN_HISTORY_OPETYPE_INFO		= 0
+      	CN_HISTORY_OPETYPE_MODIF		= 1
+      	CN_HISTORY_OPETYPE_ERROR	= 2
+      	CN_HISTORY_OPETYPE_CALL_WS	= 3
+      END
+      
+      RESTRICTED
+      	// Management of errors
+      	gsTextSiteError		is string
+     type : 720896
+  procedures :
+   -
+     name : GetSiteParameter
+     procedure_id : 1416732121299863949
+     type_code : 15
+     code : |1+
+      // Summary: Retrieve a parameter for the configuration of the site
+      // Syntax:
+      //[ <Result> = ] GetSiteParameter (<sParameterName> [, <sDefaultValue>])
+      //
+      // Parameters:
+      //	sParameterName: Name of the parameter (see the constants..)
+      //	sDefaultValue (default value=""): Default value to return
+      // Return value:
+      // 	Undefined type: Value of the parameter
+      //
+      
+      Procedure GetSiteParameter(sParameterName,sDefaultValue = "")
+      
+      // Search for the parameter
+      HReadSeekFirst(SITE_CONFIGURATION,Parameter_Name,sParameterName)
+      IF HFound(SITE_CONFIGURATION) THEN
+      	
+      	// According to the type of parameter	
+      	SWITCH SITE_CONFIGURATION.ParameterType
+      		// Integer
+      		CASE CN_INTEGER
+      			// Returns the integer value of this parameter
+      			RESULT SITE_CONFIGURATION.IntegerValue
+      		
+      		// Binary
+      		CASE CN_BINARY
+      			// Returns the binary value of this parameter
+      			RESULT SITE_CONFIGURATION.BinaryValue
+      			
+      		// String
+      		CASE CN_STRING
+      			// Returns the string value of this parameter
+      			RESULT SITE_CONFIGURATION.StringValue
+      					
+      		// Real
+      		CASE CN_REAL		
+      			// Returns the real value of this parameter
+      			RESULT SITE_CONFIGURATION.RealValue
+      		
+      		// Unknown case
+      		OTHER CASE
+      			// No action
+      			IF NOT sParameterName IN (csAdmin_Banner, csAdmin_SiteLogo) THEN
+      				// Indicates that the default value is used outside the banner and logo
+      				dbgAssert(False,"Unknown type of configuration parameter")
+      			END
+      			
+      	END
+      ELSE
+      	IF NOT sParameterName IN (csAdmin_Banner, csAdmin_SiteLogo) THEN
+      		dbgAssert(False,"Parameter not found in database: the default value will be used")	
+      	END
+      END
+      
+      
+      // Return an empty string by default if nothing is found or if the type of value is not correct
+      // No problem if the expected value is a string value or a binary value
+      // It will be set to 0 if the expected value is an integer value or a real value
+      RESULT sDefaultValue
+     type : 458752
+   -
+     name : SaveSiteParameter
+     internal_properties : CAAAAAgAAADII9SyL0x4mTami63qmvu++/D8vHofof6pxITVFSzOOsDPIdRZHqRNzPTmkLYSZdpwQDxlrkLZ8+wYyV6E0MQZAzxaisR2g7pqEs7yvHVezU6jiQVN1qOwTCEMDgPMVnczgpEjxBnlnpCLBgUMAMnolePvgkj7B6Dl0hFtymHPRo5A4moHpq0I/Gkr8TRU9Y2r8gX4K6A=
+     procedure_id : 1416732121299929485
+     type_code : 15
+     code : |1-
+      // Summary: Save a parameter for the configuration of the site
+      // Syntax:
+      //[ <Result> = ] SaveSiteParameter (<sParameterName>, <sValue>, <nType>)
+      //
+      // Parameters:
+      //	sParameterName: Name of the parameter
+      //	sValue: Value that must be assigned to this parameter
+      //	nType: Type of the parameter
+      // Return value:
+      // 	boolean: True if the parameter was saved, False otherwise
+      //
+      // Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      PROCEDURE SaveSiteParameter(sParameterName, sValue, nType)
+      
+      
+      nIntegerValue is int
+      cyRealValue is currency
+      
+      
+      // Do we have to caste the value?
+      SWITCH nType
+      
+      	CASE CN_BINARY, CN_STRING
+      		// No action
+      		
+      	CASE CN_REAL
+      		// Caste the value into a currency
+      		cyRealValue = sValue
+      		
+      	CASE CN_INTEGER
+      		
+      		// Caste the value into an integer
+      		nIntegerValue = sValue
+      		
+      	OTHER CASE
+      		// The type is unknown, return False		
+      		AddError("Unknown type of parameter")
+      		RESULT False
+      END
+      
+      
+      // Search for the parameter in the configuration file
+      HReadSeekFirst(SITE_CONFIGURATION,Parameter_Name,sParameterName)
+      
+      // Refresh the parameters
+      HReset()
+      SITE_CONFIGURATION.Parameter_Name = sParameterName
+      SITE_CONFIGURATION.ParameterType = nType
+      
+      SWITCH nType
+      	CASE CN_BINARY
+      		// Attach the memo
+      		HLinkMemo(SITE_CONFIGURATION,BinaryValue,sValue)
+      	
+      	CASE CN_STRING
+      	
+      		SITE_CONFIGURATION.StringValue = sValue
+      	
+      	CASE CN_REAL
+      	
+      		SITE_CONFIGURATION.RealValue = cyRealValue
+      		
+      	CASE CN_INTEGER
+      		
+      		SITE_CONFIGURATION.IntegerValue = nIntegerValue
+      		
+      	OTHER CASE
+      		
+      END
+      
+      
+      // Do we have to modify it or to add it?
+      IF HFound(SITE_CONFIGURATION) THEN
+      	// Parameter found: it must be modified
+      	IF HModify(SITE_CONFIGURATION) = False THEN
+      		AddError("Unable to modify the parameter")
+      		RESULT False
+      	ELSE
+      		RESULT True
+      	END
+      
+      ELSE
+      	// Parameter not found: it must be added
+      	IF HAdd(SITE_CONFIGURATION) = False THEN
+      		AddError("Unable to add the parameter")
+      		RESULT False		
+      	ELSE
+      		RESULT True
+      	END
+      
+      END
+      
+      CASE EXCEPTION:
+      	dbgAssert(False,"Exception not supported while saving the parameter")
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : sTransformHTML
+     procedure_id : 1416732121299995021
+     type_code : 15
+     code : |1-
+      // Summary: Formats a text in HTML format
+      // Syntax:
+      //[<Result> = ] sTransformHTML (<sText> is string)
+      //
+      // Parameters:
+      //	sText (string): Rough text to format
+      // Return value:
+      // 	string: Text formatted into HTML
+      //
+      
+      PROCEDURE sTransformHTML(sText is string)
+      
+      // Local variables
+      sHTMLText is string
+      
+      // Copy the initial text
+      sHTMLText = sText
+      
+      // Replace the CR characters by <BR>
+      sHTMLText = Replace(sHTMLText,CR,"<BR>")
+      
+      RESULT sHTMLText
+     type : 458752
+   -
+     name : AddError
+     procedure_id : 1416732121300060557
+     type_code : 15
+     code : |1-
+      // Summary: Stores and returns an error
+      // Syntax:
+      //AddError (<sErrorText> is string[, <sTechnicalError> is string[, <bSendError> is boolean]])
+      //
+      // Parameters:
+      //	sErrorText (string): Text of the error
+      //	sTechnicalError (string): Technical details of the error
+      // 	bSendError (boolean - default value=1): Sends the error to the WebMaster if requested
+      // Return value:
+      // 	None
+      //
+      
+      Procedure AddError(sErrorText is string, sTechnicalError is string = HErrorInfo(), bSendError is boolean = True)
+      
+      // For the test mode, switch to assertion
+      dbgAssert(False,"Error: "+sErrorText+CR+sTechnicalError)
+      
+      // As soon as a technical detail is available
+      IF sTechnicalError = "" THEN
+      	gsTextSiteError = gsTextSiteError + [CR] + sErrorText
+      ELSE
+      	gsTextSiteError = gsTextSiteError + [CR] + sErrorText + CR + sTechnicalError
+      END	
+      
+      // _AddSiteHistory(CN_HISTORY_OPETYPE_INFO,"An error was stored: "+gsTextSiteError)
+      
+      // Write into the history
+      _AddSiteHistory(CN_HISTORY_OPETYPE_ERROR,sErrorText+CR+sTechnicalError+CR+dbgInfo(dbgStack),*,*,bSendError)
+     type : 458752
+   -
+     name : sReturnError
+     procedure_id : 1416732121300126093
+     type_code : 15
+     code : |1+
+      // Summary: Returns the last error stored
+      // Syntax:
+      //[<Result> = ] sReturnError ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	string: text of the last error
+      //
+      
+      PROCEDURE sReturnError()
+      
+      
+      // _AddSiteHistory(CN_HISTORY_OPETYPE_INFO,"The text of an error was returned: "+gsTextSiteError+" while we are connected as: "+gsNameCurrentUser)
+      
+      RESULT gsTextSiteError
+     type : 458752
+   -
+     name : InitializeError
+     procedure_id : 1416732121300191629
+     type_code : 15
+     code : |1-
+      // Summary: Initializes the mechanism for error feedback
+      // Syntax:
+      //InitializeError ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      
+      Procedure InitializeError()
+      
+      // Local variables
+      sCallStack		is string
+      
+      // For a WebService, the initialization of the error system is performed ONLY if the process is a process without calling
+      // Which means if the call stack only contains 2 lines: the main caller and this procedure
+      IF InWebserviceMode() = True THEN
+      	// Retrieve the call stack
+      	sCallStack = dbgInfo(dbgStack)
+      	
+      	// Are there more than 2 lines in the call stack?
+      	IF StringCount(dbgInfo(dbgStack),CR)>=2 THEN
+      		// Don't reinitialize the variable for storing the errors
+      		RETURN
+      	END
+      	
+      	// It is an initial call: write it into the log
+      	IF StringCount(dbgInfo(dbgStack),CR)=1 THEN
+      		_AddSiteHistory(CN_HISTORY_OPETYPE_CALL_WS,"Calling an entry of WS: "+ExtractString(sCallStack,2,CR))
+      	END
+      
+      END
+      
+      gsTextSiteError = ""
+     type : 458752
+   -
+     name : sReturnUploadDir
+     internal_properties : CAAAAAgAAABIlgWTg7S0RY+87eAGIj1+c6kS3DQUjdYYPVVYTdQ3FRJlU4QWxdTumQZmMg+2s1YWslTyq4cIa/LjYqAqkoGg4b0z8jW3IZaBCbnB44aNdmOE8w2e90wyqF3/3AXuBlb1vT1T2I1Z4YJYY59fipPp48IvRqhJLMDeBtWC4E3R93ji5wbXITVW6TxPQl2oAmR6nlj/hr2tUKzORJl7XevOodJDUS7e+2a02Z4jmvq+Jf1ttMnvIAquLblePrLFPw==
+     procedure_id : 1416732121300257165
+     type_code : 15
+     code : |1-
+      // Summary: Returns the full path of the upload directory
+      // Syntax:
+      //[ <Result> = ] sReturnUploadDir ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	string: Upload directory
+      //
+      
+      PROCEDURE sReturnUploadDir()
+      
+      // Local variables
+      sUPLOADDIR is string = fDataDir()+["\"]+"upload"
+      
+      // Does the upload directory exist?
+      IF fDirectoryExist(sUPLOADDIR) = False THEN
+      	fMakeDir(sUPLOADDIR)
+      END
+      
+      RESULT sUPLOADDIR
+     type : 458752
+   -
+     name : NotifyConfigurationModification
+     procedure_id : 1416732121300322701
+     type_code : 15
+     code : |1-
+      // Summary: Saves a modification of configuration
+      // Syntax:
+      //NotifyConfigurationModification (<sModificationText> is string[, <sValueBefore> is string[, <sValueAfter> is string]])
+      //
+      // Parameters:
+      //	sModificationText (string): Modification performed
+      //	sValueBefore (string - default value=""): Value before modification
+      //	sValueAfter (string - default value=""): Value after modification
+      // Return value:
+      // 	None
+      //
+      
+      Procedure NotifyConfigurationModification(sTextModification is string, sValueBefore is string = "", sValueAfter is string = "")
+      
+      // Here, we must add 
+      // the user name, the time, the IP address, the stack?
+      // Then, save in database
+      
+      _AddSiteHistory(CN_HISTORY_OPETYPE_MODIF,sTextModification,sValueBefore,sValueAfter)
+     type : 458752
+   -
+     name : _AddSiteHistory
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416732121300388237
+     type_code : 15
+     code : |1+
+      // Summary: Adds an information or an error to the site history
+      // Syntax:
+      //_AddSiteHistory (<nOperationType> is int, <sOperationDetails> is string[, <sValueBefore> is string[, <sValueAfter> is string[, <bSendError> is boolean]]])
+      //
+      // Parameters:
+      //	nOperationType (integer): type of operation (see the CN_HISTORY_TYPEXXXX constants)
+      //	sOperationDetails (string): Details of the operation or details of the error
+      //	sValueBefore (string - default value=""): Value before modification
+      //	sValueAfter (string - default value=""): Value after modification
+      // 	bSendError (boolean - default value=1): Sends the error to the WebMaster if requested
+      // Return value:
+      // 	None
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure _AddSiteHistory(nOperationType is int, sOperationDetails is string, sValueBefore is string="", sValueAfter is string ="", bSendError is boolean = True)
+      
+      // Initialize the history
+      HReset(History)
+      
+      // Write the automatic information
+      History.DateTime = DateSys()+TimeSys()
+      History.UserName	= gsNameCurrentUser
+      
+      // Type of code use
+      IF InWebserviceMode() = True THEN
+      	History.UseType = CN_HISTORY_WS_TYPE
+      ELSE
+      	History.UseType = CN_HISTORY_WEB_TYPE
+      END
+      
+      
+      <COMPILE IF ConfigurationType=Webservice>	
+      	// Take the IP address 
+      	History.IPAddress	= NetIPAddress()
+      <ELSE>
+      	// Take the IP address with return (for a proxy for example) and the direct IP address
+      	History.IPAddress	= BrowserIPAddress(True)+" / "+BrowserIPAddress(False)	
+      <END>
+      
+      // Take the values passed in parameter
+      History.ValueBefore = sValueBefore
+      History.ValueAfter = sValueAfter
+      History.OperationDetails = sOperationDetails
+      History.OperationType = nOperationType
+      
+      // Addition in database
+      IF HAdd(History) = False THEN
+      	dbgAssert(False,"Unable to save the history")
+      	fSaveText(fDataDir()+["\"]+"dump_error_"+DateSys()+"_"+TimeSys()+".log","Error while saving the history: "+HErrorInfo())
+      END
+      
+      IF nOperationType = CN_HISTORY_OPETYPE_ERROR THEN
+      	// Notification in case of error
+      	IF bSendError = True _AND_ ReadNotificationIfErrorEnabled() = True THEN
+      		SendMessageToWebmaster("Erreur detected on the site",...
+      		_sConvertText(StringBuild("An error was detected on the site on %1 at %2: %3",DateToString(DateSys(), maskSystemDate),TimeToString(TimeSys(),maskSystemTime),sOperationDetails)))
+      	END
+      END
+      
+      CASE EXCEPTION:
+      	dbgAssert(False,"Unable to save the history")
+      	fSaveText(fDataDir()+["\"]+"dump_error_"+DateSys()+"_"+TimeSys()+".log","Error while saving the history: "+HErrorInfo())
+     type : 458752
+   -
+     name : NotifyInformation
+     procedure_id : 1416732121300453773
+     type_code : 15
+     code : |1-
+      // Summary: Details of the operation
+      // Syntax:
+      //NotifyInformation (<sOperationDetails> is string)
+      //
+      // Parameters:
+      //	sOperationDetails (string): Detailed text of the operation
+      // Return value:
+      // 	None
+      //
+      
+      Procedure NotifyInformation(sOperationDetails is string)
+      
+      _AddSiteHistory(CN_HISTORY_OPETYPE_INFO,sOperationDetails)
+     type : 458752
+   -
+     name : DisplayError
+     procedure_id : 1416732121300519309
+     type_code : 15
+     code : |1+
+      // Summary: Displays an error
+      // Syntax:
+      //DisplayError (<sErrorText> is string[, <sTechnicalError> is string])
+      //
+      // Parameters:
+      //	sErrorText (string): text of the error
+      //	sTechnicalError (string): technical details of the error
+      // Return value:
+      // 	None
+      //
+      
+      Procedure DisplayError(sErrorText is string, sTechnicalError is string = HErrorInfo())
+      
+      // For the test mode, switch to assertion
+      dbgAssert(False,"Error: "+sErrorText+CR+sTechnicalError)
+      
+      // Write into the history
+      _AddSiteHistory(CN_HISTORY_OPETYPE_ERROR,sErrorText+CR+sTechnicalError)
+      
+      // Display the error
+      IF InAWPMode() = True THEN
+      	Error(sErrorText)	
+      ELSE
+      	Error(sErrorText,sTechnicalError)	
+      END
+     type : 458752
+   -
+     name : sReturnDirWebUpload
+     internal_properties : CAAAAAgAAADidVwAzGMMHFGh1G68r2bSHvpupMey2iLyo7xX4FjyO809Iiudv0cIOckBzBIbWBGVq/nQu7zgd2X5q7uQp1InUeBgyeqg0a8Ss3fXkX67aam16XLAkFX/TsCX3W+0KNDTww9k0zsZGyxGZaCOqoO/JSzl/fFl/AaMuBuRsV01dztQpdbFBRaGrXFfZ4GtnqSUvtbgu3CIZ5olwRzsDw4rPAmOI9ms9w==
+     procedure_id : 1416732121300584845
+     type_code : 15
+     code : |1-
+      // Summary: Returns the generation directory of photos
+      // Syntax:
+      //[ <Result> = ] sReturnWebUploadDir ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	string: generation directory of photos
+      //
+      
+      PROCEDURE sReturnDirWebUpload()
+      
+      // Local variables
+      sUPLOADDIR is string
+      
+      <COMPILE IF Configuration="eBusiness">
+      	sUPLOADDIR = fWebDir()+["\UK\"]+"gen_img"
+      	
+      	// Does the upload directory exist?
+      	IF fDirectoryExist(sUPLOADDIR) = False THEN
+      		fMakeDir(sUPLOADDIR)
+      	END
+      <END>
+      
+      RESULT sUPLOADDIR
+     type : 458752
+   -
+     name : sGetAccessPathNextPage
+     procedure_id : 1416732121300650381
+     type_code : 15
+     code : |1-
+      // Summary: Returns the access path to the next page
+      // Used when a page can have different return pages
+      // Syntax:
+      //[ <Result> = ] sGetAccesssPathNextPage ([<sDefaultPage> [, <bGetWithoutUsing>]])
+      //
+      // Parameters:
+      //	sDefaultPage (default value=""): Page to display if no next page was defined beforehand
+      // 	bGetWithoutUsing (default value=0): True to only retrieve the name of the next page, False to use it (pops)
+      // Return value:
+      // 	Undefined type: Next access
+      //
+      
+      PROCEDURE sGetAccessPathNextPage(sDefaultPage="", bGetWithoutUsing=False)
+      
+      // If no page was defined, returns the default page specified in parameter
+      IF StackInfo(gStackAccessNextPages, tiTotalNumber) = 0 THEN
+      	RESULT sDefaultPage
+      END
+      
+      // Stores the next access
+      sNextPage is string
+      Pop(gStackAccessNextPages, sNextPage)
+      // If the page must be retrieved only (to get the name)
+      IF bGetWithoutUsing THEN
+      	// Places the page back in the stack
+      	Push(gStackAccessNextPages, sNextPage)
+      END
+      
+      // Returns the next access
+      RESULT sNextPage
+     type : 458752
+   -
+     name : sDefineAccessPathNextPage
+     procedure_id : 1416732121300715917
+     type_code : 15
+     code : |1+
+      // Summary: Defines the access path to the next page
+      // Used when a page can have different return pages
+      // Syntax:
+      //sDefineAccesPathNextPage (<sPage> [,...])
+      //
+      // Parameters:
+      // 	sPage: Name of the next page
+      // 	<*>: List of parameters that will be passed to this page
+      // Return value:
+      // 	None
+      //
+      
+      PROCEDURE sDefineAccessPathNextPage(sPage <useful>, *)
+      
+      <COMPILE IF Configuration="eBusiness">
+      	// Defines the next page
+      	sAccessNextPage is string = PageAddress(sPage, paFull)
+      	
+      	// Adds the parameters
+      	FOR i = 2 _TO_ MyParameters..Occurrence
+      		// Adds the parameters
+      		IF i = 2 THEN
+      			sAccessNextPage += "?" + "P"+(i-1)+"="+ MyParameters[i]	
+      		ELSE
+      			sAccessNextPage += "&" + "P"+(i-1)+"="+ MyParameters[i]
+      		END
+      		
+      	END
+      	
+      	// Adds the identifier of the AWP context
+      	sIdentifierAWPContext is string = IdentifierAWPContext()
+      	IF sIdentifierAWPContext <> "" THEN
+      		sAccessNextPage += (MyParameters..Occurrence = 0 ? "?" ELSE "&") + sIdentifierAWPContext
+      	END
+      	
+      	// Pushes this page into the list of "next" pages
+      	// gsAccessNextPage contains the next access
+      	Push(gStackAccessNextPages, sAccessNextPage)
+      <END>
+      
+     type : 458752
+   -
+     name : InitializeConfiguration
+     procedure_id : 1416732121300781453
+     type_code : 15
+     code : |1+
+      // Summary: Used to manage the specific configurations
+      // Syntax:
+      // InitializeConfiguration ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      
+      Procedure InitializeConfiguration()
+      
+      // Localization for development
+      LOCAL
+      	sDataDirectory is string = INIRead("DATA","DATA_DIR","",fDataDir()+"\config.ini")
+      	
+      IF sDataDirectory <> "" THEN
+      	HSubstDir("?",INIRead("DATA","DATA_DIR","",fDataDir()+"\config.ini"))
+      END
+      
+      // Activation of asserts?
+      IF Val(INIRead("DATA","ASSERTION","0",fDataDir()+"\config.ini")) = False THEN
+      	dbgEnableAssert(False)
+      END
+      
+     type : 458752
+   -
+     name : sReturnGenerationDir
+     internal_properties : CAAAAAgAAADII9SyOMRvIbbGOyVqmos+w/DkPFKP+S50bgBFhSCSHxKHAYzJlsRlPGRWSHaileqIcDQlNkIBAySwAb586CzRA3SqAgTe05KqIv4W4ClaASL/ZcGZ4td0MJ34Mpdw4ktHji2/YKUpYlTHwukQFBX8if+LzjTJbJNMQYDqad1j0rpkFk47amnUuB0PLWAgmTjW8gX4K6A=
+     procedure_id : 1416732121300846989
+     type_code : 15
+     code : |1-
+      // Summary: Returns the full path of the directory for generating the miniatures
+      // Syntax:
+      //[ <Result> = ] sReturnGenerationDir ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	ANSI string: Directory for generating the miniatures
+      //
+      
+      PROCEDURE sReturnGenerationDir()
+      
+      // Local variables
+      sGenDir is string = fDataDir()+["\"]+"gen"
+      
+      // Does the generation directory exist?
+      IF fDirectoryExist(sGenDir) = False THEN
+      	fMakeDir(sGenDir)
+      END
+      
+      RESULT sGenDir
+     type : 458752
+   -
+     name : DeleteSiteParameter
+     procedure_id : 1416732121300912525
+     type_code : 15
+     code : |1+
+      // Summary: Delete a parameter for site configuration
+      // Syntax:
+      //[ <Result> = ] DeleteSiteParameter (<sParameterName>)
+      //
+      // Parameters:
+      //	sParameterName: Name of the parameter (see the constants..)
+      // Return value:
+      // 	boolean: True if the deletion is effective, False otherwise
+      //
+      
+      Procedure DeleteSiteParameter(sParameterName)
+      
+      // Search for the parameter
+      HReadSeekFirst(SITE_CONFIGURATION,Parameter_Name,sParameterName)
+      IF HFound(SITE_CONFIGURATION) THEN
+      	// Delete
+      	IF HDelete(SITE_CONFIGURATION) = False THEN
+      		dbgAssert(False,"Parameter not deleted")
+      		RESULT False	
+      	END
+      	
+      	// The deletion was performed
+      	RESULT True
+      END
+      
+      // By default, no parameter is deleted
+      dbgAssert(False,"Request for deleting a parameter that does not exist")
+      RESULT True
+     type : 458752
+   -
+     name : StoreControls
+     procedure_id : 1416732121300978061
+     type_code : 15
+     code : |1-
+      // Summary: Stores the content of the specified control for the session
+      // Syntax:
+      //StoreControls (<sControlName> is string, <sValue> is string)
+      //
+      // Parameters:
+      //	sControlName (ANSI string): Name of the control
+      //	sValue (ANSI string): Value of the control
+      // Return value:
+      // 	None
+      //
+      // Example:
+      // Indicate an example.
+      //
+      PROCEDURE StoreControls(sControlName is string, LOCAL sValue is string)
+      
+      gaaBackOfficeStoredInfo[sControlName] = sValue
+     type : 458752
+   -
+     name : GetControls
+     procedure_id : 1416732121301043597
+     type_code : 15
+     code : |1-
+      // Summary: Retrieves the stored content of controls in the session
+      // Syntax:
+      //[ <Result> = ] RetrieveControls (<sControlName> is string, <sDefaultValue> is string)
+      //
+      // Parameters:
+      //	sControlName (ANSI string): Name of the control 
+      //	sDefaultValue (ANSI string): Default value
+      // Return value:
+      // 	Undefined type: Stored value or default value
+      //
+      // Example:
+      // Indicate an example.
+      //
+      Procedure GetControls(sControlName is string, LOCAL sDefaultValue is string)
+      
+      IF gaaBackOfficeStoredInfo[sControlName]..Empty THEN
+      	RESULT sDefaultValue
+      ELSE
+      	RESULT gaaBackOfficeStoredInfo[sControlName]
+      END
+     type : 458752
+   -
+     name : TestHFSQLFile
+     procedure_id : 1416732121301109133
+     type_code : 15
+     code : |1+
+      // Summary: Checks the opening of the files
+      // Syntax:
+      //TestHFSQLFile ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      
+      Procedure TestHFSQLFile()
+      
+      // Positions the exact-match check
+      HCheckStructure("*", hIdentical)
+      
+      WHEN EXCEPTION IN
+      	// Checks the opening of all the files
+      	HOpen("*")
+      	HClose("*")
+      	
+      	<COMPILE IF ConfigurationType=Library>
+      		PageDisplay(page_error)		
+      	<END>	
+      
+      DO
+      	// Problems during opening
+      	
+      	<COMPILE IF ConfigurationType=Library>
+      		TestWriteResult(twrError, "Files in error: " + ExceptionInfo(errMessage))
+      	<END>		
+      END
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Collection1
+resources :
+ string_res :
+  identifier : 0x1fa19c5a028c533a
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ
+associated_test :
+ name : TEST_pSiteParameters.wxt

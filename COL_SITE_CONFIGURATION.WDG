@@ -1,0 +1,3228 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_SITE_CONFIGURATION
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c858ca59c36
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAADI+UARKRBbm3zkoS6rAhj9e0LwlX08/v3ueL+aw4yEpwt6nZiU1uAuqQuzlQxJWuvNT156xZc75EZYsfzSqo8iGOVkYN3XKTKTL26oAb03
+  type_code : 31
+  p_codes :
+   -
+     code : |1+
+      STCOL_SITE_CONFIGURATION is Structure
+      		Parameter_Name is string//Parameter name
+      		ParameterType is string//Type of parameter
+      		IntegerValue is int //Integer value
+      		StringValue is string//String value
+      		BinaryValue is buffer //Binary value
+      		RealValue is currency //Real value
+      END
+      
+      ST_SMTP_CONFIGURATION is Structure
+      	sServerAddress		is string
+      	sUserLogin	is string
+      	sUserPWD		is string
+      	nPort				is int
+      	bSecuredMode		is boolean	
+      END
+      
+      ST_PAYXBOX_CONFIGURATION	is Structure
+      	bIsEnabled		is boolean
+      	bInTestMode		is boolean
+      	sContractMOS		is string
+      	sRank			is string
+      	sIdentifier	is string
+      END
+      
+      ST_PAYPAL_CONFIGURATION		is Structure
+      	bIsEnabled		is boolean
+      	bInTestMode		is boolean
+      	SANDBOX_Identifier	is string
+      	SANDBOX_Password	is string
+      	SANDBOX_Signature	is string
+      	Identifier	is string
+      	Password	is string
+      	Signature	is string
+      END
+      
+      
+      // List of special pages
+      CONSTANT
+      	Page_NEWS 			= 1
+      	Page_NEWPRODUCTS 			= 2
+      	PAGE_PROMOTIONS				= 3
+      	PAGE_REFERENCES				= 4
+      	PAGE_SERVICES				= 5
+      	PAGE_LEGAL_INFORMATION	= 6
+      	PAGE_CONTACT				= 7
+      	PAGE_PRESENTATION			= 8
+      END
+     type : 720896
+  procedures :
+   -
+     name : ReadCompanyName
+     procedure_id : 1416730102072777782
+     type_code : 15
+     code : |1-
+      // Summary: Returns the text specified in company name
+      // Syntax:
+      //[ <Result> = ] ReadCompanyName ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Name of the company
+      Procedure ReadCompanyName():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      // It is a public information: there is no code for checking the connection
+      
+      RESULT GetSiteParameter(csAdmin_CompanyName,"")
+     type : 458752
+   -
+     name : ModifyCompanyName
+     procedure_id : 1416730102072843318
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the name specified for the company
+      // Syntax:
+      //[<Result> = ] ModifyCompanyName (<sCompanyName> is string)
+      //
+      // Parameters:
+      //	sCompanyName (string): New name specified for the company
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyCompanyName(sCompanyName is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the name of the company", ReadCompanyName(), sCompanyName)
+      
+      RESULT SaveSiteParameter(csAdmin_CompanyName,sCompanyName,CN_STRING)
+     type : 458752
+   -
+     name : ReadCompanyAddress
+     procedure_id : 1416730102072908854
+     type_code : 15
+     code : |1-
+      // Summary: Returns the address specified for the company
+      // Syntax:
+      //[ <Result> = ] ReadCompanyAddress ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      Procedure ReadCompanyAddress():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      // It is a public information: there is no code for checking the connection
+      
+      
+      RESULT GetSiteParameter(csAdmin_CompanyAddress,"")
+     type : 458752
+   -
+     name : ModifyCompanyAddress
+     procedure_id : 1416730102072974390
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the address specified for the company
+      // Syntax:
+      //[<Result> = ] ModifyCompanyAddress (<sCompanyAddress> is string)
+      //
+      // Parameters:
+      //	sCompanyAddress (string): New address of the company
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyCompanyAddress(sCompanyAddress is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the address of the company",ReadCompanyAddress(),sCompanyAddress)
+      
+      RESULT SaveSiteParameter(csAdmin_CompanyAddress,sCompanyAddress,CN_STRING)
+     type : 458752
+   -
+     name : ReadCompanyAboutUs
+     procedure_id : 1416730102073039926
+     type_code : 15
+     code : |1-
+      // Summary: Returns the text specified as company overview
+      // Syntax:
+      //[ <Result> = ] ReadCompanyAboutUs ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Text specified as company overview
+      Procedure ReadCompanyAboutUs():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(pSiteParameters.csAdmin_Contacts)
+     type : 458752
+   -
+     name : ModifyCompanyAboutUs
+     procedure_id : 1416730102073105462
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the text specified as company overview
+      // Syntax:
+      //[<Result> = ] ModifyWhoAreWeCompany (<sTextWhoAreWe> is string)
+      //
+      // Parameters:
+      //	sTextWhoAreWe (string): New presentation text for the company
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyCompanyAboutUs(sTextAboutUs is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the presentation page of the company", ReadCompanyAboutUs(), sTextAboutUs)
+      
+      RESULT SaveSiteParameter(csAdmin_Contacts,sTextAboutUs,CN_STRING)
+     type : 458752
+   -
+     name : ReadCompanyServices
+     procedure_id : 1416730102073170998
+     type_code : 15
+     code : |1-
+      // Summary: Returns the services proposed by the company
+      // Syntax:
+      //[ <Result> = ] ReadCompanyServices ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	String: Services proposed by the company
+      Procedure ReadCompanyServices():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(pSiteParameters.csAdmin_Services)
+     type : 458752
+   -
+     name : ModifyCompanyServices
+     procedure_id : 1416730102073236534
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the presentation of services proposed by the company
+      // Syntax:
+      //[<Result> = ] ModifyCompanyServices (<sCompanyServices> is string)
+      //
+      // Parameters:
+      //	sCompanyServices (string): New presentation text for the proposed services
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyCompanyServices(sCompanyServices is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the service page of the company", ReadCompanyServices(), sCompanyServices)
+      
+      RESULT SaveSiteParameter(csAdmin_Services,sCompanyServices,CN_STRING) 
+     type : 458752
+   -
+     name : ReadCompanyGeneralSalesConditions
+     procedure_id : 1416730102073302070
+     type_code : 15
+     code : |1-
+      // Summary: Returns the general sales conditions of the company
+      // Syntax:
+      //[ <Result> = ] ReadCompanyGeneralSalesConditions ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	String: Text of general sales conditions
+      Procedure ReadCompanyGeneralSalesConditions():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_ORDER_GSC, "")
+     type : 458752
+   -
+     name : ModifyCompanyGeneralSalesConditions
+     procedure_id : 1416730102073367606
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the presentation of services proposed by the company
+      // Syntax:
+      //[<Result> = ] ModifyGeneralSalesConditionsCompany (<sGeneralSalesConditions> is string)
+      //
+      // Parameters:
+      //	sGeneralSalesConditions (string): New presentation text of proposed services
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyCompanyGeneralSalesConditions(sGeneralSalesConditions is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the GSC", ReadCompanyGeneralSalesConditions(),sGeneralSalesConditions)
+      
+      RESULT SaveSiteParameter(csAdmin_ORDER_GSC, sGeneralSalesConditions, CN_STRING)
+     type : 458752
+   -
+     name : ReadEmailAddressSenderCompanyContact
+     procedure_id : 1416730102073433142
+     type_code : 15
+     code : |1-
+      // Summary: Returns the shipping email address of contacts
+      // Syntax:
+      //[ <Result> = ] ReadEmailAddressSenderCompanyContact ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Email address
+      Procedure ReadEmailAddressSenderCompanyContact():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT  GetSiteParameter(csAdmin_Contact_EmailSender,"")
+     type : 458752
+   -
+     name : ReadEmailAddressSenderCompanyOrder
+     procedure_id : 1416730102073498678
+     type_code : 15
+     code : |1-
+      // Summary: Returns the shipping email address of orders
+      // Syntax:
+      //[ <Result> = ] ReadEmailAddressSenderCompanyOrder ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Email address
+      Procedure ReadEmailAddressSenderCompanyOrder():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_ORDER_EmailSender,"")
+     type : 458752
+   -
+     name : ReadSMTPConfiguration
+     internal_properties : CAAAAAgAAACQGMWJV7+6dwZxrJYfgpukM2YlK9Xlvrdo+DYObd/0IRrqzr4XpmYaOyITOOxvpfaSzW86J8mb/oO2MG7yrpA685cEybLh/wPIJ2cT9Zf50eiTdAk1CLVS3ImkUm2eIH2fVv1vxBej3N5RjPeGmPei3ZuvKmQzHzhTWFebEAu5ZNcp2bu41R6LZ0wO1uuPlmyIKUzZUEQyaGmANuz3goyVZ5oyrmZz
+     procedure_id : 1416730102073564214
+     type_code : 15
+     code : |1+
+      // Summary: Returns the configuration of the SMTP server 
+      // Syntax:
+      //[<Result> = ] ReadSMTPConfiguration ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	ST_SMTP_CONFIGURATION: SMTP configuration 	
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ReadSMTPConfiguration()
+      
+      // Local variables
+      stConfiguration 			is ST_SMTP_CONFIGURATION
+      sSerializedConfiguration	is string
+      
+      // Default configuration
+      stConfiguration.nPort = 25
+      stConfiguration.sServerAddress = "localhost"
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT stConfiguration
+      END
+      
+      // Retrieve the stored content
+      sSerializedConfiguration = GetSiteParameter(csAdmin_SMTPCONFIG, "")
+      
+      // Deserialization
+      IF sSerializedConfiguration <> "" THEN
+      	WHEN EXCEPTION IN
+      		Deserialize(stConfiguration,sSerializedConfiguration,psdXML)
+      	DO
+      		AddError("A format problem was detected",ErrorInfo())
+      	END
+      ELSE
+      	
+      END
+      
+      // Return the configuration
+      RESULT stConfiguration
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo(errFullDetails))
+      	RESULT stConfiguration
+     type : 458752
+   -
+     name : ModifySMTPConfiguration
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730102073629750
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the configuration of the SMTP server 
+      // Syntax:
+      //[<Result> = ] ModifySMTPConfiguration (<stNewConfiguration> is ST_SMTP_CONFIGURATION)
+      //
+      // Parameters:
+      //	stNewConfiguration (ST_SMTP_CONFIGURATION): New configuration of the SMTP server
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ModifySMTPConfiguration(stNewConfiguration is ST_SMTP_CONFIGURATION)
+      
+      // Local variables
+      sSerializedConfiguration	is string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the configuration of the SMTP server for taking contact")
+      
+      // Serialization
+      WHEN EXCEPTION IN
+      	Serialize(stNewConfiguration,sSerializedConfiguration,psdXML)
+      DO
+      	AddError("A format problem was detected",ErrorInfo())
+      	RESULT False
+      END
+      
+      // Save in database
+      IF SaveSiteParameter(csAdmin_SMTPCONFIG, sSerializedConfiguration, CN_STRING) = False THEN	
+      	RESULT False
+      END
+      
+      // Modification successfully performed
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo(errFullDetails))
+      	RESULT False
+     type : 458752
+   -
+     name : ReadSiteHomePage
+     procedure_id : 1416730102073695286
+     type_code : 15
+     code : |1-
+      // Summary: Returns the home page of the site
+      // Syntax:
+      //[ <Result> = ] ReadSiteHomePage ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	Undefined type: name of the home page of the site
+      Procedure ReadSiteHomePage():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      // It is a public information: there is no code for checking the connection
+      
+      
+      // Return the home page
+      RESULT GetSiteParameter(csAdmin_HomePage, "home_newproducts")
+     type : 458752
+   -
+     name : ModifySiteHomePage
+     procedure_id : 1416730102073760822
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the home page of the site
+      // Syntax:
+      //[<Result> = ] ModifySiteHomePage (<sNameHomePage> is string)
+      //
+      // Parameters:
+      //	sNameHomePage (string): New name for the home page of the site
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifySiteHomePage(sNameHomePage is string):boolean
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the home page of the site", ReadSiteHomePage(), sNameHomePage)
+      
+      // Return the home page
+      RESULT SaveSiteParameter(csAdmin_HomePage, sNameHomePage, CN_STRING)
+     type : 458752
+   -
+     name : ReadSiteBanner
+     procedure_id : 1416730102073826358
+     type_code : 15
+     code : |1-
+      // Summary: Returns the banner of the site
+      // Syntax:
+      //[ <Result> = ] ReadSiteBanner ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	Buffer: Empty buffer if no banner image to apply
+      Procedure ReadSiteBanner():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      // Return the banner (by localizing properly according to the call)
+      IF InAWPMode() = True _OR_ InWebserviceMode() = True THEN
+      	RESULT GetSiteParameter(csAdmin_Banner)
+      ELSE
+      	RESULT "UK/"+GetSiteParameter(csAdmin_Banner)
+      END
+     type : 458752
+   -
+     name : SiteBannerIsCustomized
+     internal_properties : CAAAAAgAAADcJ9j7RrINAVREO9FmuBNaPcL2gl6VaXbm+AiZ8TYKn9A1mwJJoAQhzpbSyPZUAeom3t771uQ5k1ayGZYUAgSlBQ5wPOCkG2akzM4RuVZVBqsQ8K6il4QT4c4ZwRzZudxIj6B0yTrmEQUIA6xdtcgpDgSKJ5HqzeKFSukdcrqiW9cZwWMA0xqHfVJkxPmFkGtpuxHsJ6w=
+     procedure_id : 1416730102073891894
+     type_code : 15
+     code : |1+
+      // Summary: Indicates whether the banner of the site is customized
+      // Syntax:
+      //[<Result> = ] SiteBannerIsCustomized ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the banner is customized, False otherwise
+      //
+      
+      PROCEDURE SiteBannerIsCustomized():boolean
+      
+      // Local variables
+      bufBanner is buffer
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Retrieve the banner
+      bufBanner = GetSiteParameter(csAdmin_Banner)
+      
+      // If the buffer is empty, it means that the banner is not customized
+      IF bufBanner = "" THEN
+      	// The banner is the default one
+      	RESULT False
+      ELSE
+      	// The banner is customized
+      	RESULT True
+      END
+     type : 458752
+   -
+     name : ModifySiteBanner
+     internal_properties : CAAAAAgAAAAda+KFpQbOGr93127iTQ8UOhxl0F/btp0HlEWEZR5Nvw8ZopmPd23BmRXJqgl/bjg1nP76qKMq4YDN9Db4IvqERZsvOzoKKCQqJWcq7ioEp+5pe4zQFYvAtyCJ4WWKqCPakwAnhnSm8PIk6p9NzytqI0gYUO0b8z8bELFowczn8+MYpBeCdeO+8MUi4sV0Fk6ZjuMzUlZdQ29QXkIWCsXPX6+GFlph7M8p8uwMM0kwy44B2O06GnSYQ1Ulp0SfotpfJCtEHRUiJX4QlOGUd2pki+XBe81SkdfhuuhClVCExfnjCLXMsvJybexfRC64t9+/C30Ay0aXxaHhogZyBzVr7sgGq9wy8+9Ql/Syy3PICBQ5OZiDM/3sIxGOmcl2dJf1AEv23kX8qpkOFDSHRFe0fZ2puyakIgdpYAgX6NlvkiCeLJILPjpOiVpP0nA1Ut1Mjm9HB1WaA6e/D1oXuWsWfRKGKRWV0jfUyP01O9wy8Q==
+     procedure_id : 1416730102073957430
+     type_code : 15
+     code : |1-
+      // Summary: Modify the banner of the site
+      // Syntax:
+      //[<Result> = ] ModifySiteBanner (<sFilePath> is string)
+      //
+      // Parameters:
+      //	sFilePath (string): Path of the file for the new banner
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ModifySiteBanner(sFilePath is string):boolean
+      
+      // Local variables
+      BannerImage is a Image
+      sBannerPath				is string
+      sPathGenerationBanner	is string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the banner of the site")
+      
+      // Check the existence of the file
+      IF fFileExist(sFilePath) = False THEN
+      	AddError("The file for the new banner is not accessible")
+      	RESULT False
+      END
+      
+      // Is the image not too big?
+      BannerImage = sFilePath
+      IF BannerImage..Height > 132 _OR_ BannerImage..Width > 980  THEN
+      	// Resize the image
+      	IF dResize(BannerImage,980,132,drHomotheticCentered) = False THEN
+      		AddError("The specified banner image has not been resized",ErrorInfo())
+      		RESULT False
+      	END
+      	
+      	// Save the image
+      	IF BannerImage..WithAlpha = True THEN
+      		sPathGenerationBanner = CompleteDir(sReturnGenerationDir())+"banner.png"
+      		IF dSaveImagePNG(BannerImage,sPathGenerationBanner) = False THEN
+      			AddError("An error occurred while saving the banner",ErrorInfo())
+      			RESULT False
+      		END
+      	ELSE
+      		sPathGenerationBanner = CompleteDir(sReturnGenerationDir())+"banner.jpg"
+      		IF dSaveImageJPEG(BannerImage,sPathGenerationBanner) = False THEN
+      			AddError("An error occurred while saving the banner",ErrorInfo())
+      			RESULT False
+      		END
+      	END
+      	
+      END
+      
+      // If the size is not exactly the one of the banner, it is filled with the palette color
+      IF BannerImage..Height <> 132 _OR_ BannerImage..Width <> 980  THEN
+      	// Resize with white or transparent 
+      	IF BannerImage..WithAlpha = True THEN
+      		BannerImage..FillColor..Color = iTransparent
+      ELSE		
+      		<COMPILE IF ConfigurationType=Webservice>
+      			// The white color is used as background color
+      			BannerImage..FillColor..Color = iWhite
+      		<ELSE>			
+      			// The color of the site palette is used as background color
+      			BannerImage..FillColor..Color = ColorPalette(colorBackgroundGeneral)			
+      		<END>
+      			
+      	END
+      	
+      	BannerImage..Height = 132
+      	BannerImage..Width = 980
+      	
+      	// Save the image
+      	IF BannerImage..WithAlpha = True THEN
+      		sPathGenerationBanner = CompleteDir(sReturnGenerationDir())+"banner.png"
+      		IF dSaveImagePNG(BannerImage,sPathGenerationBanner) = False THEN
+      			AddError("An error occurred while saving the banner",ErrorInfo())
+      			RESULT False
+      		END
+      	ELSE
+      		sPathGenerationBanner = CompleteDir(sReturnGenerationDir())+"banner.jpg"
+      		IF dSaveImageJPEG(BannerImage,sPathGenerationBanner) = False THEN
+      			AddError("An error occurred while saving the banner",ErrorInfo())
+      			RESULT False
+      		END
+      	END
+      ELSE
+      	// All you have to do is copy the file (if not already done)
+      	IF sPathGenerationBanner = "" THEN
+      		sPathGenerationBanner = CompleteDir(sReturnGenerationDir())+"banner"+fExtractPath(sFilePath,fExtension)
+      		IF fCopyFile(sFilePath,sPathGenerationBanner) = False THEN
+      			AddError("An error occurred while saving the banner",ErrorInfo())
+      			RESULT False
+      		END
+      	END
+      END
+      
+      // Copy the banner into the authorized _WEB directory
+      IF fExtractPath(sPathGenerationBanner,fExtension)~=".png" THEN
+      	sBannerPath = CompleteDir(sReturnDirWebUpload())+"banner.png"	
+      ELSE
+      	sBannerPath = CompleteDir(sReturnDirWebUpload())+"banner.jpg"	
+      END
+      
+      // Transfer the image
+      <COMPILE IF ConfigurationType=Webservice>
+      	// Not available 
+      	AddError("This feature is not available in Web Service mode")
+      	RESULT False
+      <ELSE>	
+      	// Copy into the _WEB directory
+      	IF fCopyFileWebFolder(sPathGenerationBanner,sBannerPath) = False THEN
+      		AddError("An error occurred while deploying the banner",ErrorInfo())
+      		RESULT False
+      	END
+      <END>
+      
+      // Delete the generation file
+      IF fDelete(sPathGenerationBanner) = False THEN
+      	AddError("Unable to delete the file for banner generation",ErrorInfo())
+      	// Non-fatal error, continue
+      END
+      
+      <COMPILE IF ConfigurationType=Webservice>
+      	// Build the path of the image
+      	sBannerPath = Replace(sBannerPath,fExeDir()+"\UK","")
+      <ELSE>	
+      	// Build the path of the image in relation to fWebDir
+      	sBannerPath = Replace(sBannerPath,fWebDir()+"\UK","")	
+      <END>
+      
+      sBannerPath = Replace(sBannerPath,"\","/")
+      IF Left(sBannerPath,1)~="/" THEN sBannerPath = Right(sBannerPath,Length(sBannerPath)-1)
+      
+      
+      // Save the banner in database
+      IF SaveSiteParameter(csAdmin_Banner,sBannerPath,CN_STRING) = False THEN
+      	RESULT False
+      END
+      
+      // Delete the temporary file
+      IF fDelete(sFilePath) = False THEN
+      	AddError("The temporary file of the banner cannot be deleted",ErrorInfo())
+      	// This is not a fatal error
+      END
+      
+      // Modification successfully performed
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("An exception was detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : ReadSSLConfiguration
+     procedure_id : 1416730102074022966
+     type_code : 15
+     code : |1-
+      // Summary: Returns the SSL configuration of the site
+      // Syntax:
+      //[ <Result> = ] ReadSSLConfiguration ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	boolean: True if the SSL configuration is enabled, False otherwise
+      Procedure ReadSSLConfiguration():boolean
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      RESULT GetSiteParameter(csAdmin_SSL)
+     type : 458752
+   -
+     name : ModifySSLConfiguration
+     procedure_id : 1416730102074088502
+     type_code : 15
+     code : |1+
+      // Summary: Modifies the SSL configuration of the site
+      // Syntax:
+      //[<Result> = ] ModifySSLConfiguration (<bEnableSSL> is boolean)
+      //
+      // Parameters:
+      //	bEnableSSL (boolean): True to enable the SSL connection, False otherwise
+      // Return value:
+      // 	boolean: True if the modification was successfully performed, False otherwise
+      //
+      
+      Procedure ModifySSLConfiguration(bEnableSSL is boolean):boolean
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the SSL configuration", ""+ReadSSLConfiguration(),""+bEnableSSL)
+      
+      IF bEnableSSL = True THEN
+      	RESULT SaveSiteParameter(csAdmin_SSL,1,CN_INTEGER)	
+      ELSE
+      	RESULT SaveSiteParameter(csAdmin_SSL,0,CN_INTEGER)
+      END
+     type : 458752
+   -
+     name : ReadAvailabilitySpecialPage
+     procedure_id : 1416730102074154038
+     type_code : 15
+     code : |1+
+      // Summary: Returns the availability of a special page
+      // Syntax:
+      //[<Result> = ] ReadAvailabilitySpecialPage (<nNumberSpecialPage> is int)
+      //
+      // Parameters:
+      //	nNumberSpecialPage (integer): Number of the page (PAGE_XXX constants of the collection)
+      // Return value:
+      // 	boolean: True if the page is available, False otherwise
+      //
+      
+      Procedure ReadAvailabilitySpecialPage(nNumberSpecialPage is int):boolean
+      
+      bPageIsAvailable is boolean
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      // It is a public information: there is no code for checking the connection
+      
+      
+      // Read the configuration
+      SWITCH nNumberSpecialPage
+      	CASE Page_NEWS 		
+      		bPageIsAvailable =  GetSiteParameter(csAdmin_AvailPage_News,True)	
+      	CASE Page_NEWPRODUCTS 			
+      		bPageIsAvailable =  GetSiteParameter(csAdmin_AvailPage_NewProducts,True)
+      	CASE PAGE_PROMOTIONS				
+      		bPageIsAvailable =  GetSiteParameter(csAdmin_AvailPage_Promotions,True)
+      	CASE PAGE_REFERENCES				
+      		bPageIsAvailable =  GetSiteParameter(csAdmin_AvailPage_References,True)
+      	CASE PAGE_SERVICES				
+      		bPageIsAvailable =  GetSiteParameter(csAdmin_AvailPage_Services,True)
+      	CASE PAGE_LEGAL_INFORMATION	
+      		bPageIsAvailable =  GetSiteParameter(csAdmin_AvailPage_LegalInfo,True)
+      	CASE PAGE_CONTACT				
+      		bPageIsAvailable =  GetSiteParameter(csAdmin_AvailPage_ContactForm,True)
+      	CASE PAGE_PRESENTATION
+      		bPageIsAvailable = GetSiteParameter(csAdmin_AvailPage_Presentation,True)
+      	OTHER CASE
+      		AddError("Identifier of special page not valid")
+      		RESULT False	
+      END
+      
+      RESULT bPageIsAvailable
+     type : 458752
+   -
+     name : ModifyAvailabilitySpecialPage
+     procedure_id : 1416730102074219574
+     type_code : 15
+     code : |1+
+      // Summary: Modifies the availability of a special page
+      // Syntax:
+      //[<Result> = ] ModifyAvailabilitySpecialPage (<nNumberSpecialPage> is int, <bActive> is boolean)
+      //
+      // Parameters:
+      //	nNumberSpecialPage (integer): Number of the page (PAGE_XXX constants of the collection)
+      //	bActive (boolean): True to make the page visible, False otherwise
+      // Return value:
+      // 	boolean: True if the modification was performed, False if an error occurred
+      //
+      
+      Procedure ModifyAvailabilitySpecialPage(nNumberSpecialPage is int, bEnabled is boolean):boolean
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Read the configuration
+      SWITCH nNumberSpecialPage
+      	CASE Page_NEWS 		
+      		// Note the modification of configuration
+      		NotifyConfigurationModification("Modifying the availability of the page about news", ""+ReadAvailabilitySpecialPage(nNumberSpecialPage),""+bEnabled)
+      		
+      		RESULT SaveSiteParameter(csAdmin_AvailPage_News, bEnabled, CN_INTEGER)
+      	CASE Page_NEWPRODUCTS 			
+      		// Note the modification of configuration
+      		NotifyConfigurationModification("Modifying the availability of the page about new products", ""+ReadAvailabilitySpecialPage(nNumberSpecialPage),""+bEnabled)
+      		
+      		RESULT SaveSiteParameter(csAdmin_AvailPage_NewProducts, bEnabled, CN_INTEGER)
+      	CASE PAGE_PROMOTIONS				
+      		// Note the modification of configuration
+      		NotifyConfigurationModification("Modifying the availability of the page about promotions", ""+ReadAvailabilitySpecialPage(nNumberSpecialPage),""+bEnabled)
+      		
+      		RESULT SaveSiteParameter(csAdmin_AvailPage_Promotions, bEnabled, CN_INTEGER)
+      	CASE PAGE_REFERENCES				
+      		// Note the modification of configuration
+      		NotifyConfigurationModification("Modifying the availability of the page about references", ""+ReadAvailabilitySpecialPage(nNumberSpecialPage),""+bEnabled)
+      		
+      		RESULT SaveSiteParameter(csAdmin_AvailPage_References, bEnabled, CN_INTEGER)
+      	CASE PAGE_SERVICES				
+      		// Note the modification of configuration
+      		NotifyConfigurationModification("Modifying the availability of the page about services", ""+ReadAvailabilitySpecialPage(nNumberSpecialPage),""+bEnabled)
+      		
+      		RESULT SaveSiteParameter(csAdmin_AvailPage_Services, bEnabled, CN_INTEGER)
+      	CASE PAGE_LEGAL_INFORMATION	
+      		// Note the modification of configuration
+      		NotifyConfigurationModification("Modifying the availability of the page about legal information", ""+ReadAvailabilitySpecialPage(nNumberSpecialPage),""+bEnabled)
+      		
+      		RESULT SaveSiteParameter(csAdmin_AvailPage_LegalInfo, bEnabled, CN_INTEGER)
+      	CASE PAGE_CONTACT				
+      		// Note the modification of configuration
+      		NotifyConfigurationModification("Modifying the availability of the page for taking contact", ""+ReadAvailabilitySpecialPage(nNumberSpecialPage),""+bEnabled)
+      		
+      		RESULT SaveSiteParameter(csAdmin_AvailPage_ContactForm, bEnabled, CN_INTEGER)
+      	
+      	CASE PAGE_PRESENTATION
+      		// Note the modification of configuration
+      		NotifyConfigurationModification("Modifying the availability of the page for taking contact", ""+ReadAvailabilitySpecialPage(nNumberSpecialPage),""+bEnabled)
+      		
+      		RESULT SaveSiteParameter(csAdmin_AvailPage_Presentation, bEnabled, CN_INTEGER)	
+      	OTHER CASE
+      		AddError("Identifier of special page not valid")
+      		RESULT False	
+      END
+      
+     type : 458752
+   -
+     name : ReadSiteName
+     procedure_id : 1416730102074285110
+     type_code : 15
+     code : |1-
+      // Summary: Returns the text specified in site name
+      // Syntax:
+      //[ <Result> = ] ReadSiteName ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Name of the site
+      Procedure ReadSiteName():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_SiteName,"")
+     type : 458752
+   -
+     name : ModifySiteName
+     procedure_id : 1416730102074350646
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the name specified for the site
+      // Syntax:
+      //[<Result> = ] ModifySiteName (<sSiteName> is string)
+      //
+      // Parameters:
+      //	sSiteName (string): New name specified for the site
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifySiteName(sSiteName is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the name of the site", ReadSiteName(), sSiteName)
+      
+      RESULT SaveSiteParameter(csAdmin_SiteName,sSiteName,CN_STRING)
+     type : 458752
+   -
+     name : ReadSiteLogo
+     internal_properties : CAAAAAgAAACyPf6Vu9iDSXoa1+0q1puib8Rs3CKDbX7oMsxVjdQSgzabMYyR6rC14IiKMB621S7knHRlbn4to/DcpR7svMTlxzDqepxSbxIGXpoMPv8gS1i1E9un6HWCHnN+cFWGOFV1rLPJfnMn4CLVYPfmIgu2r5UZkDoH4vniFybYN8OpVNByrGBpaHfijuMl87bebxIkwS/OQUo=
+     procedure_id : 1416730102074416182
+     type_code : 15
+     code : |1-
+      // Summary: Returns the logo of the site
+      // Syntax:
+      //[<Result> = ] ReadSiteLogo ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	ANSI string: Empty buffer if no banner image to apply
+      //
+      
+      Procedure ReadSiteLogo():string
+      
+      // Local variables
+      sLogoFile is string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      // It is a public information: there is no code for checking the connection
+      
+      
+      // Read the logo
+      sLogoFile = GetSiteParameter(csAdmin_SiteLogo,"gen_img/logo.png")
+      IF sLogoFile = "" THEN RESULT ""
+      
+      // Return the logo (by localizing properly according to the call)
+      IF InAWPMode() = True _OR_ InWebserviceMode() = True THEN
+      	RESULT sLogoFile
+      ELSE
+      	RESULT "UK/"+sLogoFile
+      END
+     type : 458752
+   -
+     name : ModifySiteLogo
+     internal_properties : CAAAAAgAAAC/J37FTZPnDTXLT16hL7mtwtDl8c5DhO0F8rLNCYOmmvNNpWo6SLbRYRNADxilzFtgYi0dATwMskJm6tegbyh7rfWSbTqCWuAHoidyxKXRcx3rIN4aTPl+Q3lAAIWd6uwJHyRsqOzJjC5Y3vs4Sw4LU/Bu18LAjZi3jRWjglr+T/IW4M03+ofJTR4QKkQz29eOMhqwDrcSyDmOIlGoMhPFKbD9sGsebEXbcCIqtE0vfShTGIex1csoK2JCYXQ5i6akrA==
+     procedure_id : 1416730102074481718
+     type_code : 15
+     code : |1-
+      // Summary: Modify the logo of the site
+      // Syntax:
+      //[<Result> = ] ModifySiteLogo (<sFilePath> is string)
+      //
+      // Parameters:
+      //	sFilePath (string): Path of the file for the new logo
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ModifySiteLogo(sFilePath is string):boolean
+      
+      // Local variables
+      LogoImage is a Image
+      sLogoPath	is string
+      sPathGenerationFile is string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the logo of the site")
+      
+      // Check the existence of the file
+      IF fFileExist(sFilePath) = False THEN
+      	AddError("The file for the new banner is not accessible")
+      	RESULT False
+      END
+      
+      // Build the file name for the generation image
+      sPathGenerationFile = CompleteDir(sReturnGenerationDir())+fExtractPath(sFilePath,fFileName)+".png"
+      
+      // Is the image not too big?
+      LogoImage = sFilePath
+      IF LogoImage..Height > 120 _OR_ LogoImage..Width > 210  THEN
+      	AlphaImage is a Image	
+      	// Create a destination image with Alpha layer to manage the transparency
+      	IF NOT fExtractPath(sFilePath,fExtension)~=".png" THEN
+      	
+      		AlphaImage..FillColor = iTransparent
+      		AlphaImage..Width = LogoImage..Width
+      		AlphaImage..Height = LogoImage..Height
+      	
+      		// Copy the image read in the image with Alpha layer
+      		dAlphaBlend(AlphaImage,LogoImage)
+      	ELSE
+      		AlphaImage = LogoImage
+      	END
+      	
+      	// Resize the image
+      	IF dResize(AlphaImage,210,120,drHomotheticCentered) = False THEN
+      		AddError("The specified banner image has not been resized",ErrorInfo())
+      		// This is not a fatal error
+      	END
+      	
+      	// Save the image: we want a PNG
+      	IF dSaveImagePNG(AlphaImage,sPathGenerationFile) = False THEN
+      		AddError("An error occurred while saving the logo",ErrorInfo())
+      		RESULT False
+      	END
+      ELSE
+      	IF fCopyFile(sFilePath,sPathGenerationFile) = False THEN
+      		AddError("An error occurred while copying the logo")
+      		RESULT False
+      	END
+      END
+      
+      
+      <COMPILE IF ConfigurationType=Webservice>	
+      	// Not available 
+      	AddError("This feature is not available in Web Service mode")
+      	RESULT False
+      <ELSE>
+      	// Copy the logo into the authorized _WEB directory
+      	sLogoPath = CompleteDir(sReturnDirWebUpload())+"logo.png"
+      	IF fCopyFileWebFolder(sPathGenerationFile,sLogoPath) = False THEN
+      		AddError("An error occurred while deploying the logo",ErrorInfo())
+      		RESULT False
+      	END	
+      <END>
+      
+      
+      
+      <COMPILE IF ConfigurationType=Webservice>
+      	// Build the path of the image in relation to fWebDir
+      	sLogoPath = Replace(sLogoPath,fExeDir(),"")
+      <ELSE>
+      	// Build the path of the image in relation to fWebDir
+      	sLogoPath = Replace(sLogoPath,fWebDir()+"\UK","")	
+      <END>
+      
+      sLogoPath = Replace(sLogoPath,"\","/")
+      IF Left(sLogoPath,1)~="/" THEN sLogoPath = Right(sLogoPath,Length(sLogoPath)-1)
+      
+      // Save the banner in database
+      IF SaveSiteParameter(csAdmin_SiteLogo,sLogoPath,CN_STRING) = False THEN
+      	RESULT False
+      END
+      
+      // Delete the temporary file
+      IF fDelete(sFilePath) = False THEN
+      	AddError("The temporary file of the banner cannot be deleted",ErrorInfo())
+      	// This is not a fatal error
+      END
+      
+      // Modification successfully performed
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("An exception was detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : SiteLogoIsCustomized
+     procedure_id : 1416730102074547254
+     type_code : 15
+     code : |1+
+      // Summary: Indicates whether the logo of the site is customized
+      // Syntax:
+      //[<Result> = ] SiteLogoIsCustomized ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the logo is customized, False otherwise
+      //
+      
+      PROCEDURE SiteLogoIsCustomized():boolean
+      
+      // Local variables
+      sLogo is string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      // It is a public information: there is no code for checking the connection
+      
+      
+      // Retrieve the banner
+      sLogo = GetSiteParameter(csAdmin_SiteLogo)
+      
+      // If the path is empty, it means that the logo is not customized
+      IF sLogo = "" THEN
+      	// The banner is the default one
+      	RESULT False
+      ELSE
+      	// The banner is customized
+      	RESULT True
+      END
+     type : 458752
+   -
+     name : ReadCompanyReferences
+     procedure_id : 1416730102074612790
+     type_code : 15
+     code : |1-
+      // Summary: Returns the presentation of references for the company
+      // Syntax:
+      //[ <Result> = ] ReadCompanyReferences ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      Procedure ReadCompanyReferences():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(pSiteParameters.csAdmin_References)
+     type : 458752
+   -
+     name : ModifyCompanyReferences
+     procedure_id : 1416730102074678326
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the references of the company
+      // Syntax:
+      //[<Result> = ] ModifyCompanyReferences (<sCompanyReferences> is string)
+      //
+      // Parameters:
+      //	sCompanyReferences (string): New presentation text for the references of the company
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyCompanyReferences(sCompanyReferences is string):boolean
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the page of references of the company", ReadCompanyReferences(), sCompanyReferences)
+      
+      RESULT SaveSiteParameter(csAdmin_References,sCompanyReferences,CN_STRING) 
+     type : 458752
+   -
+     name : ReadAmountFixedShippingCosts
+     procedure_id : 1416730102074743862
+     type_code : 15
+     code : |1-
+      // Summary: Returns the fixed amount for the shipping costs
+      // Syntax:
+      //[ <Result> = ] ReadAmountFixedShippingCosts ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	Real: Fixed amount for the shipping costs
+      Procedure ReadAmountFixedShippingCosts():Real
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT 0.0
+      END
+      
+      RESULT GetSiteParameter(csAdmin_COSTS_Deal,0)
+     type : 458752
+   -
+     name : ReadAmountFreeShippingCosts
+     procedure_id : 1416730102074809398
+     type_code : 15
+     code : |1-
+      // Summary: Returns the minimum order amount for free shipping costs
+      // Syntax:
+      //[ <Result> = ] ReadAmountFreeShippingCosts ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      Procedure ReadAmountFreeShippingCosts():real
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT 0.0
+      END
+      
+      RESULT GetSiteParameter(csAdmin_COSTS_Limit,0.0)
+     type : 458752
+   -
+     name : ModifyAmountFixedShippingCosts
+     procedure_id : 1416730102074874934
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the fixed amount for the shipping costs
+      // Syntax:
+      //[<Result> = ] ModifyFixedAmountShippingCosts (<rAmountShippingCosts> is real)
+      //
+      // Parameters:
+      //	rAmountShippingCosts (real): New amount
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyAmountFixedShippingCosts(LOCAL rAmountShippingCost is real)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the fixed amount for the shipping costs", ""+ReadAmountFixedShippingCosts(),""+rAmountShippingCost)
+      
+      RESULT SaveSiteParameter(csAdmin_COSTS_Deal,rAmountShippingCost,CN_REAL)
+     type : 458752
+   -
+     name : ModifyAmountFreeShippingCosts
+     procedure_id : 1416730102074940470
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the minimum order amount for free shipping costs
+      // Syntax:
+      //[<Result> = ] ModifyAmountFreeShippingCosts (<rMinOrderAmount> is real)
+      //
+      // Parameters:
+      //	rMinOrderAmount (real): New amount
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyAmountFreeShippingCosts(LOCAL rMinOrderAmount is real)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the minimum order amount for free shipping costs",""+ ReadAmountFreeShippingCosts(),""+rMinOrderAmount)
+      
+      RESULT SaveSiteParameter(csAdmin_COSTS_Limit,rMinOrderAmount,CN_REAL)
+     type : 458752
+   -
+     name : ModifyEmailAddressSenderCompanyOrder
+     internal_properties : CAAAAAgAAABf7AsYFbI0w7kWRKCWAvh037/kYySckIU19/LtUbgXs8rh4ldJgXEHc3QgC24BocesKZJjNXbKf8isA9qBlCkkD/RBZ0/q2I0p59+o6hT2sbcsxLriH+3zcK/nKhtpncTGocNa2p5mdSpnFxE4Z9zp5vifY5xQIdpAKz0gZzgsJbTbasA45e87hrqaySM43CWw62qeRMSajMwlaFXefAgU0Kp6hnJ0gZn/CQFq+uHF8ToFMgU=
+     procedure_id : 1416730102075006006
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the email address used to send the orders
+      // Syntax:
+      //[<Result> = ] ModifyEmailAddressSenderCompanyOrder (<sEmailAddress> is string)
+      //
+      // Parameters:
+      //	sEmailAddress (string): New email address
+      // Return value:
+      // 	boolean: True if the modification was successfully performed, False otherwise
+      //
+      
+      Procedure ModifyEmailAddressSenderCompanyOrder(sEmailAddress is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the email address for sending the order confirmation",ReadEmailAddressSenderCompanyOrder(),sEmailAddress)
+      
+      RESULT SaveSiteParameter(csAdmin_ORDER_EmailSender,sEmailAddress,CN_STRING)
+     type : 458752
+   -
+     name : ModifyEmailAddressSenderCompanyContact
+     internal_properties : CAAAAAgAAABf7AsYFbI0w7kWRKCWAvh037/kYySckIU19/LtUbgXs8rh4ldJgXEHc3QgC24BocesKZJjNXbKf8isA9qBlCkkD/RBZ0/q2I0p59+o6hT2sbcsxLriH+3zcK/nKhtpncTGocNa2p5mdSpnFxE4Z9zp5vifY5xQIdpAKz0gZzgsJbTbasA45e87hrqaySM43CWw62qeRMSajMwlaFXefAgU0Kp6hnJ0gZn/CQFq+uHF8ToFMgU=
+     procedure_id : 1416730102075071542
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the email address used for taking contact
+      // Syntax:
+      //[<Result> = ] ModifyEmailAddressSenderCompanyContact (<sEmailAddress> is string)
+      //
+      // Parameters:
+      //	sEmailAddress (string): New email address
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyEmailAddressSenderCompanyContact(sEmailAddress is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the email address for sending contact",ReadEmailAddressSenderCompanyContact(),sEmailAddress)
+      
+      
+      RESULT  SaveSiteParameter(csAdmin_Contact_EmailSender,sEmailAddress,CN_STRING)
+     type : 458752
+   -
+     name : ReadTextContactForm
+     procedure_id : 1416730102075137078
+     type_code : 15
+     code : |1-
+      // Summary: Returns the text specified when taking contact
+      // Syntax:
+      //[ <Result> = ] ReadTextContactForm ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	String: Specified text
+      Procedure ReadTextContactForm():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_TextContactForm,"")
+     type : 458752
+   -
+     name : ModifyTextContactForm
+     procedure_id : 1416730102075202614
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the text specified when taking contact
+      // Syntax:
+      //[<Result> = ] ModifyTextContactForm (<sContactText> is string)
+      //
+      // Parameters:
+      //	sContactText (string): New text
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyTextContactForm(sContactText is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the text for taking contact", ReadTextContactForm(),sContactText)
+      
+      RESULT SaveSiteParameter(csAdmin_TextContactForm,sContactText,CN_STRING)
+     type : 458752
+   -
+     name : ReadLegalInformation
+     procedure_id : 1416730102075268150
+     type_code : 15
+     code : |1-
+      // Summary: Returns the text specified in legal information
+      // Syntax:
+      //[ <Result> = ] ReadLegalInformation ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	String: legal information
+      Procedure ReadLegalInformation():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_LegalInfo,CN_STRING)
+     type : 458752
+   -
+     name : ModifyLegalInformation
+     procedure_id : 1416730102075333686
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the text specified in the legal information
+      // Syntax:
+      //[<Result> = ] ModifyLegalInformation (<sInformation> is string)
+      //
+      // Parameters:
+      //	sInformation (string): New text
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyLegalInformation(sInformation is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      RESULT SaveSiteParameter(csAdmin_LegalInfo,sInformation,CN_STRING)
+     type : 458752
+   -
+     name : Maintenance_GenerateProductImages
+     internal_properties : CAAAAAgAAADA4iRlJPfTT93c1EbZPFe7NiwpiiiLv8uDoJ79kZ2I1Doto0b4F7dxmR1f9rcOHMbTvKLZPd7RxUTAs9RjUOiiEdE38V6TeJdfLh9Tv1IuwDBgz/F6ycsbBqcIaZpFJqBvc4sf5d7Xv2xD5GxpZ8uLdRYbqBdgbsRq04hZemxVEbwzzBKUO63X1jdHUq9xZOv4YZBN5Q==
+     procedure_id : 1416730102075399222
+     type_code : 15
+     code : |1-
+      // Summary: Regenerates all the images of products
+      // Syntax:
+      //[<Result> = ] Maintenance_GenerateProductImages ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the generation was successfully performed, False otherwise
+      //
+      
+      Procedure Maintenance_GenerateProductImages()
+      
+      // Local variables
+      nContextID			is int
+      bError				is boolean
+      
+      // no error by default
+      bError = False
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // It is a maintenance operation, notify
+      NotifyInformation("Generating all the images of products")
+      
+      // Browse the products
+      FOR EACH product on ProductID			
+      	// Generate all the photos for this product
+      	nContextID = HSavePosition(product)
+      	IF GenerateProductPhotos(product.ProductID) = False THEN bError = True
+      	HRestorePosition(nContextID)
+      	
+      END
+      
+      IF bError = False THEN
+      	// The operation was successfully performed
+      	RESULT True
+      ELSE
+      	// At least one image was not generated
+      	RESULT False
+      END
+     type : 458752
+   -
+     name : ReadCompanyCompRegNumber
+     internal_properties : CAAAAAgAAAAqRc98QFiRRE4+sangvH/gn4rb0nCSH5l4jq1ppRYsjjxc4OhMNsptbP18gTbh50GHwESyVEqd1JbH5JbybO5KjbQBudJEwnIrQKLl9YrDqcQ2nUj/N/ptKP8NKkFTJXyc550QPnIySe5jq7uEKyCNMOpNGQjco1ymZVns57gs1b6M11gGptUcp359UveoErqhzgtfTRyvNZTVzRGCnMRSJBynUA==
+     procedure_id : 1416730102075464758
+     type_code : 15
+     code : |1-
+      // Summary: Returns the Company Registration Number of the company
+      // Syntax:
+      //[<Result> = ] ReadCompanyCompRegNumber ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	Undefined type: Company Registration Number
+      //
+      
+      Procedure ReadCompanyCompRegNumber():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(pSiteParameters.csAdmin_CompRegNumber)
+     type : 458752
+   -
+     name : ModifyCompRegNumber
+     internal_properties : CAAAAAgAAADlhQPdH5A+8VesprZssGvU2nxFXfaehrdv6XhHswq1UUycMm2/Ly8xSyRm/4qxKWcQnXZd33hU9WxoURJB3EUIN5RxfVWgRgP1Y3k8JsTuAff0GBzEsYNlyOcW+Rwwch+h5Jop14lJntO4hsjxpk1Ixc/28gFbJN/FuKSniC/FvCPCWdcd+Op8J1clbOhD6SCzrpLi5OTGsLBdmDnefARgtPfyQxs8PdULMbHmSqmZMXGISH8=
+     procedure_id : 1416730102075530294
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the Company Registration Number of the company
+      // Syntax:
+      //[<Result> = ] ModifyCompanyCompRegNumber (<sCompanyCompRegNumber> is string)
+      //
+      // Parameters:
+      //	sCompanyCompRegNumber (string): New Company Registration Number
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyCompRegNumber(sCompanyCompRegNumber is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the Company Registration Number of the company", ReadCompanyCompRegNumber(), sCompanyCompRegNumber)
+      
+      RESULT SaveSiteParameter(csAdmin_CompRegNumber,sCompanyCompRegNumber,CN_STRING) 
+     type : 458752
+   -
+     name : ReadMaximumNumberNewProducts
+     procedure_id : 1416730102075595830
+     type_code : 15
+     code : |1-
+      // Summary: Returns the maximum number of new products displayed on the page of new products
+      // Syntax:
+      //[ <Result> = ] ReadMaximumNumberNewProducts ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      Procedure ReadMaximumNumberNewProducts():int
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT 0
+      END
+      
+      RESULT GetSiteParameter(csAdmin_LimitNewProductsDisplayed,10)
+     type : 458752
+   -
+     name : ModifyMaximumNumberNewProducts
+     procedure_id : 1416730102075661366
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the maximum number of new products displayed on the page of new products
+      // Syntax:
+      //[<Result> = ] ModifyMaximumNumberNewFeatures (<nMaximumNumber> is int)
+      //
+      // Parameters:
+      //	nMaximumNumber (integer): New maximum number
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyMaximumNumberNewProducts(nMaximumNumber is int)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the maximum number of new products displayed", ""+ReadMaximumNumberNewProducts(),""+nMaximumNumber)
+      
+      RESULT SaveSiteParameter(csAdmin_LimitNewProductsDisplayed,nMaximumNumber,CN_INTEGER)
+     type : 458752
+   -
+     name : Maintenance_OptimizeDatabase
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730102075726902
+     type_code : 15
+     code : |1-
+      // Summary: Optimizes the database
+      // Syntax:
+      //[<Result> = ] Maintenance_OptimizeDatabase ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure Maintenance_OptimizeDatabase()
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // It is a maintenance operation, notify
+      NotifyInformation("Request for optimizing the database")
+      
+      
+      // Local variables
+      sListFiles		is string
+      sFile			is string
+      bError				is boolean
+      
+      // Retrieve the list of files found in the the database
+      sListFiles = HListFile()
+      
+      // Browse the files
+      FOR EACH string sFile of sListFiles separee by CR
+      //	// Optimize the file
+      	IF HIndex(sFile) = False THEN
+      		AddError(StringBuild(<§@1eb15ad0055be0760001§>,sFile))
+      		bError = True 
+      	END	
+      END
+      
+      // Did an error occur
+      IF bError = True THEN
+      	RESULT False
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : Maintenance_GeneratePromotionImages
+     internal_properties : CAAAAAgAAADA4iRlJPfTT93c1EbZPFe7NiwpiiiLv8uDoJ79kZ2I1Doto0b4F7dxmR1f9rcOHMbTvKLZPd7RxUTAs9RjUOiiEdE38V6TeJdfLh9Tv1IuwDBgz/F6ycsbBqcIaZpFJqBvc4sf5d7Xv2xD5GxpZ8uLdRYbqBdgbsRq04hZemxVEbwzzBKUO63X1jdHUq9xZOv4YZBN5Q==
+     procedure_id : 1416730102075792438
+     type_code : 15
+     code : |1-
+      // Summary: Regenerates all the images of promotions
+      // Syntax:
+      //[<Result> = ] Maintenance_GeneratePromotionImages ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the generation was successfully performed, False otherwise
+      //
+      
+      Procedure Maintenance_GeneratePromotionImages()
+      
+      // Local variables
+      nContextID			is int
+      bError				is boolean
+      
+      // no error by default
+      bError = False
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // It is a maintenance operation, notify
+      NotifyInformation("Generating all the images of promotions")
+      
+      // Browse the promotions
+      FOR EACH Promotion 
+      	
+      	// Generate all the photos for this promotion
+      	nContextID = HSavePosition(Promotion)	
+      	IF GeneratePromotionPhotos(Promotion.PromotionID) = False THEN bError = True
+      	HRestorePosition(nContextID)
+      END
+      
+      IF bError = False THEN
+      	// The operation was successfully performed
+      	RESULT True
+      ELSE
+      	// At least one image was not generated
+      	RESULT False
+      END
+     type : 458752
+   -
+     name : ReadPayBoxConfiguration
+     internal_properties : CAAAAAgAAACk30CWuYCqAXYWGxWaWrv+Y5BkjDLP6T5xHFw1rYQW4mBHgQzJlsRlPGRWSHailWqIcDQltsKBg6QwgT78aKzRg/QqggTe05KqIv5WoGmaweI/pQFZIhe0cF24clewIgsHzm3/IOVpopSHginQVFW8ST/LDrRXW3SZHu1BfqUbCsJ8vgZjEnFMMIX3FQiI8dP1TumEnzQ=
+     procedure_id : 1416730102075857974
+     type_code : 15
+     code : |1-
+      // Summary: Read the configuration of the PAYBOX payment solution
+      // Syntax:
+      //[<Result> = ] ReadPayboxConfiguration ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	ST_PAYBOX_CONFIGURATION: Configuration of the PayBox solution
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ReadPayBoxConfiguration()
+      
+      // Local variables
+      stConfiguration 			is ST_PAYXBOX_CONFIGURATION
+      sSerializedConfiguration	is string
+      
+      // Default configuration
+      stConfiguration.bIsEnabled = True
+      stConfiguration.bInTestMode = True
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT stConfiguration
+      END
+      
+      // Retrieve the stored content
+      sSerializedConfiguration = GetSiteParameter(csAdmin_Paybox_Configuration, "")
+      
+      // Deserialization
+      IF sSerializedConfiguration <> "" THEN
+      	WHEN EXCEPTION IN
+      		Deserialize(stConfiguration,sSerializedConfiguration,psdXML)
+      	DO
+      		AddError("A format problem was detected",ErrorInfo())
+      	END
+      ELSE
+      	
+      END
+      
+      // Return the configuration
+      RESULT stConfiguration
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo(errFullDetails))
+      	RESULT stConfiguration
+     type : 458752
+   -
+     name : ModifyPayBoxConfiguration
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730102075923510
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the configuration of the PayBox solution
+      // Syntax:
+      //[<Result> = ] ModifyPayboxConfiguration (<stNewConfiguration> is ST_PAYBOX_CONFIGURATION)
+      //
+      // Parameters:
+      //	stNewConfiguration (ST_PAYBOX_CONFIGURATION): New configuration
+      // Return value:
+      // 	boolean: Configuration of the PayBox solution
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ModifyPayBoxConfiguration(stNewConfiguration is ST_PAYXBOX_CONFIGURATION)
+      
+      // Local variables
+      sSerializedConfiguration	is string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the PayBox configuration")
+      
+      // Check the parameters
+      IF stNewConfiguration.bInTestMode = False THEN
+      	// Do we have all the real parameters?
+      	IF stNewConfiguration.sContractMOS~="" _OR_ stNewConfiguration.sRank~="" _OR_ stNewConfiguration.sIdentifier~="" THEN
+      		AddError("The contract parameters are not correct")
+      		RESULT False
+      	END
+      END
+      
+      // Serialization
+      WHEN EXCEPTION IN
+      	Serialize(stNewConfiguration,sSerializedConfiguration,psdXML)
+      DO
+      	AddError("A format problem was detected",ErrorInfo())
+      	RESULT False
+      END
+      
+      // Save in database
+      IF SaveSiteParameter(csAdmin_Paybox_Configuration, sSerializedConfiguration, CN_STRING) = False THEN	
+      	RESULT False
+      END
+      
+      // Modification successfully performed
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : Maintenance_GenerateFamilyImages
+     internal_properties : CAAAAAgAAADA4iRlJPfTT93c1EbZPFe7NiwpiiiLv8uDoJ79kZ2I1Doto0b4F7dxmR1f9rcOHMbTvKLZPd7RxUTAs9RjUOiiEdE38V6TeJdfLh9Tv1IuwDBgz/F6ycsbBqcIaZpFJqBvc4sf5d7Xv2xD5GxpZ8uLdRYbqBdgbsRq04hZemxVEbwzzBKUO63X1jdHUq9xZOv4YZBN5Q==
+     procedure_id : 1416730102075989046
+     type_code : 15
+     code : |1-
+      // Summary: Regenerates all the images for the families of products
+      // Syntax:
+      //[<Result> = ] Maintenance_GenerateFamilyImages ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the generation was successfully performed, False otherwise
+      //
+      
+      Procedure Maintenance_GenerateFamilyImages()
+      
+      // Local variables
+      nContextID			is int
+      bError				is boolean
+      
+      // no error by default
+      bError = False
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // It is a maintenance operation, notify
+      NotifyInformation("Generating all the images for the families of products")
+      
+      // Browse the families
+      FOR EACH Family 	
+      	
+      	// Force the generation of the family
+      	nContextID = HSavePosition(Family)	
+      	IF ModifyFamily(Family.FamilyID,Family.Binary,Family.Caption)  = False THEN bError = True	
+      	HRestorePosition(nContextID)
+      END
+      
+      IF bError = False THEN
+      	// The operation was successfully performed
+      	RESULT True
+      ELSE
+      	// At least one image was not generated
+      	RESULT False
+      END
+     type : 458752
+   -
+     name : ReadRequestDisplaySiteName
+     procedure_id : 1416730102076054582
+     type_code : 15
+     code : |1-
+      // Summary: Indicates whether the name of the site must be displayed in the top part of the site
+      // Syntax:
+      //[ <Result> = ] ReadRequestDisplaySiteName ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	Boolean: True to display the name of the site, False otherwise
+      Procedure ReadRequestDisplaySiteName():boolean
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      RESULT GetSiteParameter(csAdmin_DisplaySiteName,True)
+     type : 458752
+   -
+     name : ModifyRequestDisplaySiteName
+     procedure_id : 1416730102076120118
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the display status of the site name on the main banner
+      // Syntax:
+      //[<Result> = ] ModifyRequestDisplaySiteName (<bDisplaySiteName> is boolean)
+      //
+      // Parameters:
+      //	bDisplaySiteName (boolean): True to display the name of the site, False otherwise
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyRequestDisplaySiteName(bDisplaySiteName is boolean)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the display status of the site name", ""+ReadRequestDisplaySiteName(), ""+bDisplaySiteName)
+      
+      RESULT SaveSiteParameter(csAdmin_DisplaySiteName,bDisplaySiteName,CN_INTEGER)
+     type : 458752
+   -
+     name : ReadEmailAddressRecipientCompanyOrder
+     procedure_id : 1416730102076185654
+     type_code : 15
+     code : |1-
+      // Summary: Returns the recipient email address for the orders
+      // Syntax:
+      //[ <Result> = ] ReadEmailAddressRecipientCompanyOrder ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      Procedure ReadEmailAddressRecipientCompanyOrder():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_ORDER_RecipientEmail,"")
+     type : 458752
+   -
+     name : ReadEmailAddressRecipientCompanyContact
+     procedure_id : 1416730102076251190
+     type_code : 15
+     code : |1-
+      // Summary: Returns the recipient email address for the contacts
+      // Syntax:
+      //[ <Result> = ] ReadEmailAddressRecipientCompanyContact ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Email address
+      Procedure ReadEmailAddressRecipientCompanyContact():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT  GetSiteParameter(csAdmin_Contact_RecipientEmail,"")
+     type : 458752
+   -
+     name : ModifyEmailAddressRecipientCompanyOrder
+     internal_properties : CAAAAAgAAABf7AsYFbI0w7kWRKCWAvh037/kYySckIU19/LtUbgXs8rh4ldJgXEHc3QgC24BocesKZJjNXbKf8isA9qBlCkkD/RBZ0/q2I0p59+o6hT2sbcsxLriH+3zcK/nKhtpncTGocNa2p5mdSpnFxE4Z9zp5vifY5xQIdpAKz0gZzgsJbTbasA45e87hrqaySM43CWw62qeRMSajMwlaFXefAgU0Kp6hnJ0gZn/CQFq+uHF8ToFMgU=
+     procedure_id : 1416730102076316726
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the email address used to receive the copies of orders
+      // Syntax:
+      //[<Result> = ] ModifyEmailAddressRecipientCompanyOrder (<sEmailAddress> is string)
+      //
+      // Parameters:
+      //	sEmailAddress (string): New email address
+      // Return value:
+      // 	boolean: True if the modification was successfully performed, False otherwise
+      //
+      
+      Procedure ModifyEmailAddressRecipientCompanyOrder(sEmailAddress is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the destination email address for the copies of orders",ReadEmailAddressRecipientCompanyOrder(),sEmailAddress)
+      
+      RESULT SaveSiteParameter(csAdmin_ORDER_RecipientEmail,sEmailAddress,CN_STRING)
+     type : 458752
+   -
+     name : ModifyEmailAddressRecipientCompanyContact
+     internal_properties : CAAAAAgAAABf7AsYFbI0w7kWRKCWAvh037/kYySckIU19/LtUbgXs8rh4ldJgXEHc3QgC24BocesKZJjNXbKf8isA9qBlCkkD/RBZ0/q2I0p59+o6hT2sbcsxLriH+3zcK/nKhtpncTGocNa2p5mdSpnFxE4Z9zp5vifY5xQIdpAKz0gZzgsJbTbasA45e87hrqaySM43CWw62qeRMSajMwlaFXefAgU0Kp6hnJ0gZn/CQFq+uHF8ToFMgU=
+     procedure_id : 1416730102076382262
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the email address used for taking contact (send a copy)
+      // Syntax:
+      //[<Result> = ] ModifyEmailAddressSenderCompanyContact (<sEmailAddress> is string)
+      //
+      // Parameters:
+      //	sEmailAddress (string): New email address
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyEmailAddressRecipientCompanyContact(sEmailAddress is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the email address for receiving the contacts",ReadEmailAddressRecipientCompanyContact(),sEmailAddress)
+      
+      
+      RESULT  SaveSiteParameter(csAdmin_Contact_RecipientEmail,sEmailAddress,CN_STRING)
+     type : 458752
+   -
+     name : ReadEmailAddressNotificationRecipient
+     procedure_id : 1416730102076447798
+     type_code : 15
+     code : |1-
+      // Summary: Returns the destination email address for the notifications
+      // Syntax:
+      //[ <Result> = ] ReadEmailAddressNotificationRecipient ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Email address or empty string
+      Procedure ReadEmailAddressNotificationRecipient():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_NOTIFICATION_RecipientEmail,"")
+     type : 458752
+   -
+     name : ReadEmailAddressNotificationSender
+     procedure_id : 1416730102076513334
+     type_code : 15
+     code : |1-
+      // Summary: Returns the email address for sending the notifications
+      // Syntax:
+      //[ <Result> = ] ReadEmailAddressNotificationSender ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Email address
+      Procedure ReadEmailAddressNotificationSender():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_NOTIFICATION_SenderEmail,"")
+     type : 458752
+   -
+     name : ModifyEmailAddressNotificationRecipient
+     internal_properties : CAAAAAgAAADJYpUCL7xGneuoKjKM5BIesSVxXfoKroNJq8Q14djjL6pBQjXHF+/xe2yWZzoxUf8wzf69D7gcHTQYORJJJJUYLxwRVX2YZtM1m7lEdvQWuVdEQAzUoRttACdyjcDUptP9sOa9Y4U9ig+MwoyV+tHsEfuSFq1HCMvBXGDLzKM5MD9+tds55O54IzvhoPxXzSSPykm9Od+9qSmuj2QPK2HTSxzkLNjO53+Rm5OYKNPL+yRvpJM=
+     procedure_id : 1416730102076578870
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the destination email address of notifications
+      // Syntax:
+      //[<Result> = ] ModifyEmailAddressNotificationRecipient (<sEmailAddress> is string)
+      //
+      // Parameters:
+      //	sEmailAddress (ANSI string): New email address
+      // Return value:
+      // 	boolean: True if the modification was successfully performed, False otherwise
+      //
+      
+      Procedure ModifyEmailAddressNotificationRecipient(sEmailAddress is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the destination email address for the notifications",ReadEmailAddressNotificationRecipient(),sEmailAddress)
+      
+      RESULT SaveSiteParameter(csAdmin_NOTIFICATION_RecipientEmail,sEmailAddress,CN_STRING)
+     type : 458752
+   -
+     name : ModifyEmailAddressNotificationSender
+     internal_properties : CAAAAAgAAABf7AsYFbI0w7kWRKCWAvh037/kYySckIU19/LtUbgXs8rh4ldJgXEHc3QgC24BocesKZJjNXbKf8isA9qBlCkkD/RBZ0/q2I0p59+o6hT2sbcsxLriH+3zcK/nKhtpncTGocNa2p5mdSpnFxE4Z9zp5vifY5xQIdpAKz0gZzgsJbTbasA45e87hrqaySM43CWw62qeRMSajMwlaFXefAgU0Kp6hnJ0gZn/CQFq+uHF8ToFMgU=
+     procedure_id : 1416730102076644406
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the destination email address of notifications
+      // Syntax:
+      //[<Result> = ] ModifyEmailAddressNotificationSender (<sEmailAddress> is string)
+      //
+      // Parameters:
+      //	sEmailAddress (string): New email address
+      // Return value:
+      // 	boolean: True if the modification was successfully performed, False otherwise
+      //
+      
+      Procedure ModifyEmailAddressNotificationSender(sEmailAddress is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the email address for sending the notifications",ReadEmailAddressNotificationSender(),sEmailAddress)
+      
+      RESULT SaveSiteParameter(csAdmin_NOTIFICATION_SenderEmail,sEmailAddress,CN_STRING)
+     type : 458752
+   -
+     name : ReadNotificationIfErrorEnabled
+     procedure_id : 1416730102076709942
+     type_code : 15
+     code : |1-
+      // Summary: Returns True if the notification is enabled when an error occurs
+      // Syntax:
+      //[ <Result> = ] ReadNotificationIfErrorEnabled ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	variant: Status of the notification
+      Procedure ReadNotificationIfErrorEnabled():string
+      
+      // Initialize the mechanism for error feedback
+      // This function must not reinitialize the mechanism of errors
+      
+      // Check the identification
+      // It is a public information: there is no code for checking the connection
+      
+      
+      RESULT Val(GetSiteParameter(csAdmin_NOTIFICATION_IF_ERROR,"0"))
+     type : 458752
+   -
+     name : ReadNotificationIfOrderEnabled
+     procedure_id : 1416730102076775478
+     type_code : 15
+     code : |1-
+      // Summary: Returns True if the notification is enabled when an order is placed
+      // Syntax:
+      //[ <Result> = ] ReadNotificationIfOrderEnabled ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	boolean: Status of the notification
+      Procedure ReadNotificationIfOrderEnabled():boolean
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      RESULT Val(GetSiteParameter(csAdmin_NOTIFICATION_IF_ORDER,"0"))
+     type : 458752
+   -
+     name : ReadNotificationIfConnectionEnabled
+     procedure_id : 1416730102076841014
+     type_code : 15
+     code : |1-
+      // Summary: Returns True if the notification is enabled when connecting to the BackOffice
+      // Syntax:
+      //[ <Result> = ] ReadNotificationIfConnectionEnabled ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	boolean: Status of the notification
+      Procedure ReadNotificationIfConnectionEnabled():boolean
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      
+      RESULT Val(GetSiteParameter(csAdmin_NOTIFICATION_IF_CONNECTIONBO,"0"))
+     type : 458752
+   -
+     name : ReadEmailOrderConfirmation
+     procedure_id : 1416730102076906550
+     type_code : 15
+     code : |1-
+      // Summary: Returns the content of the email for order confirmation
+      // Syntax:
+      //[ <Result> = ] ReadEmailOrderConfirmation ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: HTML content of the email
+      Procedure ReadEmailOrderConfirmation():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(pSiteParameters.csAdmin_ORDER_ConfirmationEmail)
+     type : 458752
+   -
+     name : ModifyEmailOrderConfirmation
+     internal_properties : CAAAAAgAAAByG295SFgdgOycvaNWelkyzSx5tPiKoz2y+PmXR2DqHJJGCmws1pZJ/idY5/x/DX+VQt7eTLLp4OR93KDciqCUO+4vsV7I3rpV4uJP5+jVs37cXCN8smHaRcQk1cqa/qvXQgiXv2EVqj8EyqaVwgWgv2nIAPE7FpkTcnTr9Iu9RDFP5qvrOWy1HBMg0dTL43lid6QcqMlgZFcYglqV9dtrCg7/iA==
+     procedure_id : 1416730102076972086
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the content of the email for order confirmation
+      // Syntax:
+      //[<Result> = ] ModifyEmailOrderConfirmation (<sEmailHTMLContent> is string)
+      //
+      // Parameters:
+      //	sEmailHTMLContent (string): New order content
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyEmailOrderConfirmation(sEmailHTMLContent is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the email address for order confirmation", ReadEmailOrderConfirmation(),sEmailHTMLContent )
+      
+      RESULT SaveSiteParameter(csAdmin_ORDER_ConfirmationEmail,sEmailHTMLContent,CN_STRING) 
+     type : 458752
+   -
+     name : ReadFixedTaxRateShippingCosts
+     procedure_id : 1416730102077037622
+     type_code : 15
+     code : |1-
+      // Summary: Returns the tax rate associated with the shipping costs
+      // Syntax:
+      //[ <Result> = ] ReadFixedTaxRateShippingCosts ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	real: Tax rate
+      Procedure ReadFixedTaxRateShippingCosts():real
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT 0.0	
+      END
+      
+      RESULT GetSiteParameter(csAdmin_COSTS_FixedTaxRate,0)
+     type : 458752
+   -
+     name : ModifyTaxRateFixedShippingCosts
+     procedure_id : 1416730102077103158
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the tax rate associated with the shipping costs
+      // Syntax:
+      //[ <Result> = ] ModifyTaxRateFixedShippingCosts (<rTaxRateShippingCost> is real)
+      //
+      // Parameters:
+      //	rTaxRateShippingCost (real): New rate
+      
+      // Return value:
+      Procedure ModifyTaxRateFixedShippingCosts(rTaxRateShippingCost is real)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the tax rate for fixed shipping costs", ""+ReadFixedTaxRateShippingCosts(),""+rTaxRateShippingCost)
+      
+      RESULT SaveSiteParameter(csAdmin_COSTS_FixedTaxRate,rTaxRateShippingCost,0.0)
+     type : 458752
+   -
+     name : ReadPayPalConfiguration
+     internal_properties : CAAAAAgAAACk30CWuYCqAXYWGxWaWrv+Y5BkjDLP6T5xHFw1rYQW4mBHgQzJlsRlPGRWSHailWqIcDQltsKBg6QwgT78aKzRg/QqggTe05KqIv5WoGmaweI/pQFZIhe0cF24clewIgsHzm3/IOVpopSHginQVFW8ST/LDrRXW3SZHu1BfqUbCsJ8vgZjEnFMMIX3FQiI8dP1TumEnzQ=
+     procedure_id : 1416730102077168694
+     type_code : 15
+     code : |1-
+      // Summary: Read the configuration of the PAYPAL payment solution
+      // Syntax:
+      //[<Result> = ] ReadPayPalConfiguration ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	ST_PAYPAL_CONFIGURATION: Configuration of the PAYPAL payment solution
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ReadPayPalConfiguration()
+      
+      // Local variables
+      stConfiguration 			is ST_PAYPAL_CONFIGURATION
+      sSerializedConfiguration	is string
+      
+      // Default configuration
+      stConfiguration.bIsEnabled = False
+      stConfiguration.bInTestMode = True
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT stConfiguration
+      END
+      
+      // Retrieve the stored content
+      sSerializedConfiguration = GetSiteParameter(csAdmin_Paypal_Configuration, "")
+      
+      // Deserialization
+      IF sSerializedConfiguration <> "" THEN
+      	WHEN EXCEPTION IN
+      		Deserialize(stConfiguration,sSerializedConfiguration,psdXML)
+      	DO
+      		AddError("A format problem was detected",ErrorInfo())
+      	END
+      ELSE
+      	
+      END
+      
+      // Return the configuration
+      RESULT stConfiguration
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo(errFullDetails))
+      	RESULT stConfiguration
+     type : 458752
+   -
+     name : ModifyPayPalConfiguration
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730102077234230
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the configuration of the PAYPAL solution
+      // Syntax:
+      //[<Result> = ] ModifyPaypalConfiguration (<stNewConfiguration> is ST_PAYPAL_CONFIGURATION)
+      //
+      // Parameters:
+      //	stNewConfiguration (ST_PAYPAL_CONFIGURATION): New configuration
+      // Return value:
+      // 	boolean: Configuration of the paypal solution
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ModifyPayPalConfiguration(stNewConfiguration is ST_PAYPAL_CONFIGURATION)
+      
+      // Local variables
+      sSerializedConfiguration	is string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the PayBox configuration")
+      
+      // Check the parameters
+      IF stNewConfiguration.bInTestMode = False THEN
+      	// Do we have all the real parameters?
+      	IF stNewConfiguration.Identifier~="" _OR_ stNewConfiguration.Password~="" _OR_ stNewConfiguration.Signature~="" THEN
+      		AddError("The contract parameters are not correct")
+      		RESULT False
+      	END
+      END
+      
+      // Serialization
+      WHEN EXCEPTION IN
+      	Serialize(stNewConfiguration,sSerializedConfiguration,psdXML)
+      DO
+      	AddError("A format problem was detected",ErrorInfo())
+      	RESULT False
+      END
+      
+      // Save in database
+      IF SaveSiteParameter(csAdmin_Paypal_Configuration, sSerializedConfiguration, CN_STRING) = False THEN	
+      	RESULT False
+      END
+      
+      // Modification successfully performed
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : RestoreDefaultSiteLogo
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730102077299766
+     type_code : 15
+     code : |1-
+      // Summary: Restores the default logo of the site
+      // Syntax:
+      //[ <Result> = ] RestoreDefaultSiteLogo ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the restore operation was performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      
+      Procedure RestoreDefaultSiteLogo()
+      
+      // Local variables
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Restoring the default logo of the site")
+      
+      // Restore the logo
+      IF ModifySiteLogo(fDataDir()+["\"]+"default_logo.png") = False THEN
+      	AddError(<§@1eb15ad0055be0760002§>)
+      	RESULT False	
+      END
+      
+      // Modification successfully performed
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("An exception was detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : RestoreDefaultSiteBanner
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730102077365302
+     type_code : 15
+     code : |1-
+      // Summary: Restores the default banner of the site
+      // Syntax:
+      //[ <Result> = ] RestoreDefaultSiteBanner ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	boolean: True if the restore operation was performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure RestoreDefaultSiteBanner()
+      
+      // Local variables
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Restoring the default banner of the site")
+      
+      // Delete the banner
+      IF DeleteSiteParameter(csAdmin_Banner) = False THEN
+      	AddError(<§@1eb15ad0055be0760003§>)
+      	RESULT False
+      END
+      
+      // Modification successfully performed
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("An exception was detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : ReadURLRestAdminPage
+     procedure_id : 1416730102077430838
+     type_code : 15
+     code : |1-
+      // Summary: Returns the URL of the REST management page 
+      // Syntax:
+      //[ <Result> = ] ReadURLRestAdminPage ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Name of the site
+      Procedure ReadURLRestAdminPage():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_URLRESTPAGE_Management,"")
+     type : 458752
+   -
+     name : ModifyURLRestAdminPage
+     procedure_id : 1416730102077496374
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the URL of the REST management page
+      // Syntax:
+      //[ <Result> = ] ModifyURLRestAdminPage (<sURL> is string)
+      //
+      // Parameters:
+      //	sURL (ANSI string): New URL specified for the REST page of the site
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyURLRestAdminPage(sURL is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the URL of the REST management page", ReadURLRestAdminPage(), sURL)
+      
+      RESULT SaveSiteParameter(csAdmin_URLRESTPAGE_Management,sURL,CN_STRING)
+     type : 458752
+   -
+     name : ReadTextOrderForm
+     procedure_id : 1416730102077561910
+     type_code : 15
+     code : |1-
+      // Summary: Returns the custom text of the order form
+      // Syntax:
+      //[ <Result> = ] ReadTextOrderForm ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Text of the order form
+      Procedure ReadTextOrderForm():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_ORDER_TextORF, "")
+     type : 458752
+   -
+     name : ModifyTextOrderForm
+     procedure_id : 1416730102077627446
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the custom text for the order forms
+      // Syntax:
+      //[ <Result> = ] ModifyOrderFormText (<sORFText> is string)
+      //
+      // Parameters:
+      //	sORFText (ANSI string): New text for the order form
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyTextOrderForm(sTextORF is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the ORF text", ReadTextOrderForm(), sTextORF)
+      
+      RESULT SaveSiteParameter(csAdmin_ORDER_TextORF, sTextORF, CN_STRING)
+     type : 458752
+   -
+     name : ReadTitleLinkedProductsSection
+     procedure_id : 1416730102077692982
+     type_code : 15
+     code : |1-
+      // Summary: Returns the title of the "linked products" section of the "product" page
+      // Syntax:
+      //[ <Result> = ] ReadTitleLinkedProductsSection ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Title
+      Procedure ReadTitleLinkedProductsSection():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      RESULT GetSiteParameter(csAdmin_TitleLinkedProductsSection,"")
+     type : 458752
+   -
+     name : ModifyTitleLinkedProductsSection
+     procedure_id : 1416730102077758518
+     type_code : 15
+     code : |1-
+      // Summary: Modifies the title of the "linked products" section of the "product" page
+      // Syntax:
+      //[ <Result> = ] ModifyTitleLinkedProductsSection (<sTitle> is string)
+      //
+      // Parameters:
+      //	sTitle (ANSI string): New title
+      // Return value:
+      // 	boolean: True if the modification was successfully performed, False otherwise
+      //
+      
+      Procedure ModifyTitleLinkedProductsSection(sTitle is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the title of the section of linked products", ReadTitleLinkedProductsSection(), sTitle)
+      
+      RESULT SaveSiteParameter(csAdmin_TitleLinkedProductsSection, sTitle, CN_STRING)
+     type : 458752
+   -
+     name : ReadBasketTextProductMaxStock
+     procedure_id : 1416730102077824054
+     type_code : 15
+     code : |1-
+      // Summary: Returns the custom text if the ordered quantity corresponds to the maximum stock
+      // Syntax:
+      //[ <Result> = ] ReadBasketTextProductMaxStock ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // string: Text displayed
+      Procedure ReadBasketTextProductMaxStock():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Public information
+      // Check the identification
+      //IF bIsConnectedWSBackOffice() = False THEN
+      //	AddError("User not identified or without sufficient rights")
+      //	RESULT ""
+      //END
+      
+      RESULT GetSiteParameter(csAdmin_ORDER_BasketTextMaxStock, "")
+     type : 458752
+   -
+     name : ReadBasketTextProductInsufficientStock
+     procedure_id : 1416730102077889590
+     type_code : 15
+     code : |1-
+      // Summary: Returns the custom text if the stock is not sufficient
+      // Syntax:
+      //[ <Result> = ] ReadBasketTextProductInsufficientStock ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // string: Text displayed
+      Procedure ReadBasketTextProductInsufficientStock():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Public information
+      // Check the identification
+      //IF bIsConnectedWSBackOffice() = False THEN
+      //	AddError("User not identified or without sufficient rights")
+      //	RESULT ""
+      //END
+      
+      RESULT GetSiteParameter(csAdmin_ORDER_BasketTextInsufficientStock, "")
+     type : 458752
+   -
+     name : ModifyBasketTextProductMaxStock
+     procedure_id : 1416730102077955126
+     type_code : 15
+     code : |1-
+      // Summary: Modify the text of the basket if the quantity is limited
+      // Syntax:
+      //[ <Result> = ] ModifyBasketTextProductMaxStock (<sBasketText> is string)
+      //
+      // Parameters:
+      //	sBasketText (ANSI string): New text displayed 
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyBasketTextProductMaxStock(sBasketText is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the text of basket if the quantity is limited", ReadBasketTextProductMaxStock(), sBasketText)
+      
+      RESULT SaveSiteParameter(csAdmin_ORDER_BasketTextMaxStock, sBasketText, CN_STRING)
+     type : 458752
+   -
+     name : ModifyBasketTextProductInsufficientStock
+     procedure_id : 1416730102078020662
+     type_code : 15
+     code : |1-
+      // Summary: Modify the text of the basket if the stock is not sufficient
+      // Syntax:
+      //[ <Result> = ] ModifyBasketTextProductInsufficientStock (<sBasketText> is string)
+      //
+      // Parameters:
+      //	sBasketText (ANSI string): New text displayed
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyBasketTextProductInsufficientStock(sBasketText is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the text of basket if the stock is not sufficient", ReadBasketTextProductInsufficientStock(), sBasketText)
+      
+      RESULT SaveSiteParameter(csAdmin_ORDER_BasketTextInsufficientStock, sBasketText, CN_STRING)
+     type : 458752
+   -
+     name : ReadStockTextLowProduct
+     procedure_id : 1416730102078086198
+     type_code : 15
+     code : |1-
+      // Summary: Returns the custom text if the available quantity is low for this product
+      // Syntax:
+      //[ <Result> = ] ReadStockTextLowProduct ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // string: Text displayed
+      Procedure ReadStockTextLowProduct():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Public information
+      // Check the identification
+      //IF bIsConnectedWSBackOffice() = False THEN
+      //	AddError("User not identified or without sufficient rights")
+      //	RESULT ""
+      //END
+      
+      RESULT GetSiteParameter(csAdmin_ORDER_StockTextLow, "")
+     type : 458752
+   -
+     name : ModifyStockTextLowProduct
+     procedure_id : 1416730102078151734
+     type_code : 15
+     code : |1-
+      // Summary: Modify the text if the quantity of product is low in stock
+      // Syntax:
+      //[ <Result> = ] ModifyTextLowProductStock (<sStockText> is string)
+      //
+      // Parameters:
+      //	sStockText (ANSI string): New text displayed
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyStockTextLowProduct(sStockText is string)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the availability text of a product if the quantity is low", ReadStockTextLowProduct(), sStockText)
+      
+      RESULT SaveSiteParameter(csAdmin_ORDER_StockTextLow, sStockText, CN_STRING)
+     type : 458752
+   -
+     name : ReadStockLevelLowProduct
+     procedure_id : 1416730102078217270
+     type_code : 15
+     code : |1-
+      // Summary: Returns the level indicating that the available quantity is low for this product
+      // Syntax:
+      //[ <Result> = ] ReadStockLevelLowProduct ()
+      //
+      // Parameters:
+      //	None
+      
+      // Return value:
+      // 	string: Text displayed
+      Procedure ReadStockLevelLowProduct():string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Public information
+      // Check the identification
+      //IF bIsConnectedWSBackOffice() = False THEN
+      //	AddError("User not identified or without sufficient rights")
+      //	RESULT ""
+      //END
+      
+      RESULT GetSiteParameter(csAdmin_ORDER_StockLevelLow, "")
+     type : 458752
+   -
+     name : ModifyStockLevelLowProduct
+     procedure_id : 1416730102078282806
+     type_code : 15
+     code : |1-
+      // Summary: Modify the level defining whether the quantity of product is low in stock
+      // Syntax:
+      //[ <Result> = ] ModifyLevelLowProductStock (<nStockLevel> is int)
+      //
+      // Parameters:
+      //	nStockLevel (integer): New level
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      
+      Procedure ModifyStockLevelLowProduct(nStockLevel is int)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the availability level of a product if the quantity is low", ReadStockLevelLowProduct(), ""+nStockLevel)
+      
+      RESULT SaveSiteParameter(csAdmin_ORDER_StockLevelLow, nStockLevel, CN_INTEGER)
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_CONFIGURATION_SITE
+resources :
+ string_res :
+  identifier : 0x1eb15ad0055be076
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      en-GB : User not identified or without sufficient rights
+     index : 0
+   -
+     text :
+      en-GB : The %1 file has not been optimized
+     index : 1
+   -
+     text :
+      en-GB : Unable to restore the default logo
+     index : 2
+   -
+     text :
+      en-GB : Unable to restore the default banner
+     index : 3
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

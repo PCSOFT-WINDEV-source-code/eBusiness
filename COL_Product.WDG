@@ -1,0 +1,1913 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_Product
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c8b8e9fb320
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAABPOo5wfzL5PtlmH9g6pVlcqG1md+uM4GM8B/k/aVja5R6ZseBzxTGWZbo12UeE8bWym5Rl91AKrNq9wTYnFyamg2lAMw==
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACko1DOYSGWiEfmi47+g0xrryBFucjRJOZNM28b4cO+S1M4MC2h4adn0pITUUH+X+gT4JsjJwu3rpWi0Nt9BiXJMn3gzThsJTpDY5C2E6bDK8jnmlOjc+813c/t3AK14IdkK2kd7CvOV5R9lQ==
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the Product file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_Product is Structure
+      		ProductID 				is int 
+      		Reference 				is string
+      		ProductCaption 			is string
+      		Description 			is string
+      		UnitPriceBT 			is currency 
+      		arrProductVariation 	is array of STCOL_ProductVariation 
+      		nNewProductID			is int
+      		arrPromotion 			is array of STCOL_Promotion 
+      		arrProductPhoto 		is array of STCOL_ProductPhoto 
+      		arrReview 				is array of STCOL_Reviews 
+      		FamilyID 				is int //Identifier of Family
+      		TaxRateID 				is int		
+      		FamilyCaption			is string
+      END
+       
+       
+      PUBLIC
+      garrProducts		is array of STCOL_Product
+       
+     type : 720896
+  procedures :
+   -
+     name : ListProducts
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127875748640
+     type_code : 15
+     code : |1-
+      // Summary: Returns the list of products
+      // Syntax:
+      //[ <Result> = ] ListProducts (<nFamilyID> is int, <cyMMinPrice> is currency, <cyMMaxPrice> is currency, <sReference> is string, <sSearch> is string, <nRole> is int)
+      //
+      // Parameters:
+      //	nFamilyID (int):Identifier of the family of products (0 for all)
+      //	cyMMinPrice (currency):Minimum price
+      //	cyMMaxPrice (currency):Maximum price
+      //	sReference (ANSI string):Reference
+      //	sSearch (ANSI string):Search
+      //	nRole (int):Role of photos of products among: 	ROLE_PHOTO_NORMAL = 0, 	ROLE_PHOTO_SMALL_SQUARE = 1, ROLE_PHOTO_LARGE_SQUARE = 2, default : ROLE_PHOTO_NORMAL
+      // Automatic Process of Exceptions:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	array: Array of STCOL_Product
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      FUNCTION ListProducts ( LOCAL  nFamilyID is int , LOCAL  cyMMinPrice is currency , LOCAL  cyMMaxPrice is currency , LOCAL  sReference is string, LOCAL  sSearch is string, LOCAL nRole is int)
+      
+      // Local variables
+      stErr is STCOL_Product
+      sListFamilyID	is string
+      
+      // Delete the content from the previous array
+      ArrayDeleteAll(garrProducts)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      // It is a public information: there is no code for checking the connection
+      
+      
+      // Initially, all the parameters are ignored
+      QRY_SearchProducts.pFamilyID	= Null
+      QRY_SearchProducts.pStartPrice	= Null
+      QRY_SearchProducts.pEndPrice		= Null
+      QRY_SearchProducts.pSearch	= Null
+      QRY_SearchProducts.pReference	= Null
+      
+      // Find the sub-families of the family (to get all the products)
+      IF nFamilyID <>-1 THEN
+      	sListFamilyID = COL_Family.ListIDSubFamilies(nFamilyID)
+      ELSE
+      	sListFamilyID = nFamilyID
+      END
+      
+      // Configure the query
+      IF nFamilyID>0 THEN QRY_SearchProducts.pFamilyID		= sListFamilyID
+      IF cyMMinPrice<>0 THEN QRY_SearchProducts.pStartPrice		= cyMMinPrice
+      IF cyMMaxPrice<>0 THEN QRY_SearchProducts.pEndPrice		= cyMMaxPrice
+      IF NOT sSearch~="" THEN QRY_SearchProducts.pSearch	= sSearch
+      IF NOT sReference~="" THEN QRY_SearchProducts.pReference	= sReference
+      
+      // Run the query
+      IF HExecuteQuery(QRY_SearchProducts) = False THEN	
+      	AddError("An error occurred while running the QRY_SearchProducts query")	
+      	ArrayAdd(garrProducts,stErr)
+      END
+      
+      // Browse the query to build the array with all the sub-elements
+      FOR EACH QRY_SearchProducts 
+      	stProduct is STCOL_Product	
+      	
+      	// Read the product
+      	stProduct = ReadProduct(QRY_SearchProducts.ProductID, nRole)
+      		 
+      	// Add to the array of products
+      	ArrayAdd(garrProducts,stProduct)
+      END
+      
+      // Return the list of products
+      RESULT garrProducts
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	ArrayAdd(garrProducts,stErr)
+      	
+     type : 458752
+   -
+     name : DeleteProduct
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127875814176
+     type_code : 15
+     code : |1+
+      // Summary: Delete the specified product
+      // Syntax:
+      //[ <Result> = ] DeleteProduct (<nSoughtProductID> is int)
+      //
+      // Parameters:
+      //	nSoughtProductID (integer): Identifier of the sought product
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION DeleteProduct ( nSoughtProductID is int )
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Find the product in database
+      HReadSeekFirst(product,ProductID,nSoughtProductID)
+      IF HFound(product) = False THEN
+      	AddError("Record not found in database")
+      	RESULT False
+      END
+      
+      // Is this product proposed by other products?
+      HReadSeekFirst(ProductLink,LinkedProductID,product.ProductID)
+      WHILE HFound(ProductLink)
+      	HDelete(ProductLink)
+      	HReadNext(ProductLink,LinkedProductID)
+      END
+      
+      // Deletion in database
+      IF HDelete(product) = False THEN
+      	AddError("Cannot delete record")
+      	RESULT False
+      END
+      
+      // The deletion is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : ReadListPhotos
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127875879712
+     type_code : 15
+     code : |1-
+      // Summary: Returns the list of identifiers for the photos of a product
+      // Syntax:
+      //[ <Result> = ] ReadListPhotos (<nProductID> is int)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product
+      // Return value:
+      // 	array: array of integers (photo identifier)
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ReadListPhotos(nProductID is int)
+      
+      // Local variables
+      arrListPhoto is array of int
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT arrListPhoto
+      END
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT arrListPhoto
+      END
+      
+      // Browse the photos of the product
+      FOR EACH ProductPhoto WHERE ProductID = product.ProductID
+      	// Take the default role only
+      	IF ProductPhoto.Role = ROLE_PHOTO_NORMAL THEN
+      		ArrayAdd(arrListPhoto,ProductPhoto.ProductPhotoID)
+      	END
+      END
+      
+      // Return the array
+      RESULT arrListPhoto
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT arrListPhoto
+     type : 458752
+   -
+     name : ReadProductPhotoAccordingToNumber
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127875945248
+     type_code : 15
+     code : |1-
+      // Summary: Returns the path of a given photo
+      // Syntax:
+      //[ <Result> = ] ReadProductPhotoAccordingToNumber (<nProductID> is int, <nPhotoNum> is int, <nPhotoRole> is int)
+      //
+      // Parameters:
+      //	nProductID (int): Identifier of the product
+      //	nPhotoNum (int): Number of the photo
+      //	nPhotoRole (int): Role of the photo
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	String: Path of the photo
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      Procedure ReadProductPhotoAccordingToNumber(nProductID is int, nPhotoNum is int, nPhotoRole is int ):string
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      // Find the photo
+      HReadSeekFirst(ProductPhoto,ProductIDPhotoNumberRole,[nProductID,nPhotoNum,nPhotoRole])
+      IF HFound(ProductPhoto) = False THEN
+      	AddError("Requested photo not found")
+      	RESULT ""
+      ELSE
+      	IF InAWPMode() = True THEN
+      		RESULT ProductPhoto.Photo	
+      	ELSE
+      		RESULT "UK/"+ProductPhoto.Photo
+      	END	
+      END
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT ""
+     type : 458752
+   -
+     name : AddProduct
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876010784
+     type_code : 15
+     code : |1-
+      // Summary: Adds a product to the database
+      // Syntax:
+      //[ <Result> = ] AddProduct (<nFamilyID> is int, <sReference> is string, <sCaption> is string, <sDescription> is string, <cyUnitPriceBT> is currency, <nTaxRateID> is int, <bPriorityDisplay> is boolean)
+      //
+      // Parameters:
+      //	nFamilyID (integer): Identifier of the family of products
+      //	sReference (ANSI string): Reference of the product
+      //	sCaption (ANSI string): Caption of the product
+      //	sDescription (ANSI string): Description of the product
+      //	cyUnitPriceBT (currency): Unit price of the product
+      //	nTaxRateID (integer): identifier of the associated tax rate
+      //	bPriorityDisplay (boolean): True to move this product up in the display order, False otherwise
+      // Return value:
+      // 	integer: Identifier of the created product, -1 if an error occurred
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure AddProduct(nFamilyID is int, sReference is string, sCaption is string, sDescription is string, cyUnitPriceBT is currency, nTaxRateID is int, bPriorityDisplay is boolean)
+      
+      // Local variables
+      nProductID		is int	= -1
+      nDisplayOrder	is int
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT nProductID
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Adding a product","",sReference)
+      
+      // Check the family
+      HReadSeekFirst(Family,FamilyID,nFamilyID)
+      IF HFound(Family) = False THEN
+      	AddError("Family not found")
+      	RESULT -1
+      END
+      
+      // Check the tax rate
+      HReadSeekFirst(TaxRate,TaxRateID,nTaxRateID)
+      IF HFound(TaxRate) = False THEN
+      	AddError("Tax rate not found")
+      	RESULT -1
+      END
+      
+      // Check whether this reference does not already exist
+      HReadSeekFirst(product,Reference,sReference)
+      IF HFound(product) = True THEN
+      	 AddError("A product already exists for this reference")
+      	 RESULT -1
+      END
+      
+      // Manage the display order
+      IF bPriorityDisplay = False THEN
+      	// Find the maximum display order (addition)
+      	QRY_MAXORDER_PRODUCT_DISPLAY.pFamilyID = nFamilyID
+      	IF HExecuteQuery(QRY_MAXORDER_PRODUCT_DISPLAY) = False THEN
+      		AddError("An error occurred while running the QRY_MAXORDER_DISPLAY_PRODUCT query")			
+      	ELSE
+      		HReadFirst(QRY_MAXORDER_PRODUCT_DISPLAY)
+      		IF HOut(QRY_MAXORDER_PRODUCT_DISPLAY) THEN
+      			nDisplayOrder = product.DisplayOrder..DefaultValue
+      		ELSE
+      			nDisplayOrder = QRY_MAXORDER_PRODUCT_DISPLAY.the_maximum_DisplayOrder			
+      		END
+      	END
+      
+      ELSE
+      	// Priority display
+      	nDisplayOrder = 0
+      END	
+      
+      // Initialize the record
+      HReset(product)
+      
+      // Fill the parameters of the product
+      product.FamilyID 		= Family.FamilyID
+      product.Description		= sDescription
+      product.Reference		= sReference
+      product.ProductCaption	= sCaption
+      product.UnitPriceBT	= cyUnitPriceBT
+      product.TaxRateID		= TaxRate.TaxRateID
+      product.DisplayOrder	= nDisplayOrder
+      
+      // Addition in database
+      IF HAdd(product) = False THEN
+      	AddError("Unable to add the product")
+      	RESULT -1
+      END
+      
+      // Store the identifier
+      nProductID = product.ProductID
+      
+      // Return the product identifier
+      RESULT nProductID
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT -1
+     type : 458752
+   -
+     name : ModifyProduct
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876076320
+     type_code : 15
+     code : |1-
+      // Summary: Modifies a product in the database
+      // Syntax:
+      //[ <Result> = ] ModifyProduct (<nProductToModifyID> is int, <nFamilyID> is int, <sReference> is string, <sCaption> is string, <sDescription> is string, <cyUnitPriceBT> is currency, <nTaxRateID> is int, <bPriorityDisplay> is boolean)
+      //
+      // Parameters:
+      //	nProductIDToModify (integer): Identifier of the product
+      //	nFamilyID (integer): Identifier of the family of products
+      //	sReference (ANSI string): Reference of the product
+      //	sCaption (ANSI string): Caption of the product
+      //	sDescription (ANSI string): Description of the product
+      //	cyUnitPriceBT (currency): Unit price of the product
+      //	nTaxRateID (integer): identifier of the associated tax rate
+      //	bPriorityDisplay (boolean): True to move this product up in the display order, False otherwise
+      // Return value:
+      // 	boolean: True if the modification was performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ModifyProduct(nProductIDToModify is int, nFamilyID is int, sReference is string, sCaption is string, sDescription is string, cyUnitPriceBT is currency, nTaxRateID is int, bPriorityDisplay is boolean)
+      
+      // Local variables
+      nDisplayOrder		is int
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying a product",sReference,"")
+      
+      // Check the family
+      HReadSeekFirst(Family,FamilyID,nFamilyID)
+      IF HFound(Family) = False THEN
+      	AddError("Family not found")
+      	RESULT False
+      END
+      
+      // Check the tax rate
+      HReadSeekFirst(TaxRate,TaxRateID,nTaxRateID)
+      IF HFound(TaxRate) = False THEN
+      	AddError("Tax rate not found")
+      	RESULT False
+      END
+      
+      // Check whether this reference does not already exist
+      HReadSeekFirst(product,Reference,sReference)
+      IF HFound(product) = True AND  product.ProductID <> nProductIDToModify THEN
+      	 AddError("Another product already exists for this reference")
+      	 RESULT False
+      END
+      
+      // Load the product
+      HReadSeekFirst(product,ProductID,nProductIDToModify)
+      IF HFound(product) = False THEN
+      	AddError("Unable to find the specified product")
+      	RESULT False
+      END
+      
+      // Manage the display order
+      IF bPriorityDisplay = False THEN
+      	// Find the maximum display order (addition)
+      	QRY_MAXORDER_PRODUCT_DISPLAY.pFamilyID = nFamilyID
+      	IF HExecuteQuery(QRY_MAXORDER_PRODUCT_DISPLAY) = False THEN
+      		AddError("An error occurred while running the QRY_MAXORDER_DISPLAY_PRODUCT query")			
+      	ELSE
+      		HReadFirst(QRY_MAXORDER_PRODUCT_DISPLAY)
+      		IF HOut(QRY_MAXORDER_PRODUCT_DISPLAY) THEN
+      			nDisplayOrder = product.DisplayOrder..DefaultValue
+      		ELSE
+      			nDisplayOrder = QRY_MAXORDER_PRODUCT_DISPLAY.the_maximum_DisplayOrder			
+      		END
+      	END
+      	
+      ELSE
+      	// Priority display
+      	nDisplayOrder = 0
+      END	
+      
+      // Fill the parameters of the product
+      product.FamilyID 		= Family.FamilyID
+      product.Reference		= sReference
+      product.ProductCaption	= sCaption
+      product.Description 	= sDescription
+      product.UnitPriceBT	= cyUnitPriceBT
+      product.TaxRateID		= TaxRate.TaxRateID
+      product.DisplayOrder	= nDisplayOrder
+      
+      // Modification in database
+      IF HModify(product) = False THEN
+      	AddError("Unable to modify the product")
+      	RESULT False
+      END
+      
+      // Return the product identifier
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : ReadProduct
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876141856
+     type_code : 15
+     code : |1-
+      // Summary: Returns information about a product
+      // Syntax:
+      //[ <Result> = ] ReadProduct (<nProductID> is int, <nRole> is int)
+      //
+      // Parameters:
+      //	nProductID (int):Identifier of the product
+      //	nRole (int):role of photo among: 	ROLE_PHOTO_NORMAL = 0, 	ROLE_PHOTO_SMALL_SQUARE = 1, ROLE_PHOTO_LARGE_SQUARE = 2, default :ROLE_PHOTO_NORMAL
+      // Automatic Process of Exceptions:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	STCOL_Product: information about the product
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      FUNCTION ReadProduct( LOCAL  nProductID is int, LOCAL nRole is int)
+      
+      // Local variables
+      stErr 			is STCOL_Product
+      stProductDetails	is STCOL_Product
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT stErr
+      END
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT stErr
+      END
+      
+      // Retrieve the information	
+      FileToMemory(stProductDetails,product)	
+      	
+      // Find the family
+      HReadSeekFirst(Family,FamilyID,product.FamilyID) 
+      IF HFound(Family) = False THEN
+      	AddError("Family of the product not found in database")
+      	RESULT stErr	
+      END
+      	
+      // Layout the data about the family
+      stProductDetails.FamilyCaption = Family.Caption
+      
+      // Add the photos of the product 
+      NewPhoto is STCOL_ProductPhoto 		
+      		
+      // Find the photos of this product
+      HReadSeekFirst(ProductPhoto,ProductIDRole,[stProductDetails.ProductID,nRole])
+      WHILE HFound(ProductPhoto) = True 
+      	// Transfer into memory
+      	FileToMemory(NewPhoto,ProductPhoto)
+      		
+      	// Is this photo already found in the array?
+      	IF ArraySeek(stProductDetails.arrProductPhoto,asLinear,"ProductPhotoID",NewPhoto.ProductPhotoID) <= 0 THEN
+      		// Add the photo
+      							
+      		// Some information is useless.
+      		NewPhoto.Binary = ""			
+      		
+      		// If it's another role, check whether the image with the normal role is the default one
+      		IF nRole <> ROLE_PHOTO_NORMAL THEN
+      			HReadSeekFirst(ProductPhoto,ProductIDPhotoNumberRole,[stProductDetails.ProductID,ProductPhoto.PhotoNumber,ROLE_PHOTO_NORMAL])
+      			IF HFound(ProductPhoto) _AND_ ProductPhoto.ByDefault = True THEN
+      				// This is the default photo
+      				NewPhoto.ByDefault = True
+      			END
+      		END
+      				
+      		ArrayAdd(stProductDetails.arrProductPhoto,NewPhoto)
+      	END
+      		
+      	HReadNext(ProductPhoto,ProductIDRole)
+      END
+      
+      // Return the product
+      RESULT stProductDetails
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT stErr
+      	
+     type : 458752
+   -
+     name : ListLinkedProducts
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876207392
+     type_code : 15
+     code : |1-
+      // Summary: Returns the list of products linked to a given product
+      // Syntax:
+      //[ <Result> = ] ListLinkedProducts (<nReferenceProductID> is int, <nRole> is int)
+      //
+      // Parameters:
+      //	nReferenceProductID (int):Identifier of the product of products
+      //	nRole (int):Role of photos of products among: 	ROLE_PHOTO_NORMAL = 0, 	ROLE_PHOTO_SMALL_SQUARE = 1, ROLE_PHOTO_LARGE_SQUARE = 2, default : ROLE_PHOTO_NORMAL
+      // Automatic Process of Exceptions:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	array: Array of STCOL_Product
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      FUNCTION ListLinkedProducts( LOCAL  nReferenceProductID is int, LOCAL nRole is int)
+      
+      // Local variables
+      stErr is STCOL_Product
+      
+      // Delete the content from the previous array
+      ArrayDeleteAll(garrProducts)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      // It is a public information: there is no code for checking the connection
+      
+      // Initially, all the parameters are ignored
+      QRY_FindLinkedProducts.pReferenceProductID	= Null
+      
+      // Check whether the product identifier is valid
+      IF nReferenceProductID <=0 THEN
+      	IF HExecuteQuery(QRY_FindLinkedProducts) = False THEN	
+      		AddError("The specified product is not valid")	
+      		ArrayAdd(garrProducts,stErr)
+      		
+      		// Return the list of products
+      		RESULT garrProducts
+      	END
+      END
+      
+      // Configure the query
+      QRY_FindLinkedProducts.pReferenceProductID		= nReferenceProductID
+      
+      // Run the query
+      IF HExecuteQuery(QRY_FindLinkedProducts) = False THEN	
+      	AddError("An error occurred while running the QRY_FindLinkedProducts query")	
+      	ArrayAdd(garrProducts,stErr)
+      END
+      
+      // Browse the query to build the array with all the sub-elements
+      FOR EACH QRY_FindLinkedProducts 
+      	stProduct is STCOL_Product	
+      	
+      	// Read the product
+      	stProduct = ReadProduct(QRY_FindLinkedProducts.ProductID, nRole)
+      		 
+      	// Add to the array of products
+      	ArrayAdd(garrProducts,stProduct)
+      END
+      
+      // Return the list of products
+      RESULT garrProducts
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	ArrayAdd(garrProducts,stErr)
+      	
+     type : 458752
+   -
+     name : AddLinkedProduct
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876272928
+     type_code : 15
+     code : |1-
+      // Summary: Adds a linked product to the database
+      // Syntax:
+      //[ <Result> = ] AddLinkedProduct (<nReferenceProductID> is int, <nLinkedProductID> is int)
+      //
+      // Parameters:
+      //	nReferenceProductID (integer): Identifier of the reference product
+      //	nLinkedProductID (integer): Identifier of the linked product
+      // Return value:
+      // 	integer: Identifier of the updated product, -1 if an error occurred
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure AddLinkedProduct(nReferenceProductID is int, nLinkedProductID is int)
+      
+      // Local variables
+      nProductID		is int	= -1
+      nDisplayOrder	is int 	= 0
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT nProductID
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Adding a linked product","",""+nLinkedProductID)
+      
+      // Check the reference product
+      HReadSeekFirst(product,ProductID,nReferenceProductID)
+      IF HFound(product) = False THEN
+      	AddError("Reference product not found")
+      	RESULT -1
+      END
+      
+      // Check the linked product
+      HReadSeekFirst(product,ProductID,nLinkedProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product to link not found")
+      	RESULT -1
+      END
+      
+      // Find the maximum display order (addition)
+      QRY_MAXORDER_LINKEDPRODUCT_DISPLAY.pProductID = nReferenceProductID
+      IF HExecuteQuery(QRY_MAXORDER_LINKEDPRODUCT_DISPLAY) = False THEN
+      	AddError("An error occurred while running the QRY_MAXORDER_DISPLAY_LINKEDPRODUCT query")			
+      ELSE
+      	HReadFirst(QRY_MAXORDER_LINKEDPRODUCT_DISPLAY)
+      	nDisplayOrder = QRY_MAXORDER_LINKEDPRODUCT_DISPLAY.the_maximum_DisplayOrder
+      END
+      
+      
+      // Initialize the record
+      HReset(ProductLink)
+      
+      // Fill the parameters of the product
+      ProductLink.ProductID 		= nReferenceProductID
+      ProductLink.LinkedProductID		= nLinkedProductID
+      ProductLink.DisplayOrder	= nDisplayOrder
+      
+      // Addition in database
+      IF HAdd(ProductLink) = False THEN
+      	AddError("Unable to add the linked product")
+      	RESULT -1
+      END
+      
+      // Store the identifier
+      nProductID = ProductLink.ProductID
+      
+      // Returns the updated product identifier
+      RESULT nProductID
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT -1
+     type : 458752
+   -
+     name : MoveUpLinkedProductOrder
+     internal_properties : CAAAAAgAAABC7a6IlA4Uuej4p0l2JHsOMQYW+n4RZab7Vqh1ncpyzoLRO5IJDEAhcjqGkB7IOZ7yAu6jzlgNg9o2lTbEhrz5qVJYpNiwv4YQSNJ/BzwDcJEeDpCgtXqJF7z3P5pPt5a2bQ6uR2hUj5NGcfqDY24TjOpgwR8OKkVQTayePRiQ/f3XD11eaYh1YwhKuv+DZkByPN+ecRo=
+     procedure_id : 1416730127876338464
+     type_code : 15
+     code : |1-
+      // Summary: Moves up a product linked to another product in the database
+      // Syntax:
+      //[ <Result> = ] MoveUpOrderLinkedProduct (<nReferenceProductID> is int, <nLinkedProductID> is int)
+      //
+      // Parameters:
+      //	nReferenceProductID (integer): Identifier of the reference product
+      //	nLinkedProductID (integer): Identifier of the linked product
+      // Return value:
+      // 	boolean: True if the product was moved up, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure MoveUpLinkedProductOrder(nReferenceProductID is int, nLinkedProductID is int)
+      
+      // Local variables
+      nProductID				is int	= -1
+      nDisplayOrder			is int 	= 0
+      nPreviousLinkedProductID	is int
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the display order of a linked product","",""+nReferenceProductID)
+      
+      // Check the reference product
+      HReadSeekFirst(product,ProductID,nReferenceProductID)
+      IF HFound(product) = False THEN
+      	AddError("Reference product not found")
+      	RESULT False
+      END
+      
+      // Check the linked product
+      HReadSeekFirst(product,ProductID,nLinkedProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product to link not found")
+      	RESULT False
+      END
+      
+      // Find the listed products, sorted
+      QRY_FindLinkedProducts.pReferenceProductID = nReferenceProductID
+      IF HExecuteQuery(QRY_MAXORDER_LINKEDPRODUCT_DISPLAY) = False THEN
+      	AddError("An error occurred while running the QRY_FindLinkedProducts query")			
+      	RESULT False
+      END
+      
+      // Browse the linked products until we find the one to move up
+      FOR EACH QRY_FindLinkedProducts 
+      	// Is it the sought product?
+      	IF QRY_FindLinkedProducts.LinkedProductID = nLinkedProductID THEN
+      		// Can it be moved up according to the previous one?
+      		IF nPreviousLinkedProductID <> 0 THEN
+      			// Yes, modify
+      			HReadSeekFirst(ProductLink,ProductLinkID,[nReferenceProductID,QRY_FindLinkedProducts.LinkedProductID])
+      			
+      			// If the display order is the same, force the difference
+      			IF ProductLink.DisplayOrder = nDisplayOrder THEN
+      				ProductLink.DisplayOrder = ProductLink.DisplayOrder - 1
+      			ELSE
+      				// Take the display order of the previous one
+      				ProductLink.DisplayOrder = nDisplayOrder				
+      			END
+      			IF HModify(ProductLink) = False THEN
+      				AddError("Unable to update the display order of the linked product")
+      				RESULT False
+      			END
+      			
+      			// And move the previous one down
+      			HReadSeekFirst(ProductLink,ProductLinkID,[nReferenceProductID,nPreviousLinkedProductID])
+      			ProductLink.DisplayOrder = QRY_FindLinkedProducts.DisplayOrder
+      			IF HModify(ProductLink) = False THEN
+      				AddError("Unable to update the display order of the previous linked product")
+      				RESULT False				
+      			END
+      			
+      			RESULT True
+      		END
+      	END
+      	
+      	// Store the current display order as well as the current link
+      	nPreviousLinkedProductID 	= QRY_FindLinkedProducts.LinkedProductID
+      	nDisplayOrder		= QRY_FindLinkedProducts.DisplayOrder
+      	
+      END
+      
+      // By default, the product was not moved up
+      RESULT False
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : MoveDownLinkedProductOrder
+     internal_properties : CAAAAAgAAABC7a6IlA4Uuej4p0l2JHsOMQYW+n4RZab7Vqh1ncpyzoLRO5IJDEAhcjqGkB7IOZ7yAu6jzlgNg9o2lTbEhrz5qVJYpNiwv4YQSNJ/BzwDcJEeDpCgtXqJF7z3P5pPt5a2bQ6uR2hUj5NGcfqDY24TjOpgwR8OKkVQTayePRiQ/f3XD11eaYh1YwhKuv+DZkByPN+ecRo=
+     procedure_id : 1416730127876404000
+     type_code : 15
+     code : |1-
+      // Summary: moves down a product linked to another product in the database
+      // Syntax:
+      //[ <Result> = ] MoveDownOrderLinkedProduct (<nReferenceProductID> is int, <nLinkedProductID> is int)
+      //
+      // Parameters:
+      //	nReferenceProductID (integer): Identifier of the reference product
+      //	nLinkedProductID (integer): Identifier of the linked product
+      // Return value:
+      // 	boolean: True if the product was moved down, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure MoveDownLinkedProductOrder(nReferenceProductID is int, nLinkedProductID is int)
+      
+      // Local variables
+      nProductID				is int	= -1
+      nDisplayOrder			is int 	= 0
+      nPreviousLinkedProductID	is int
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Note the modification of configuration
+      NotifyConfigurationModification("Modifying the display order of a linked product","",""+nReferenceProductID)
+      
+      // Check the reference product
+      HReadSeekFirst(product,ProductID,nReferenceProductID)
+      IF HFound(product) = False THEN
+      	AddError("Reference product not found")
+      	RESULT False
+      END
+      
+      // Check the linked product
+      HReadSeekFirst(product,ProductID,nLinkedProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product to link not found")
+      	RESULT False
+      END
+      
+      // Find the listed products, sorted
+      QRY_FindLinkedProducts.pReferenceProductID = nReferenceProductID
+      IF HExecuteQuery(QRY_MAXORDER_LINKEDPRODUCT_DISPLAY) = False THEN
+      	AddError("An error occurred while running the QRY_FindLinkedProducts query")			
+      	RESULT False
+      END
+      
+      // Browse the linked products until we find the one to move up
+      FOR EACH QRY_FindLinkedProducts FromEnd
+      	// Is it the sought product?
+      	IF QRY_FindLinkedProducts.LinkedProductID = nLinkedProductID THEN
+      		// Can it be moved up according to the previous one?
+      		IF nPreviousLinkedProductID <> 0 THEN
+      			// Yes, modify
+      			HReadSeekFirst(ProductLink,ProductLinkID,[nReferenceProductID,QRY_FindLinkedProducts.LinkedProductID])
+      			
+      			// If the display order is the same, force the difference
+      			IF ProductLink.DisplayOrder = nDisplayOrder THEN
+      				ProductLink.DisplayOrder = ProductLink.DisplayOrder + 1
+      			ELSE
+      				// Take the display order of the previous one
+      				ProductLink.DisplayOrder = nDisplayOrder				
+      			END
+      			IF HModify(ProductLink) = False THEN
+      				AddError("Unable to update the display order of the linked product")
+      				RESULT False
+      			END
+      			
+      			// And move up the previous one
+      			HReadSeekFirst(ProductLink,ProductLinkID,[nReferenceProductID,nPreviousLinkedProductID])
+      			ProductLink.DisplayOrder = QRY_FindLinkedProducts.DisplayOrder
+      			IF HModify(ProductLink) = False THEN
+      				AddError("Unable to update the display order of the next linked product")
+      				RESULT False				
+      			END
+      			
+      			RESULT True
+      		END
+      	END
+      	
+      	// Store the current display order as well as the current link
+      	nPreviousLinkedProductID 	= QRY_FindLinkedProducts.LinkedProductID
+      	nDisplayOrder		= QRY_FindLinkedProducts.DisplayOrder
+      	
+      END
+      
+      // By default, the product was not moved up
+      RESULT False
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : DeleteLinkedProduct
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876469536
+     type_code : 15
+     code : |1+
+      // Summary: Delete a linked product
+      // Syntax:
+      //[ <Result> = ] DeleteLinkedProduct (<nSoughtReferenceProductID> is int, <nSoughtLinkedProductID> is int)
+      //
+      // Parameters:
+      //	nSoughtReferenceProductID (integer): Identifier of the sought product
+      //	nSoughtLinkedProductID (integer): Identifier of the sought linked product
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION DeleteLinkedProduct( nSoughtReferenceProductID is int, nSoughtLinkedProductID is int )
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Find the link in database
+      HReadSeekFirst(ProductLink,ProductLinkID,[nSoughtReferenceProductID,nSoughtLinkedProductID])
+      IF HFound(ProductLink) = False THEN
+      	AddError("Record not found in database")
+      	RESULT False
+      END
+      
+      // Deletion in database
+      IF HDelete(ProductLink) = False THEN
+      	AddError("Cannot delete record")
+      	RESULT False
+      END
+      
+      // The deletion is performed properly by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : bManageStocks
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876535072
+     type_code : 15
+     code : |1+
+      // Summary: Returns True if the stocks are limited for this product
+      // Syntax:
+      //[ <Result> = ] bManageStocks (<nroductID> is int, <bStockAlert> is boolean)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product
+      //	bStockAlert (boolean): output: True if stock alert on this product, False otherwise
+      // Return value:
+      // 	boolean: True if the stocks are limited for this product
+      //
+      // Example:
+      // Indicate an example.
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure bManageStocks(LOCAL  nProductID is int, bStockAlert is boolean)
+      
+      // Local variables
+      bAtLeastOneStock	is boolean
+      bAtLeastOneVariation is boolean
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // No stock alert by default
+      bStockAlert = False
+      bAtLeastOneStock = False
+      bAtLeastOneVariation = False
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // Browse the variations
+      FOR EACH ProductVariation WHERE ProductID = nProductID
+      	bAtLeastOneVariation = True
+      	// Is the stock limited?
+      	IF product.LimitedQuantity = True THEN
+      		bAtLeastOneStock = True
+      		
+      		// Is the alert level reached?
+      		IF ProductVariation.Quantity <= ProductVariation.StockAlertLevel THEN
+      			bStockAlert = True
+      		END
+      	END	
+      	
+      END
+      
+      IF bAtLeastOneVariation = False THEN
+      	// Does the product manage stocks?
+      	IF product.LimitedQuantity = True THEN
+      		bAtLeastOneStock = True
+      		// Is the alert level reached?
+      		IF product.Quantity <= product.StockAlertLevel THEN
+      			bStockAlert = True
+      		END	
+      	END
+      END
+      
+      RESULT bAtLeastOneStock
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+      
+     type : 458752
+   -
+     name : bHasVariations
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876600608
+     type_code : 15
+     code : |1+
+      // Summary: Returns True if the specified product has variations
+      // Syntax:
+      //[ <Result> = ] bHasVariations (<nProductID> is int)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product
+      // Return value:
+      // 	boolean: True if the specified product has variations
+      //
+      // Example:
+      // Indicate an example.
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure bHasVariations(LOCAL  nProductID is int)
+      
+      // Local variables
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // Find a variation
+      HReadSeekFirst(ProductVariation,ProductID,nProductID)
+      IF HFound(ProductVariation) = True THEN
+      	RESULT True
+      END
+      
+      // By default, a product has no variation
+      RESULT False
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+      
+     type : 458752
+   -
+     name : bProductIsInStock
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876666144
+     type_code : 15
+     code : |1+
+      // Summary: Returns True if the requested product is available in stock (or if no stock management for this product)
+      // Syntax:
+      //[ <Result> = ] bProductIsInStock (<nProductID> is int)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product
+      // Return value:
+      // 	boolean: True if the product is available
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure bProductIsInStock(LOCAL  nProductID is int)
+      
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      
+      // Find the product
+      HReadSeekFirst(product, ProductID, nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // If the product in limited quantity ( = stock management)?
+      IF product.LimitedQuantity = True THEN
+      	
+      	// If the quantity in stock positive?
+      	RESULT (product.Quantity > 0)
+      
+      ELSE // No limited quantity: therefore, the product is still available
+      	
+      	RESULT True
+      	
+      END
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+      
+     type : 458752
+   -
+     name : bVariationIsInStock
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876731680
+     type_code : 15
+     code : |1+
+      // Summary: Returns True if the requested variation is available in stock (or if no stock management for this variation)
+      // Syntax:
+      //[ <Result> = ] bVariationIsInStock (<nProductVariationID> is int)
+      //
+      // Parameters:
+      //	nProductVariationID (integer): Identifier of the product
+      // Return value:
+      // 	boolean: True if the product is available
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure bVariationIsInStock(LOCAL nIDProductVariation is int)
+      
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      
+      // Find the variation
+      HReadSeekFirst(ProductVariation, ProductVariationID, nIDProductVariation)
+      IF HFound(ProductVariation) = False THEN
+      	AddError("Variation not found in database")
+      	RESULT False
+      END
+      // Searches for the product
+      HReadSeekFirst(product, productid, ProductVariation.ProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product of the variation not found in database")
+      	RESULT False
+      END
+      
+      // If the product in limited quantity ( = stock management)?
+      IF product.LimitedQuantity = False THEN RESULT True
+      
+      // If the quantity in stock positive?
+      RESULT (ProductVariation.Quantity > 0)
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+      
+     type : 458752
+   -
+     name : bProductOrVariationIsInStock
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876797216
+     type_code : 15
+     code : |1+
+      // Summary: Returns True if the product ((or at least one variation) is available in stock (or if no stock management for this product)
+      // Syntax:
+      //[ <Result> = ] bProductOrVariationIsInStock (<nProductID> is int)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product
+      // Return value:
+      // 	boolean: True if the product is available
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure bProductOrVariationIsInStock(LOCAL nProductID is int)
+      
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      
+      // Find the product
+      HReadSeekFirst(product, ProductID, nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // If the product in limited quantity ( = stock management)?
+      IF product.LimitedQuantity = True THEN
+      	
+      	// If the product has variations
+      	IF bHasVariations(nProductID) THEN
+      		
+      		// Browse each variation to check its stock
+      		FOR EACH ProductVariation WHERE productid = nProductID
+      			// If the variation is in stock, the product is considered as being available
+      			IF bVariationIsInStock(ProductVariation.ProductVariationID) THEN
+      				RESULT True
+      			END
+      		END
+      		
+      		// If no variation is available in stock, the product is considered as being unavailable
+      		RESULT False
+      		
+      		
+      	ELSE
+      		
+      		// If the quantity in stock positive?
+      		RESULT (product.Quantity > 0)	
+      		
+      	END
+      
+      ELSE // No limited quantity: therefore, the product is still available
+      	
+      	RESULT True
+      	
+      END
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+      
+     type : 458752
+   -
+     name : ModifyProductStock
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876862752
+     type_code : 15
+     code : |1-
+      // Summary: Updates the stock for a product
+      // Syntax:
+      //[ <Result> = ] ModifyProductStock (<nProductID> is int, <bEnableStockManagement> is boolean, <nQuantity> is int, <nAlertLevel> is int)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product to update
+      //	bEnableStockManagement (boolean): True to enable the stock management, False otherwise
+      //	nQuantity (integer): Quantity in stock
+      //	nAlertLevel (integer): Alert level (-1 to have no alert)
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      // Example:
+      // Indicate an example.
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ModifyProductStock(LOCAL nProductID is int, LOCAL bEnableStockManagement is boolean, LOCAL nQuantity is int, LOCAL nAlertThreshold is int)
+      	
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // Retrieve the information
+      product.LimitedQuantity = bEnableStockManagement
+      product.Quantity = nQuantity
+      product.StockAlertLevel = nAlertThreshold
+      
+      // Update in database
+      IF HModify(product) = False THEN
+      	AddError("Unable to update the product")
+      	RESULT False
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+     type : 458752
+   -
+     name : nNbProductInStock
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876928288
+     type_code : 15
+     code : |1+
+      // Summary: Returns the number of products in stock
+      // Syntax:
+      //[ <Result> = ] nNbProductInStock (<nProductID> is int)
+      //
+      // Parameters:
+      //	nProductID (int): Identifier of the product
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	int: number of products in stock
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      Procedure nNbProductInStock(LOCAL nProductID is int):int
+      
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT 0
+      END
+      
+      
+      // Find the product
+      HReadSeekFirst(product, ProductID, nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT 0
+      END
+      
+      // If the product in limited quantity ( = stock management)?
+      IF product.LimitedQuantity = True THEN
+      	
+      	// Returns the quantity in stock
+      	RESULT product.Quantity
+      
+      ELSE // No limited quantity
+      	
+      	RESULT -1
+      	
+      END
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT 0
+      
+     type : 458752
+   -
+     name : nNbVariationsInStock
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127876993824
+     type_code : 15
+     code : |1+
+      // Summary: Returns the number of variations in stock
+      // Syntax:
+      //[ <Result> = ] nNbVariationsInStock (<nIDProductVariation> is int)
+      //
+      // Parameters:
+      //	nIDProductVariation (int): Identifier of the product
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // int: number of variations in stock
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      Procedure nNbVariationsInStock(LOCAL nIDProductVariation is int):int
+      
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT 0
+      END
+      
+      
+      // Find the variation
+      HReadSeekFirst(ProductVariation, ProductVariationID, nIDProductVariation)
+      IF HFound(ProductVariation) = False THEN
+      	AddError("Variation not found in database")
+      	RESULT 0
+      END
+      // Searches for the product
+      HReadSeekFirst(product, productid, ProductVariation.ProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product of the variation not found in database")
+      	RESULT 0
+      END
+      
+      // If the product in limited quantity ( = stock management)?
+      IF product.LimitedQuantity = False THEN RESULT -1
+      
+      // Returns the quantity in stock
+      RESULT ProductVariation.Quantity
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT 0
+      
+     type : 458752
+   -
+     name : ModifyProductVariationStock
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127877059360
+     type_code : 15
+     code : |1-
+      // Summary: Updates the stock for a product variation
+      // Syntax:
+      //[ <Result> = ] ModifyStockProductVariation (<nProductID> is int, <nVariationID> is int, <nQuantity> is int, <nAlertLevel> is int)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product to update
+      //	nProductID (integer): Identifier of the product variation to update
+      //	nQuantity (integer): Quantity in stock
+      //	nAlertLevel (integer): Alert level (-1 to have no alert)
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      // Example:
+      // Indicate an example.
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ModifyProductVariationStock(LOCAL nProductID is int, LOCAL nVariationID is int, LOCAL nQuantity is int, LOCAL nAlertThreshold is int)
+      	
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // Find the variation
+      HReadSeekFirst(ProductVariation,ProductVariationID, nVariationID)
+      IF HFound(ProductVariation) = False THEN
+      	AddError("Variation not found in database")
+      	RESULT False
+      END
+      
+      // Check the association
+      IF ProductVariation.ProductID <> product.ProductID THEN
+      	AddError("The variation does not correspond to the requested product")
+      	RESULT False
+      END
+      
+      // Retrieve the information
+      ProductVariation.Quantity = nQuantity
+      ProductVariation.StockAlertLevel = nAlertThreshold
+      
+      // Update in database
+      IF HModify(ProductVariation) = False THEN
+      	AddError("Unable to update the product variation")
+      	RESULT False
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+     type : 458752
+   -
+     name : bProductIsInLimitedQuantity
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127877124896
+     type_code : 15
+     code : |1+
+      // Summary: Returns True if the requested product is available in stock (or if no stock management for this product)
+      // Syntax:
+      //[ <Result> = ] bProductIsInLimitedQuantity (<nProductID> is int)
+      //
+      // Parameters:
+      //	nProductID (int): Identifier of the product
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // boolean: True if the product is available
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      Procedure bProductIsInLimitedQuantity(LOCAL  nProductID is int):boolean
+      
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      
+      // Find the product
+      HReadSeekFirst(product, ProductID, nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // If the product in limited quantity ( = stock management)?
+      RESULT product.LimitedQuantity
+      
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+      
+     type : 458752
+   -
+     name : ReduceProductStock
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127877190432
+     type_code : 15
+     code : |1-
+      // Summary: Reduces the stock for a product (further to an order)
+      // Syntax:
+      //[ <Result> = ] ReduceProductStock (<nProductID> is int, <nQuantityToRemove> is int)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product to update
+      //	nQuantityToRemove (integer): Quantity to remove from the stock
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ReduceProductStock(LOCAL nProductID is int, LOCAL nQuantityToRemove is int)
+      	
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // Modifies the quantity
+      product.Quantity -= nQuantityToRemove
+      
+      // Update in database
+      IF HModify(product) = False THEN
+      	AddError("Unable to update the product")
+      	RESULT False
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+     type : 458752
+   -
+     name : ReduceVariationStock
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127877255968
+     type_code : 15
+     code : |1-
+      // Summary: Reduces the stock for a product variation (further to an order)
+      // Syntax:
+      //[ <Result> = ] ReduceVariationStock (<nProductVariationID> is int, <nQuantityToRemove> is int)
+      //
+      // Parameters:
+      //	nProductVariationID (integer): Identifier of the product to update
+      //	nQuantityToRemove (integer): Quantity to remove from the stock
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ReduceVariationStock(LOCAL nIDProductVariation is int, LOCAL nQuantityToRemove is int)
+      	
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the product variation
+      HReadSeekFirst(ProductVariation, ProductVariationID, nIDProductVariation)
+      IF HFound(ProductVariation) = False THEN
+      	AddError("Product variation not found in database")
+      	RESULT False
+      END
+      
+      // Modifies the quantity
+      ProductVariation.Quantity -= nQuantityToRemove
+      
+      // Update in database
+      IF HModify(ProductVariation) = False THEN
+      	AddError("Unable to update the product")
+      	RESULT False
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+     type : 458752
+   -
+     name : IncreaseVariationStock
+     internal_properties : CAAAAAgAAAAoeizG/Q7hU1FG7iJdMgXJlrrRTGyzdfIfgBpRc6VNJmQJHYLS5Z8PW+m3CB2SACKJZKx9U/jFO67kn2J90Ogyv0FlKZQxMH2Jkm5u/OtXzT/xSNizkgLi2frrbIdOH7USJHzSentq0nO6S8/2MMikfJfEd/AHxrCkbQ5TsKmOyvf0df2tYFgGQQJySYSuqc8VWZi1jQ==
+     procedure_id : 1416730127877321504
+     type_code : 15
+     code : |1-
+      // Summary: Increases the stock for a product variation (further to order cancelation)
+      // Syntax:
+      //[ <Result> = ] IncreaseVariationStock (<nProductVariationID> is int, <nQuantityToAdd> is int)
+      //
+      // Parameters:
+      //	nProductVariationID (integer): Identifier of the product to update
+      //	nQuantityToAdd (integer): Quantity to add to the stock
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure IncreaseVariationStock(LOCAL nIDProductVariation is int, LOCAL nQuantityToAdd is int)
+      	
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the product variation
+      HReadSeekFirst(ProductVariation, ProductVariationID, nIDProductVariation)
+      IF HFound(ProductVariation) = False THEN
+      	AddError("Product variation not found in database")
+      	RESULT False
+      END
+      
+      // Modifies the quantity
+      ProductVariation.Quantity += nQuantityToAdd
+      
+      // Update in database
+      IF HModify(ProductVariation) = False THEN
+      	AddError("Unable to update the product")
+      	RESULT False
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+     type : 458752
+   -
+     name : IncreaseProductStock
+     internal_properties : CAAAAAgAAAD4yny2235VS5XWIu4BplmtErJZULi7CXob+CZVRzFxAnChPSZ2lTP/F4nb7LEOfPalTJzZPzjxo0KM+xaZ/NxGSwmlhdApTF3V6jj8bv29swU3Do4NBIBMd6gN6gHohQPw8gqQdE04NNFY7W1was6KYgWqHcJplPr6s9gJavPMAI0CU8v/6u6Ih8jcf55Yx03lqWhl3Q==
+     procedure_id : 1416730127877387040
+     type_code : 15
+     code : |1-
+      // Summary: Increases the stock for a product (further to order cancelation)
+      // Syntax:
+      //[ <Result> = ] IncreaseProductStock (<nProductID> is int, <nQuantityToAdd> is int)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product to update
+      //	nQuantityToAdd (integer): Quantity to add to the stock
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure IncreaseProductStock(LOCAL nProductID is int, LOCAL nQuantityToAdd is int)
+      	
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // Modifies the quantity
+      product.Quantity += nQuantityToAdd
+      
+      // Update in database
+      IF HModify(product) = False THEN
+      	AddError("Unable to update the product")
+      	RESULT False
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+     type : 458752
+   -
+     name : EnableStockManagementProduct
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730127877452576
+     type_code : 15
+     code : |1+
+      // Summary: Enable or disable the stock management for a product
+      // Syntax:
+      //[ <Result> = ] EnableStockManagementProduct (<nProductID> is int, <bEnableStockManagement> is boolean)
+      //
+      // Parameters:
+      //	nProductID (integer): Identifier of the product
+      //	bEnableStockManagement (boolean): True to enable the stock management, False otherwise
+      // Return value:
+      // 	boolean: True if the operation was successfully performed, False otherwise
+      //
+      // Example:
+      // Indicate an example.
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure EnableStockManagementProduct(LOCAL nProductID is int, LOCAL bEnableStockManagement is boolean)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError("Product not found in database")
+      	RESULT False
+      END
+      
+      // Retrieve the information
+      product.LimitedQuantity = bEnableStockManagement
+      
+      // Update in database
+      IF HModify(product) = False THEN
+      	AddError("Unable to update the product")
+      	RESULT False
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT False
+      
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Produit
+resources :
+ string_res :
+  identifier : 0x1fa19c5a0207529e
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

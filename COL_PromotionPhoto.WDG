@@ -1,0 +1,429 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_PromotionPhoto
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c8a8e76b0de
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAABPOo5wfzL5PtlmH9g6pVlcqG1md+uM4GM8B/k/aVja5R6ZseBzxTGWZbo12UeE8bWym5Rl91AKrNq9wTYnFyamg2lAMw==
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACko1DOYSGWiEfmi47+g0xrryBFucjRJOZNM28b4cO+S1M4MC2h4adn0pITUUH+X+gT4JsjJwu3rpWi0Nt9BiXJMn3gzThsJTpDY5C2E6bDK8jnmlOjc+813c/t3AK14IdkK2kd7CvOV5R9lQ==
+     code : |1+
+      // This structure corresponds to the structure described in the analysis for the PromotionPhoto file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_PromotionPhoto is Structure
+      		PromotionPhotoID 	is int
+      		Photo 				is string
+      		Role 				is int 
+      		Binary 			is buffer 
+      		PromotionID 		is int
+      END
+      
+     type : 720896
+  procedures :
+   -
+     name : _GeneratePromotionThumbnail
+     internal_properties : CAAAAAgAAAAtfdC9UHLgbm7DVHrvha7rgnKMS7Aeju0M/awegCjjMXyQ27LPEuYvCQ1QHk+4e2XJN0Ds6/lo5Sh0gFgloccY5igRLEkf9yTdWzJf9sXARD2d30KhMe/PfhX+D4vARtsheYf1qInF7oekN1dmERgyWcSEfpbdp81rDDgq+2I6FSz95vXDJElSw3OXzEj3xfhuOSwfYQeWovypDJx738GjO/jPBJckrWv9aoar2HsYxu/6pCDiuPGsinKsUeti0Spi3rmQiMvtuBMjLGlbmDXqicOZq8OUN+R4/qGZAenoJ2Fvz6AXCW+GOIM+CJp/lN55A1crcISK9/rhsfuKEeYOrha6ngTgI82XuXeIG2Wv94GH8SRN8RVgmkRvVUbNB+H2wx/W
+     procedure_id : 1416730123578093790
+     type_code : 15
+     code : |1-
+      // Summary: Generates the thumbnail of a promotion
+      // Syntax:
+      //[ <Result> = ] _GeneratePromotionThumbnail (<bufPromotionPhoto> is buffer, <nRole> is int, <nPromotionID> is int)
+      //
+      // Parameters:
+      //	bufPromotionPhoto (buffer): buffer of the promotion image
+      //	nRole (integer): Role of the image
+      //	nPromotionID (integer): Identifier of the promotion
+      // Return value:
+      // 	string: path of the thumbnail (empty string if an error occurs)
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      FUNCTION PRIVATE _GeneratePromotionThumbnail( bufPromotionPhoto is buffer , nRole is int , nPromotionID is int)
+      
+      // Local variables
+      sFullPathWebDirectory	is string
+      sFullGenerationPath	is string
+      sWebPath					is string
+      Thumbnail					is a Image
+      
+      // This process must not be run in Web Service
+      IF InWebserviceMode() = True THEN
+      	AddError("This process must not be run in Web Service")
+      	RESULT ""
+      END
+      
+      // Loading the image
+      IF bufPromotionPhoto <> "" THEN
+      	// Take the default image
+      	Thumbnail = bufPromotionPhoto
+      	
+      	// Fill the background color to manage the resizing
+      	IF Thumbnail..WithAlpha = False THEN
+      		// White if there is no transparency
+      		Thumbnail..FillColor..Color = iWhite
+      	ELSE
+      		// Transparent if possible
+      		Thumbnail..FillColor..Color = iTransparent
+      	END
+      ELSE
+      	// Generate a default image
+      	<COMPILE IF ConfigurationType=Webservice>
+      		Thumbnail..FillColor..Color = iWhite
+      	<ELSE>
+      		Thumbnail..FillColor..Color = ColorPalette(colorBackgroundGeneral)		
+      	<END>
+      		
+      	Thumbnail..Width = 100
+      	Thumbnail..Height = 100	
+      END
+      
+      // Resize according to the role
+      SWITCH nRole
+      	CASE ROLE_PROMOTION_LARGE_SQUARE  //	600x600 format displayed in case of main promotion
+      		dResize(Thumbnail,600,600,drHomotheticCentered)
+      		
+      		// Resize the image area 
+      		Thumbnail..Width = 600
+      		Thumbnail..Height = 600
+      		
+      	CASE ROLE_PROMOTION_SMALL_SQUARE	// 200x200 format displayed in the list of promotions
+      		dResize(Thumbnail,200,200,drHomotheticCentered)
+      		
+      		// Resize the image area 
+      		Thumbnail..Width = 200
+      		Thumbnail..Height = 200
+      		
+      	CASE ROLE_PROMOTION_LARGE_LANDSCAPE  // 705x175 format displayed in the home pages
+      		dResize(Thumbnail,705,175,drHomotheticCentered)
+      		
+      		// Resize the image area 
+      		Thumbnail..Width = 705
+      		Thumbnail..Height = 175
+      		
+      	OTHER CASE
+      		AddError("Role of photo not supported")
+      		RESULT ""
+      END
+      
+      // Save the image
+      IF Thumbnail..WithAlpha = False THEN
+      	
+      	// Build the full path of the file
+      	sFullPathWebDirectory = CompleteDir(sReturnDirWebUpload())+"promotion_"+nPromotionID+"_"+nRole+".jpg"
+      	sFullGenerationPath = CompleteDir(sReturnGenerationDir())+"promotion_"+nPromotionID+"_"+nRole+".jpg"
+      	
+      	// Backup in BMP format
+      	IF dSaveImageJPEG(Thumbnail,sFullGenerationPath) = False THEN
+      		AddError("Error while saving the thumbnail",ErrorInfo())
+      		RESULT ""
+      	END
+      ELSE
+      	// Build the full path of the file
+      	sFullPathWebDirectory = CompleteDir(sReturnDirWebUpload())+"promotion_"+nPromotionID+"_"+nRole+".png"
+      	sFullGenerationPath = CompleteDir(sReturnGenerationDir())+"promotion_"+nPromotionID+"_"+nRole+".png"
+      	
+      	// Save in PNG format to keep the alpha layer
+      	IF dSaveImagePNG(Thumbnail,sFullGenerationPath) = False THEN
+      		AddError("Error while saving the thumbnail",ErrorInfo())
+      		RESULT ""			
+      	END
+      END
+      
+      <COMPILE IF ConfigurationType=Webservice>
+      	// This process must not be called in Web Service
+      <ELSE>
+      	// Copy into the _WEB directory
+      	IF fCopyFileWebFolder(sFullGenerationPath,sFullPathWebDirectory) = False THEN
+      		AddError("Error while deploying the image in the _WEB directory",ErrorInfo())
+      		RESULT ""
+      	END	
+      <END>
+      
+      // Delete the generation file
+      IF fFileExist(sFullGenerationPath) = True THEN
+      	IF fDelete(sFullGenerationPath) = False THEN
+      		AddError("Unable to delete the generation file",ErrorInfo())
+      		// Non-fatal error, we can continue
+      	END
+      END
+      
+      <COMPILE IF ConfigurationType=Webservice>
+      	// This process must not be called in Web Service
+      <ELSE>
+      	// Build the path of the image in relation to fWebDir
+      	sWebPath = Replace(sFullPathWebDirectory,fWebDir()+"\UK","")
+      	
+      <END>
+      
+      sWebPath = Replace(sWebPath,"\","/")
+      IF Left(sWebPath,1)~="/" THEN sWebPath = Right(sWebPath,Length(sWebPath)-1)
+      
+      // Return the Web path
+      RESULT sWebPath
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT ""
+     type : 458752
+   -
+     name : AssociatePromotionPhoto
+     internal_properties : CAAAAAgAAACBqT/psyuMu3vwjMaoQLfwxnCzI8D4lHk3sQbbazZRTZB4yYD/6X1HG4zoa3rBlfs8Ue5bFUZloZB0feh1C0M0d+wBHzdC+C05/8+w+oRO+Zd8HArSvwVrqL+LtjdVGVB6hccmLsJyCb7jq4104wiFCtyzH7BuYF/bIr6h5vLOW0Ix9Br+X2H13Hw8a8mibgnVE0trLyELv2NQCeqthT8VNVJZymjv+BZYxuCt2zQF5YWkbFs=
+     procedure_id : 1416730123578159326
+     type_code : 15
+     code : |1-
+      // Summary: Associates a photo with a promotion
+      // Syntax:
+      //[ <Result> = ] AssociatePhotoPromotion (<nPromotionID> is int, <nRole> is int, <bufPromotionImage> is buffer)
+      //
+      // Parameters:
+      //	nPromotionID (integer): Identifier of the promotion
+      //	nRole (integer): Role of the photo
+      //	bufPromotionImage (buffer): Buffer of the image
+      // Return value:
+      // 	boolean: True if the photo is associated, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure AssociatePromotionPhoto(nPromotionID is int, nRole is int, bufPromotionImage is buffer)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Local variables
+      bIsAnAddition		is boolean
+      
+      // Find the promotion
+      HReadSeekFirst(Promotion,PromotionID,nPromotionID)
+      IF HFound(Promotion) = False THEN
+      	RESULT False
+      END
+      
+      // Do we already have a photo for this role
+      HReadSeekFirst(PromotionPhoto,PromotionRoleID,[Promotion.PromotionID,nRole])
+      IF HFound(PromotionPhoto) = True THEN
+      	// It's an update
+      	bIsAnAddition = False
+      ELSE
+      	// It's a new photo
+      	bIsAnAddition = True
+      	PromotionPhoto.PromotionID	= nPromotionID	
+      	PromotionPhoto.Role = nRole
+      END
+      
+      // Store the binary
+      PromotionPhoto.Binary = bufPromotionImage
+      
+      // Generate the image
+      IF InWebserviceMode() = True THEN
+      	// In WS mode, don't generate the thumbnail locally
+      	
+      ELSE
+      	PromotionPhoto.Photo = _GeneratePromotionThumbnail(bufPromotionImage,nRole,nPromotionID)	
+      	IF PromotionPhoto.Photo = "" THEN
+      		RESULT False
+      	END
+      END
+      
+      // Save in database
+      IF bIsAnAddition = True THEN
+      	// Addition in database
+      	IF HAdd(PromotionPhoto) = False THEN
+      		AddError("Unable to add the banner photo")
+      		RESULT False	
+      	END	
+      ELSE
+      	// Update
+      	IF HModify(PromotionPhoto) = False THEN
+      		AddError("Unable to modify the banner photo")
+      		RESULT False	
+      	END
+      END
+      
+      // Special case: if we are currently generating the large square, generate the small one
+      IF nRole = ROLE_PROMOTION_LARGE_SQUARE THEN
+      	IF AssociatePromotionPhoto(nPromotionID,ROLE_PROMOTION_SMALL_SQUARE,bufPromotionImage) = False THEN
+      		AddError("Unable to generate the small square banner")
+      		RESULT False
+      	END
+      END
+      
+      // If we are in WebService mode, call the REST API to generate the images
+      IF InWebserviceMode() = True THEN
+      	IF CallWSRestManagement(CN_ADMIN_REST_PARAM_IDOPERATION+"="+CN_ADMIN_REST_OPE_PROMOTION_GENERATION+"&"+CN_ADMIN_REST_PARAM_PROMOTIONID+"="+nPromotionID) = False THEN
+      		AddError("Unable to call the management API")	
+      		RESULT False
+      	END
+      END
+      
+      // The operation is successfully performed by default
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT False
+     type : 458752
+   -
+     name : GeneratePromotionPhotos
+     procedure_id : 1416730123578224862
+     type_code : 15
+     code : |1-
+      // Summary: Generates the photos for a promotion
+      // Syntax:
+      //[ <Result> = ] GeneratePromotionPhotos (<nIDPromotion> is int)
+      //
+      // Parameters:
+      //	nPromotionID (integer): Identifier of the promotion
+      // Return value:
+      // 	boolean:  True if the generation was successfully performed, False otherwise
+      //
+      
+      Procedure GeneratePromotionPhotos(nPromotionID is int)
+      
+      
+      // Local variables
+      sListRole 		is string
+      bufProductPhoto	is buffer
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Find the product
+      HReadSeekFirst(Promotion,PromotionID,nPromotionID)
+      IF HFound(Promotion) = False THEN
+      	AddError("Promotion not found in database")
+      	RESULT False
+      END
+      
+      // Initialize the list of roles
+      sListRole = ROLE_PROMOTION_LARGE_SQUARE + TAB + ROLE_PROMOTION_LARGE_LANDSCAPE
+      
+      // Create the different photos corresponding to the different roles defined in the COL_EBUSINESS collection
+      FOR EACH string sCurrentRole of sListRole SEPAREE by TAB
+      	HReadSeekFirst(PromotionPhoto,PromotionRoleID,[Promotion.PromotionID,Val(sCurrentRole)])
+      	IF HFound(PromotionPhoto) = True THEN
+      		// Retrieve the image of the banner
+      		bufProductPhoto = PromotionPhoto.Binary
+      		
+      		PromotionPhoto.Photo = _GeneratePromotionThumbnail(bufProductPhoto,Val(sCurrentRole),Promotion.PromotionID)
+      		
+      		// Modification in database
+      		IF HModify(PromotionPhoto) = False THEN
+      			AddError("Unable to modify the miniature")
+      			RESULT False			
+      		END
+      		
+      		// Special case: if we are currently generating the large square, generate the small one
+      		IF Val(sCurrentRole) = ROLE_PROMOTION_LARGE_SQUARE THEN
+      			IF AssociatePromotionPhoto(nPromotionID,ROLE_PROMOTION_SMALL_SQUARE,bufProductPhoto) = False THEN
+      				AddError("Unable to generate the small square banner")
+      				RESULT False
+      			END
+      		END
+      		
+      	ELSE
+      		// Generate a default image
+      		bufProductPhoto = ""
+      		IF AssociatePromotionPhoto(Promotion.PromotionID,Val(sCurrentRole),bufProductPhoto) = False THEN
+      			AddError("Unable to generate a default promotion image")
+      			RESULT False
+      		END
+      	END	
+      END
+      
+      
+      RESULT True
+     type : 458752
+   -
+     name : ReadPromotionPhoto
+     internal_properties : CAAAAAgAAACylEJ4Hk4vuR/OpnS70mmdaNbntCrlgXQBtM67cSkdbgbd+0rsp8Nh/W2L+pMquFr3lJoFQfa11cgIZxiHjJyO/ZF/LSKL7F/bXkXNFchoWooykbOg7+XBIBHOQ6ALGCLhbdUZE+zpZc6FQm5/3aWFr8C9Sm3skf/30P2qwS4Leza1nnBaXdv1MKEhuNW7cGin6yojEw==
+     procedure_id : 1416730123578290398
+     type_code : 15
+     code : |1-
+      // Summary: Returns the photo of the promotion
+      // Syntax:
+      //[ <Result> = ] ReadPromotionPhoto (<nSoughtPromotionID> is int, <nRole> is int)
+      //
+      // Parameters:
+      //	nSoughtPromotionID (int): Identifier of the sought promotion
+      //	nRole (int): Role of the photo (among the ROLE_PROMOTION_XXX constants of the collection)
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	string: Path of the promotion image
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      FUNCTION ReadPromotionPhoto( nSoughtPromotionID is int, nRole is int ) : string
+      // Local variables
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT ""
+      END
+      
+      // Search in database
+      HReadSeekFirst(Promotion,PromotionID,nSoughtPromotionID)
+      IF HFound(Promotion) = False THEN
+      	AddError("Promotion not found")
+      	RESULT ""
+      END
+      
+      // Find the image of the role
+      HReadSeekFirst(PromotionPhoto,PromotionRoleID,[Promotion.PromotionID,nRole])
+      IF HFound(PromotionPhoto) = False THEN
+      	AddError("No promotion photo for this role")
+      	RESULT ""
+      END
+      
+      // Is the image valid?
+      IF PromotionPhoto.Photo = "" THEN PromotionPhoto.Photo = "images/empty.gif"
+      
+      // Return the path of the promotion imge
+      IF InAWPMode()=True _OR_ InWebserviceMode()=True THEN
+      	RESULT PromotionPhoto.Photo
+      ELSE
+      	RESULT "UK/"+PromotionPhoto.Photo
+      END
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())
+      	RESULT ""
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_PhotoPromotion
+resources :
+ string_res :
+  identifier : 0x1fa19c5a007c5156
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

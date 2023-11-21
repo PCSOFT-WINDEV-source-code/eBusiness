@@ -1,0 +1,313 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_NewProduct
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93c898e42abb0
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAADcNStKL4mpUOJuyUAi5QpdTYXMk02v3v863YC9L8G4ZnYkvWw62mndt5pfegVcJehPuFiQDN+8QTB13W9ZryU0epjc9Nix9TQ=
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACko1DOYSGWiEfmi47+g0xrryBFucjRJOZNM28b4cO+S1M4MC2h4adn0pITUUH+X+gT4JsjJwu3rpWi0Nt9BiXJMn3gzThsJTpDY5C2E6bDK8jnmlOjc+813c/t3AK14IdkK2kd7CvOV5R9lQ==
+     code : |1-
+      // This structure corresponds to the structure described in the analysis for the NewProducts file
+      // This structure is used to manage the back office and for the Web Service
+      STCOL_NewProduct is Structure
+      		NewProductID 	is int 		
+      		Description 	is string	
+      		date 			is date		
+      		ProductID 		is int 
+      		ProductCaption	is string
+      		FamilyCaption	is string
+      END
+       
+       garrNewProducts is array of STCOL_NewProduct
+       
+     type : 720896
+  procedures :
+   -
+     name : ListNewProducts
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730119279717296
+     type_code : 15
+     code : |1+
+      // Summary: Returns the list of new products
+      // Syntax:
+      //[ <Result> = ] ListNewProducts ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	array: Array of STCOL_NewProduct
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure ListNewProducts()
+      
+      
+      // Local variables
+      stErr is STCOL_NewProduct
+      
+      // Delete the content from the previous array
+      ArrayDeleteAll(garrNewProducts)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT garrNewProducts
+      END
+      
+      // Run the query
+      IF HExecuteQuery(QRY_NewProducts) = False THEN	
+      	AddError("An error occurred while running the QRY_NewProducts query")		
+      	RESULT garrNewProducts
+      END
+      
+      // Browse the query to build the array with all the sub-elements
+      FOR EACH QRY_NewProducts 
+      	stNewProduct is STCOL_NewProduct	
+      	FileToMemory(stNewProduct,QRY_NewProducts)	
+      	
+      	// Layout the data about the family
+      	stNewProduct.ProductCaption = QRY_NewProducts.ProductCaption
+      	stNewProduct.FamilyCaption = QRY_NewProducts.Caption_Fa	
+      	
+      	// Add to the array of new products
+      	ArrayAdd(garrNewProducts,stNewProduct)
+      END
+      
+      // Returns the list of new products
+      RESULT garrNewProducts
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	ArrayAdd(garrNewProducts,stErr)
+      
+     type : 458752
+   -
+     name : AddNewProduct
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730119279782832
+     type_code : 15
+     code : |1+
+      // Summary: Adds a new product
+      // Syntax:
+      //[ <Result> = ] AddNewProduct (<nProductID> is int, <sDescription> is string, <sDate> is string)
+      //
+      // Parameters:
+      //	nProductID (int): Identifier of the product
+      //	sDescription (ANSI string): Description of the new product
+      //	sDate (ANSI string): Date of the new product (today's date by default)
+      // Automatic exception processing:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Automatic Process of Exceptions:   run the block of code CASE EXCEPTION:
+      // Return value:
+      // 	int: Identifier of the new product that was added
+      Procedure AddNewProduct(nProductID is int, sDescription is string, sDate is string) :int
+      
+      // Local variables
+      
+      // Delete the content from the previous array
+      ArrayDeleteAll(garrNewProducts)
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT -1
+      END
+      
+      // Check the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError(<§@1eb15ad20571e92d0000§>)
+      	RESULT -1
+      END
+      
+      // Initializes the record
+      HReset(NewProduct)
+      
+      // Fill the record
+      NewProduct.Date 			= sDate
+      NewProduct.Description	= sDescription
+      NewProduct.ProductID		= nProductID
+      
+      // Addition in database
+      IF HAdd(NewProduct) = False THEN
+      	AddError(<§@1eb15ad20571e92d0001§>)
+      	RESULT -1
+      END
+      
+      // Return the identifier of the new product
+      RESULT NewProduct.NewProductID
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT -1
+      
+     type : 458752
+   -
+     name : ModifyNewProduct
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730119279848368
+     type_code : 15
+     code : |1+
+      // Summary: Modifies a new product
+      // Syntax:
+      //[ <Result> = ] ModifyNewProduct (<nNewProductID> is int, <nProductID> is int, <sDescription> is string, <sDate> is string)
+      //
+      // Parameters:
+      //	nNewProductID (int):Identifier of the new product to modify
+      //	nProductID (int):Identifier of the product
+      //	sDescription (ANSI string):Description of the new product
+      //	sDate (ANSI string):Date of the new product (today's date by default)
+      // Automatic Process of Exceptions:   run the block of code CASE EXCEPTION:
+      //
+      
+      // Return value:
+      // 	boolean: True if the modification is performed, False otherwise
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      Procedure ModifyNewProduct(nNewProductID is int,nProductID is int, sDescription is string, sDate is string)
+      
+      // Local variables
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Check the product
+      HReadSeekFirst(product,ProductID,nProductID)
+      IF HFound(product) = False THEN
+      	AddError(<§@1eb15ad20571e92d0000§>)
+      	RESULT False
+      END
+      
+      // Search for the new product
+      HReadSeekFirst(NewProduct,NewProductID,nNewProductID)
+      IF HFound(NewProduct) = False THEN
+      	AddError(<§@1eb15ad20571e92d0002§>)
+      	RESULT False
+      END
+       
+      // Fill the record
+      NewProduct.Date 			= sDate
+      NewProduct.Description	= sDescription
+      NewProduct.ProductID		= nProductID
+      
+      // Modification in database
+      IF HModify(NewProduct) = False THEN	
+      	AddError(<§@1eb15ad20571e92d0003§>)
+      	RESULT False
+      END
+      
+      // By default, the modification is performed
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT True
+      
+     type : 458752
+   -
+     name : DeleteNewProduct
+     internal_properties : CAAAAAgAAAAeQeZWqR4YD9gNuw5ISpse4q5d4YfQh8vxSSLWonylqfGpzXAstIQfjtu5yNZJ9N/c91UXiZv53fcJCNn0zKQH2jXtD1BPimLproJX87E+1RbRiyhFUUvyPW0p6P5mipLcRRthNLb+/G4cHMU2fOcWaLmnLrlIMic+6HTcyeP/rQgO
+     procedure_id : 1416730119279913904
+     type_code : 15
+     code : |1+
+      // Summary: Deletes a new product
+      // Syntax:
+      //[ <Result> = ] DeleteNewProduct (<nNewProductID> is int)
+      //
+      // Parameters:
+      //	nNewProductID (integer): Identifier of the new product to delete
+      // Return value:
+      // 	boolean: True if the deletion is performed, False otherwise
+      //
+      //// Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      
+      Procedure DeleteNewProduct(nNewProductID is int)
+      
+      // Local variables
+      
+      // Initialize the mechanism for error feedback
+      InitializeError()
+      
+      // Check the identification
+      IF bIsConnectedWSBackOffice() = False THEN
+      	AddError(<§@1eb15ad0055be0760000§>)
+      	RESULT False
+      END
+      
+      // Search for the new product
+      HReadSeekFirst(NewProduct,NewProductID,nNewProductID)
+      IF HFound(NewProduct) = False THEN
+      	AddError(<§@1eb15ad20571e92d0002§>)
+      	RESULT False
+      END
+       
+      // Deletion in database
+      IF HDelete(NewProduct) = False THEN		
+      	AddError(<§@1eb15ad20571e92d0004§>)
+      	RESULT False
+      END
+      
+      // By default, the deletion is performed
+      RESULT True
+      
+      CASE EXCEPTION:
+      	AddError("Exception detected",ExceptionInfo())	
+      	RESULT True
+      
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_Nouveauté
+resources :
+ string_res :
+  identifier : 0x1eb15ad20571e92d
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      en-GB : Unable to find the specified product
+     index : 0
+   -
+     text :
+      en-GB : Unable to add the new product
+     index : 1
+   -
+     text :
+      en-GB : New product not found in database
+     index : 2
+   -
+     text :
+      en-GB : Unable to modify the new product
+     index : 3
+   -
+     text :
+      en-GB : Unable to delete the new product
+     index : 4
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

@@ -1,0 +1,238 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : pBasket
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x13a93e5bafcfc77a
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAABXDvsccJ5Z4iIsJ6HpS0uABpkTRyU6CCrLBvsDNOznhX1e1JA6CON4+66hkqkdhKpHAS7sI7gqtSBCCc68+pj93tBjWGONAEJW4st9bYf4QPiCWo+AEEB55+jqDgDIE2l0cuZDJ1E7ZwS2pP2uiyXWSqePqkLuGXmzP3Fc7672XUcJrD6bE0Jxd8rVSSCJLsMDU5Zn0Lm3wwkYEpBWVZwvHRenbMbozoCY1m7DTmuhA8n1hwpxL/3/OjgpIenImRNgcrAeeArhlnWqHmIYZAsLEAYjyXW6xoHIL/QayV+R1whvf7tQooCuD/oJz/soEv463bV5zGtl9abUGwPsA1AJEJxngzq5rtutJK7yuQ6sNecM3NWDZvTkW1CVT8CxbGVxfWGOLo1qkBcdim5cV555RqtpOme9EFwoiJjf/P8eXByR1RElmGk9uNjYRF4K/y0ksd500pClxo+7
+  type_code : 31
+  p_codes :
+   -
+     code : |1-
+      
+     type : 720896
+   -
+     code : |1-
+      
+     type : 720898
+  procedures :
+   -
+     name : GetCookieName
+     internal_properties : CAAAAAgAAAAOn6KInFQZxGjw8ZcOnunySShyOnhaq3Fgds3h2SYQEkTMfCgs5pZdBG1k4doZA/X/IGDyrNLJhDb3rM7G1ArmbSTlwWok5pL7sDKVuSqX/VTGgw6BNeBbWtWzQHPBU36e0YMuEFAInyCJSQnO+X4fOqzLtwrSmRKou6eiweYCL5j+TdaY1APCOdTLcInGgMR7xWbmlkvapqWKdLx7mzGd7yqDdA==
+     procedure_id : 1416732121297373050
+     type_code : 15
+     code : |1-
+      // Summary: Returns the name of the cookie used
+      // Syntax:
+      //[<Result> = ] GetCookieName ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	string:  Name of the cookie
+      
+      Procedure GetCookieName()
+      
+      RESULT "CatalogBasket" + DateSys
+     type : 458752
+   -
+     name : CalcShippingCost
+     procedure_id : 1416732121297438586
+     type_code : 15
+     code : |1-
+      // Summary: Calculates the shipping cost
+      // Syntax:
+      //[ <Result> = ] CalcShippingCost (<cyTotalAmount>)
+      //
+      // Parameters:
+      //	CyTotalAmount: Total amount according to which the shipping cost must be calculated
+      // Return value:
+      // 	Undefined type: Shipping cost
+      //
+      
+      Procedure CalcShippingCost(cyTotalAmount)
+      
+      cyShippingCost is currency = ReadAmountFreeShippingCosts()
+      
+      
+      // Are the shipping costs free
+      IF cyShippingCost <> 0 _AND_ cyTotalAmount >= cyShippingCost THEN
+      	RESULT 0
+      END
+      
+       RESULT ReadAmountFixedShippingCosts()
+     type : 458752
+   -
+     name : cyGetProductPriceIOT
+     procedure_id : 1416732121297504122
+     type_code : 15
+     code : |1-
+      // Summary: Retrieves the price IOT of a product
+      // Syntax:
+      //[ <Result> = ] cyGetProductPriceIOT (<nProductID>)
+      //
+      // Parameters:
+      //	nProductID: Identifier of the product
+      // Return value:
+      // 	Undefined type: Price IOT of the product
+      //
+      
+      Procedure cyGetProductPriceIOT(nProductID)
+      
+      IF product.productid <> nProductID THEN
+      	HReadSeekFirst(product, productid,nProductID)
+      	IF HFound(product) = False THEN
+      		RESULT 0
+      	END
+      END
+      
+      HReadSeekFirst(TaxRate,TaxRateID,product.TaxRateID)
+      IF HFound(TaxRate) THEN
+      	
+      	RESULT product.UnitPriceBT*(1+TaxRate.Rate/100)
+      	
+      END
+      
+      RESULT 0
+     type : 458752
+   -
+     name : cyGetPriceCurrentProductIOT
+     procedure_id : 1416732121297569658
+     type_code : 15
+     code : |1+
+      // Summary: Retrieves the price IOT of a product
+      // Syntax:
+      //[ <Result> = ] cyGetCurrentProductPriceIOT (<nProductID>)
+      //
+      // Parameters:
+      //	nProductID: Identifier of the product
+      // Return value:
+      // 	Undefined type: Price IOT of the product
+      //
+      
+      Procedure cyGetPriceCurrentProductIOT(nProductID)
+      
+      cyPriceBT is currency
+      
+      // Positions on the product
+      IF product.productid <> nProductID THEN
+      	HReadSeekFirst(product, productid,nProductID)
+      	IF HFound(product) = False THEN
+      		RESULT 0
+      	END
+      END
+      
+      // Finds the tax rate of the product
+      HReadSeekFirst(TaxRate,TaxRateID,product.TaxRateID)
+      IF HFound(TaxRate) = False THEN
+      	RESULT 0
+      END
+      
+      // Is a promotion currently applied to this product?
+      // If the product is in promotion
+      QRY_CurrentPromotions.pProductID= nProductID
+      HExecuteQuery(QRY_CurrentPromotions)
+      HReadFirst(QRY_CurrentPromotions)
+      IF NOT HOut(QRY_CurrentPromotions) THEN
+      	cyPriceBT = QRY_CurrentPromotions.UnitPriceBT
+      ELSE
+      	cyPriceBT = product.UnitPriceBT
+      END	
+      
+      
+      // Returns the price IOT
+      RESULT cyPriceBT*(1+TaxRate.Rate/100)
+     type : 458752
+   -
+     name : PrintOrderFormPDFFormat
+     internal_properties : CAAAAAgAAAA6tWYwi97Zmag4Zwk25DtO8cbWOj5RJWYiVIzhOZLiczyRO5IJDEAhcjqGkB7IOZ7yAu6jzlgNg9o2lTbEhrz5qVJYpNiwv4YQSNJ/BzwDcJEeDpCgtXqJF7z3P5pPt5a2bQ6uR2hUj5NGcfqDY24TjOpgwV/AgxjTAC8jeNhQPb0Xzx2eKUi1o8iKer/Dhh1fdIdmudI=
+     procedure_id : 1416732121297635194
+     type_code : 15
+     code : |1+
+      // Summary: Prints an order form in PDF format
+      // Syntax:
+      //PrintOrderFormPDFFormat (<nOrderID>)
+      //
+      // Parameters:
+      //	nOrderID: Identifier of the order
+      // Return value:
+      // 	None
+      //
+      
+      Procedure PrintOrderFormPDFFormat(nOrderID)
+      
+      // Retrieve the order 
+      QRY_InvoiceDetails.pIDOrder = nOrderID
+      IF HExecuteQuery(QRY_InvoiceDetails) = False THEN
+      	DisplayError(<§@126ce4a3000161800009§>)
+      	RETURN
+      END
+      
+      // Switch to PDF preview
+      iDestination(iGenericPDF)
+      
+      // Print the PDF file
+      iPrintReport(RPT_OrderForm)
+      
+      // Display the file	
+      FileDisplay(iLastFile(),"application/pdf",StringBuild(<§@126ce4a3000161800008§>,nOrderID))
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : pPanier
+resources :
+ string_res :
+  identifier : 0x126ce4a300016180
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      en-GB : The <%1> reference does not exist in the catalog anymore
+     index : 0
+   -
+     text :
+      en-GB : An error occurred when creating the order
+     index : 1
+   -
+     text :
+      en-GB : "T. "
+     index : 2
+   -
+     text :
+      en-GB : "Mrs "
+     index : 3
+   -
+     text :
+      en-GB : "Ms "
+     index : 4
+   -
+     text :
+      en-GB : "%1\r\n\r\nPlease find enclosed the invoice for your order #%2 of 3.\r\n\r\nBest regards.\r\n%4"
+     index : 5
+   -
+     text :
+      en-GB : "Invoice for order #"
+     index : 6
+   -
+     text :
+      en-GB : "Invoice for order #"
+     index : 7
+   -
+     text :
+      en-GB : ORF_%1.pdf
+     index : 8
+   -
+     text :
+      en-GB : Error while retrieving the order details
+     index : 9
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ
